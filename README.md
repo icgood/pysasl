@@ -12,7 +12,7 @@ Installation
 
 Available in [PyPi](https://pypi.python.org/):
 
-```bash
+```
 pip install pysasl
 ```
 
@@ -20,7 +20,7 @@ pip install pysasl
 
 Install into a virtual environment:
 
-```bash
+```
 virtualenv env
 source env/bin/activate
 
@@ -30,7 +30,7 @@ pip install -r test/requirements.txt
 
 Run the tests and report coverage metrics:
 
-```bash
+```
 nosetests -v --with-xcover
 ```
 
@@ -86,6 +86,7 @@ while True:
         chal = exc.challenge
         sock.send(chal.challenge + b'\r\n')
         chal.response = sock.recv(1024).rstrip(b'\r\n')
+        responses.append(chal)
     else:
         break
 ```
