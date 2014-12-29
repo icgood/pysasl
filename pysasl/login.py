@@ -18,3 +18,30 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 #
+
+from __future__ import absolute_import, unicode_literals
+
+from . import ServerMechanism, IssueChallenge, AuthenticationResult
+
+__all__ = ['LoginMechanism']
+
+
+class LoginMechanism(ServerMechanism):
+    """Implements the LOGIN authentication mechanism.
+
+    """
+
+    #: The SASL name for this mechanism.
+    name = 'LOGIN'
+
+    #: This mechanism is considered insecure for non-encrypted sessions.
+    insecure = True
+
+    def server_attempt(self, responses, **kwargs):
+        if len(responses) < 1:
+            raise IssueChallenge('Username:')
+        if len(responses) < 2:
+            raise IssueChallenge('Password:')
+        username = responses[0].response
+        password = responses[1].response
+        return AuthenticationResult(username, password)

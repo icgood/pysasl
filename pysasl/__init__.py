@@ -21,59 +21,113 @@
 
 from __future__ import absolute_import, unicode_literals
 
+import base64
+
 from pkg_resources import iter_entry_points
 
-__all__ = ['ServerMechanism', 'IssueServerChallenge', 'VerifySecret']
+__all__ = ['ServerMechanism', 'AuthenticationError', 'IssueChallenge',
+           'ChallengeResponse', 'AuthenticationResult']
 
 
-class IssueServerChallenge(Exception):
+class AuthenticationError(Exception):
+    """Indicates that authentication failed due to a protocol error unrelated
+    to any provided credentials.
+
+    """
+    pass
+
+
+class IssueChallenge(Exception):
     """Indicates the server must challenge the client before authentication can
-    continue. The :meth:`~ServerMechanism.server_attempt` method should then be
-    called again with an additional string in the ``responses`` parameter.
+    continue. The :attr:`.challenge` object should have its
+    :attr:`~Challengeresponse.response` populated before calling
+    :meth:`~ServerMechanism.server_attempt` again.
 
     """
 
-    def __init__(self, challenge):
-        super(IssueServerChallenge, self).__init__()
+    def __init__(self, message):
+        super(IssueChallenge, self).__init__()
 
-        #: The un-encoded challenge string that should be sent to the client.
+        #: The :class:`ChallengeResponse` object used to track the server's
+        #: challenge and the client's response.
+        self.challenge = ChallengeResponse(message)
+
+
+class ChallengeResponse(object):
+    """Object used to track and respond to challenges issued by the server and
+    the responses from the client.
+
+    Some protocols (e.g. SMTP) allow an initial response from the client,
+    before any challenges have been issued::
+
+        initial = AuthenticationChallenge(response='...')
+
+    :param str challenge: The challenge message issued by the server. This
+                          value may be ``None`` when building an initial
+                          response, used in some protocols.
+    :param str response: Pre-populates the :attr:`.response` field.
+
+    """
+
+    def __init__(self, challenge=None, response=None):
+        super(ChallengeResponse, self).__init__()
+
+        #: The challenge string issued by the server.
         self.challenge = challenge
 
+        #: The response string from the client.
+        self.response = response
 
-class VerifySecret(Exception):
-    """Indicates the credentials must be verified by passing the user's secret
-    (i.e. password) to the given function. It will return True or False if the
-    given secret matches what was given by the client.
 
-    This is only necessary for mechanisms that require 
+class AuthenticationResult(object):
+    """Object returned by :meth:`~ServerMechanism.server_attempt` and
+    :meth:`~ClientMechanism.client_attempt` containing information and methods
+    for checking the result of an authentication attempt.
 
     """
 
-    def __init__(self, username, callback):
-        super(RetryWithSecret, self).__init__()
+    def __init__(self, authcid, secret=None, authzid=None):
+        super(AuthenticationResult, self).__init__()
 
-        #: The username to lookup the secret credential for.
-        self.username = username
+        #: The authentication identity string used in the attempt.
+        self.authcid = authcid
+
+        #: The authorization identity string used in the attempt, or ``None``
+        #: if this field is not used by the mechanism.
+        self.authzid = authzid
+
+        #: If available, contains the secret string used in the authentication
+        #: attempt, ``None`` otherwise.
+        self.secret = secret
+
+    def check_secret(self, secret):
+        """Checks if the secret string used in the authentication attempt
+        matches the "known" secret string. The way this comparison is made
+        depends on the SASL mechanism in use.
+
+        :param str secret: The secret string to compare against what was used
+                           in the authentication attempt.
+        :rtype: bool
+
+        """
+        return secret == self.secret
 
 
 class ServerMechanism(object):
     """Base class for implementing SASL mechanisms that support server-side
     credential verification.
 
-    .. method:: server_attempt(self, responses, secret=None)
+    .. method:: server_attempt(self, responses)
 
        For SASL server-side credential verification, receives responses from
        the client and issues challenges until it has everything needed to
-       verify the credentials. In some mechanisms, the command may need to be
-       re-issued with the user's ``secret`` (i.e. password) to compare with
-       what it received from the client.
+       verify the credentials.
 
-       :param list responses: The list of responses that have been received
-                              from the client.
-       :param str secret: The user's password to be compared with what was
-                          received from the client, needed for some mechanisms.
-       :raises: :class:`RetryWithChallengeResponse`, :class:`RetryWithSecret`
-       :returns: 
+       :param list responses: The list of :class:`ChallengeResponse` objects
+                              that have been issued by the mechanism and
+                              responded to by the client.
+       :raises: :class:`IssueChallenge`
+       :rtype: :class:`AuthenticationResult`
 
     """
 
@@ -89,7 +143,8 @@ class ServerMechanism(object):
 
         """
         ret = {}
-        for mech in iter_entry_points('pysasl.mechanisms'):
+        for entry_point in iter_entry_points('pysasl.mechanisms'):
+            mech = entry_point.load()
             if not allow_insecure and getattr(mech, 'insecure', False):
                 continue
             ret[mech.name] = mech

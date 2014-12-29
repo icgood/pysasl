@@ -23,19 +23,33 @@ from __future__ import absolute_import, unicode_literals
 
 import re
 
-from . import InsecureMechanism
+from . import (ServerMechanism, IssueChallenge,
+    AuthenticationError, AuthenticationResult)
 
 __all__ = ['PlainMechanism']
 
 
-class PlainMechanism(InsecureMechanism):
+class PlainMechanism(ServerMechanism):
     """Implements the PLAIN authentication mechanism.
 
     """
 
+    #: The SASL name for this mechanism.
     name = 'PLAIN'
+
+    #: This mechanism is considered insecure for non-encrypted sessions.
+    insecure = True
 
     _pattern = re.compile(r'^([^\x00]*)\x00([^\x00]+)\x00([^\x00]*)$')
 
     def server_attempt(self, responses):
-        pass
+        if not responses:
+            raise IssueChallenge('')
+
+        response = responses[0].response
+        match = self._pattern.match(response)
+        if not match:
+            raise AuthenticationError('Invalid PLAIN response')
+        zid, cid, secret = match.groups()
+
+        return AuthenticationResult(cid, secret, zid)

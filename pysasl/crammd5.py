@@ -18,3 +18,78 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 #
+
+from __future__ import absolute_import, unicode_literals
+
+import re
+import time
+import uuid
+import hmac
+import hashlib
+from socket import gethostname
+
+from . import (ServerMechanism, IssueChallenge,
+    AuthenticationError, AuthenticationResult)
+
+__all__ = ['CramMD5Mechanism']
+
+
+class CramMD5Result(AuthenticationResult):
+
+    def __init__(self, username, challenge, digest):
+        super(CramMD5Result, self).__init__(username)
+        self.challenge = challenge
+        self.digest = digest
+
+    def check_secret(self, secret):
+        if isinstance(secret, str):
+            secret = secret.encode('utf-8')
+        expected = hmac.new(secret, self.challenge, hashlib.md5).hexdigest()
+        return expected.encode('ascii') == self.digest
+
+
+class CramMD5Mechanism(ServerMechanism):
+    """Implements the CRAM-MD5 authentication mechanism.
+
+    .. warning::
+
+       Offering this mechanism can be dangerous, as it usually means that
+       credentials are stored in clear-text.
+
+    """
+
+    #: The SASL name for this mechanism.
+    name = 'CRAM-MD5'
+
+    #: This mechanism is considered secure for non-encrypted sessions.
+    insecure = False
+
+    #: Unless this class-level attribute is set, :py:func:`~socket.gethostname`
+    #: will be used when generating challenge strings.
+    hostname = None
+
+    _pattern = re.compile(br'^(.*) ([^ ]+)$')
+
+    def __init__(self):
+        super(CramMD5Mechanism, self).__init__()
+        if self.hostname is None:
+            self.hostname = gethostname()
+
+    def _build_challenge(self):
+        uid = uuid.uuid4().hex
+        timestamp = time.time()
+        challenge = '<{0}.{1:.0f}@{2}>'.format(uid, timestamp, self.hostname)
+        return challenge.encode('utf-8')
+
+    def server_attempt(self, responses):
+        if not responses:
+            raise IssueChallenge(self._build_challenge())
+        challenge = responses[0].challenge
+        response = responses[0].response
+
+        match = self._pattern.match(response)
+        if not match:
+            raise AuthenticationError('Invalid CRAM-MD5 response')
+        username, digest = match.groups()
+
+        return CramMD5Result(username, challenge, digest)
