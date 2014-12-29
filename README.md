@@ -45,7 +45,7 @@ Server-side SASL has three basic requirements:
 
 #### Advertising Mechanisms
 
-Implementations may decide on any sub-set of mechanismms to advertise. To get a
+Implementations may decide on any sub-set of mechanisms to advertise. To get a
 dictionary of all SASL mechanisms supported by `pysasl`:
 
 ```python
@@ -54,10 +54,11 @@ available = ServerMechanism.get_available(True)
 ```
 
 The `True` argument indicates that the session is secure, and so mechanisms
-that transfer credentials in clear-text should be made available.
+that transfer credentials in clear-text should be returned as well (default is
+`False`).
 
-The end result of picking credentials should be a dictionary that looks
-something like this:
+The end result of choosing advertised credentials should be a dictionary that
+looks something like this:
 
 ```python
 from pysasl.plain import PlainMechanism
@@ -75,14 +76,16 @@ challenges to the client:
 ```python
 from pysasl import IssueChallenge
 
+mech = available['PLAIN']
+
 responses = []
 while True:
     try:
         result = mech.server_attempt(responses)
     except IssueChallenge as exc:
         chal = exc.challenge
-        sock.send(chal.challenge)
-        chal.response = sock.recv(1024)
+        sock.send(chal.challenge + b'\r\n')
+        chal.response = sock.recv(1024).rstrip(b'\r\n')
     else:
         break
 ```
