@@ -39,12 +39,13 @@ class CramMD5Result(AuthenticationResult):
     def __init__(self, username, challenge, digest):
         super(CramMD5Result, self).__init__(username)
         self.challenge = challenge
-        self.digest = digest
+        self.digest = digest.encode('ascii')
 
     def check_secret(self, secret):
         if isinstance(secret, str):
             secret = secret.encode('utf-8')
-        expected = hmac.new(secret, self.challenge, hashlib.md5).hexdigest()
+        challenge = self.challenge.encode('utf-8')
+        expected = hmac.new(secret, challenge, hashlib.md5).hexdigest()
         return expected.encode('ascii') == self.digest
 
 
@@ -68,7 +69,7 @@ class CramMD5Mechanism(ServerMechanism):
     #: will be used when generating challenge strings.
     hostname = None
 
-    _pattern = re.compile(br'^(.*) ([^ ]+)$')
+    _pattern = re.compile(r'^(.*) ([^ ]+)$')
 
     def __init__(self):
         super(CramMD5Mechanism, self).__init__()
@@ -78,8 +79,7 @@ class CramMD5Mechanism(ServerMechanism):
     def _build_challenge(self):
         uid = uuid.uuid4().hex
         timestamp = time.time()
-        challenge = '<{0}.{1:.0f}@{2}>'.format(uid, timestamp, self.hostname)
-        return challenge.encode('utf-8')
+        return'<{0}.{1:.0f}@{2}>'.format(uid, timestamp, self.hostname)
 
     def server_attempt(self, responses):
         if not responses:

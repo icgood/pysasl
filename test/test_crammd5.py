@@ -33,7 +33,7 @@ class TestCramMD5Mechanism(unittest.TestCase):
         try:
             self.crammd5.server_attempt([])
         except IssueChallenge as exc:
-            self.assertEqual(b'<abc123.1234@testhost>', exc.challenge.challenge)
+            self.assertEqual('<abc123.1234@testhost>', exc.challenge.challenge)
         else:
             self.fail('IssueChallenge not raised')
 
@@ -42,7 +42,7 @@ class TestCramMD5Mechanism(unittest.TestCase):
     def test_bad_response(self, time_mock, uuid4_mock):
         time_mock.return_value = 1234.0
         uuid4_mock.return_value = MagicMock(hex='abc123')
-        resp = ChallengeResponse(response=b'testing')
+        resp = ChallengeResponse(response='testing')
         self.assertRaises(AuthenticationError,
                           self.crammd5.server_attempt, [resp])
 
@@ -51,11 +51,11 @@ class TestCramMD5Mechanism(unittest.TestCase):
     def test_successful(self, time_mock, uuid4_mock):
         time_mock.return_value = 1234.0
         uuid4_mock.return_value = MagicMock(hex='abc123')
-        response = b'testuser 3a569c3950e95c490fd42f5d89e1ef67'
-        resp = ChallengeResponse(challenge=b'<abc123.1234@testhost>',
+        response = 'testuser 3a569c3950e95c490fd42f5d89e1ef67'
+        resp = ChallengeResponse(challenge='<abc123.1234@testhost>',
                                  response=response)
         result = self.crammd5.server_attempt([resp])
         self.assertTrue(result.authzid is None)
-        self.assertEqual(b'testuser', result.authcid)
+        self.assertEqual('testuser', result.authcid)
         self.assertTrue(result.check_secret('testpass'))
         self.assertFalse(result.check_secret('badpass'))
