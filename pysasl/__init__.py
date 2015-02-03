@@ -90,15 +90,20 @@ class AuthenticationResult(object):
         super(AuthenticationResult, self).__init__()
 
         #: The authentication identity string used in the attempt.
-        self.authcid = authcid
+        self.authcid = self._decode(authcid)
 
         #: The authorization identity string used in the attempt, or ``None``
         #: if this field is not used by the mechanism.
-        self.authzid = authzid
+        self.authzid = self._decode(authzid)
 
         #: If available, contains the secret string used in the authentication
         #: attempt, ``None`` otherwise.
-        self.secret = secret
+        self.secret = self._decode(secret)
+
+    def _decode(self, data):
+        if isinstance(data, bytes):
+            return data.decode('utf-8')
+        return data
 
     def check_secret(self, secret):
         """Checks if the secret string used in the authentication attempt
@@ -110,7 +115,7 @@ class AuthenticationResult(object):
         :rtype: bool
 
         """
-        return secret == self.secret
+        return self._decode(secret) == self.secret
 
 
 class ServerMechanism(object):
