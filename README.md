@@ -9,7 +9,9 @@ Tested on Python 2.6, 2.7 and 3.4.
 
 [![Build Status](https://travis-ci.org/icgood/pysasl.svg)](https://travis-ci.org/icgood/pysasl)
 [![Coverage Status](https://coveralls.io/repos/icgood/pysasl/badge.svg?branch=master)](https://coveralls.io/r/icgood/pysasl?branch=master)
-
+[![Latest Version](https://pypip.in/version/pysasl/badge.svg)](https://pypi.python.org/pypi/pysasl/)
+[![Supported Python versions](https://pypip.in/py_versions/pysasl/badge.svg)](https://pypi.python.org/pypi/pysasl/)
+[![License](https://pypip.in/license/pysasl/badge.svg)](https://pypi.python.org/pypi/pysasl/)
 
 Installation
 ============
