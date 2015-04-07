@@ -1,6 +1,4 @@
-nose
-coverage
-nosexcover
+pytest
+pytest-cov
 mock
-pep8
-pyflakes
+flake8

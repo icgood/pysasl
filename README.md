@@ -7,6 +7,9 @@ intended to be agnostic of the protocol or event system.
 
 Tested on Python 2.6, 2.7 and 3.4.
 
+[![Build Status](https://travis-ci.org/icgood/pysasl.svg)](https://travis-ci.org/icgood/pysasl)
+[![Coverage Status](https://coveralls.io/repos/icgood/pysasl/badge.svg)](https://coveralls.io/r/icgood/pysasl)
+
 Installation
 ============
 
