@@ -9,6 +9,6 @@ install:
   - travis_retry pip install -r test/requirements.txt
   - travis_retry pip install coveralls
   - travis_retry pip install -e .
-script: py.test --cov=provoke
+script: py.test --cov=pysasl
 after_success:
   - coveralls
