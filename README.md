@@ -35,7 +35,7 @@ pip install -r test/requirements.txt
 Run the tests and report coverage metrics:
 
 ```
-nosetests -v --with-xcover
+py.test --cov=pysasl
 ```
 
 Server-side Usage
