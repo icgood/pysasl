@@ -7,9 +7,9 @@ intended to be agnostic of the protocol or event system.
 
 [![Build Status](https://travis-ci.org/icgood/pysasl.svg)](https://travis-ci.org/icgood/pysasl)
 [![Coverage Status](https://coveralls.io/repos/icgood/pysasl/badge.svg?branch=master)](https://coveralls.io/r/icgood/pysasl?branch=master)
-[![Latest Version](https://pypip.in/version/pysasl/badge.svg)](https://pypi.python.org/pypi/pysasl/)
-[![Supported Python versions](https://pypip.in/py_versions/pysasl/badge.svg)](https://pypi.python.org/pypi/pysasl/)
-[![License](https://pypip.in/license/pysasl/badge.svg)](https://pypi.python.org/pypi/pysasl/)
+[![PyPI version](https://badge.fury.io/py/pysasl.svg)](https://pypi.python.org/pypi/pysasl/)
+[![PyPI](https://img.shields.io/pypi/pyversions/pysasl.svg)]()
+[![GitHub license](https://img.shields.io/github/license/icgood/pysasl.svg)]()
 
 Installation
 ============
