@@ -25,6 +25,7 @@ from pkg_resources import iter_entry_points
 
 __all__ = ['AuthenticationError', 'AuthenticationCredentials',
            'ServerChallenge', 'ServerMechanism',
+           'ClientResponse', 'ClientMechanism',
            'SASLAuth']
 
 
@@ -72,6 +73,35 @@ class AuthenticationCredentials(object):
 
         """
         return secret == self.secret
+
+
+class ClientResponse(object):
+    """Used by :meth:~ClientMechanism.client_attempt` to provide client
+    responses and to populate server challenges.
+
+    """
+
+    def __init__(self, response):
+        super(ClientResponse, self).__init__()
+        self.response = response
+        self.challenge = None
+
+    def get_response(self):
+        """Return the client response that should be sent to the server.
+
+        :rtype: bytes
+
+        """
+        return self.response
+
+    def set_challenge(self, data):
+        """If the server reacts to the response with a challenge, set it with
+        this method.
+
+        :param bytes data: The challenge string.
+
+        """
+        self.challenge = data
 
 
 class ServerChallenge(Exception):
@@ -124,6 +154,38 @@ class ServerMechanism(object):
                                responded to by the client.
        :raises: :class:`ServerChallenge`
        :rtype: :class:`AuthenticationCredentials`
+
+    """
+    pass
+
+
+class ClientMechanism(object):
+    """Base class for implementing SASL mechanisms that support client-side
+    credential verification.
+
+    .. classmethod:: client_attempt(self, creds, responses)
+
+       For SASL client-side credential verification, produce responses to send
+       to the server and react to its challenges until the server returns a
+       final success or failure.
+
+       Send the response string to the server with the
+       :meth:`~ClientResponse.get_response` method of the returned
+       :class:`ClientResponse` object. If the server returns another challenge,
+       set it with the object's :meth:`~ClientResponse.set_challenge` method
+       and append the object to the ``responses`` argument before calling
+       again.
+
+       The mechanism may raise :class:`AuthenticationError` if it receives
+       unexpected challenges from the server.
+
+       :param creds: The credentials to attempt authentication with.
+       :type creds: :class:`AuthenticationCredentials`
+       :param list responses: The list of :class:`ClientResponse` objects that
+                              have been sent to the server. New attempts begin
+                              with an empty list.
+       :rtype: :class:`ChallengeResponse`
+       :raises: :class:`AuthenticationError`
 
     """
     pass
