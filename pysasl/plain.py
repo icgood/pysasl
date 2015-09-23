@@ -19,12 +19,12 @@
 # THE SOFTWARE.
 #
 
-from __future__ import absolute_import, unicode_literals
+from __future__ import absolute_import
 
 import re
 
-from . import (ServerMechanism, IssueChallenge,
-    AuthenticationError, AuthenticationResult)
+from . import (ServerMechanism, ServerChallenge, AuthenticationError,
+               AuthenticationCredentials)
 
 __all__ = ['PlainMechanism']
 
@@ -35,21 +35,25 @@ class PlainMechanism(ServerMechanism):
     """
 
     #: The SASL name for this mechanism.
-    name = 'PLAIN'
+    name = b'PLAIN'
 
     #: This mechanism is considered insecure for non-encrypted sessions.
     insecure = True
 
-    _pattern = re.compile(r'^([^\x00]*)\x00([^\x00]+)\x00([^\x00]*)$')
+    _pattern = re.compile(br'^([^\x00]*)\x00([^\x00]+)\x00([^\x00]*)$')
 
-    def server_attempt(self, responses):
-        if not responses:
-            raise IssueChallenge('')
+    @classmethod
+    def server_attempt(cls, challenges):
+        if not challenges:
+            raise ServerChallenge(b'')
 
-        response = responses[0].response
-        match = self._pattern.match(response)
+        response = challenges[0].response
+        match = re.match(cls._pattern, response)
         if not match:
             raise AuthenticationError('Invalid PLAIN response')
         zid, cid, secret = match.groups()
 
-        return AuthenticationResult(cid, secret, zid)
+        cid_str = cid.decode('utf-8')
+        secret_str = secret.decode('utf-8')
+        zid_str = zid.decode('utf-8')
+        return AuthenticationCredentials(cid_str, secret_str, zid_str)

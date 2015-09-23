@@ -19,33 +19,30 @@
 # THE SOFTWARE.
 #
 
-from __future__ import absolute_import, unicode_literals
+from __future__ import absolute_import
 
 import re
-import time
-import uuid
 import hmac
 import hashlib
-from socket import gethostname
+import email.utils
 
-from . import (ServerMechanism, IssueChallenge,
-    AuthenticationError, AuthenticationResult)
+from . import (ServerMechanism, ServerChallenge, AuthenticationError,
+               AuthenticationCredentials)
 
 __all__ = ['CramMD5Mechanism']
 
 
-class CramMD5Result(AuthenticationResult):
+class CramMD5Result(AuthenticationCredentials):
 
     def __init__(self, username, challenge, digest):
-        super(CramMD5Result, self).__init__(username)
+        super(CramMD5Result, self).__init__(username, None)
         self.challenge = challenge
-        self.digest = digest.encode('ascii')
+        self.digest = digest
 
     def check_secret(self, secret):
-        if isinstance(secret, str):
+        if not isinstance(secret, bytes):
             secret = secret.encode('utf-8')
-        challenge = self.challenge.encode('utf-8')
-        expected = hmac.new(secret, challenge, hashlib.md5).hexdigest()
+        expected = hmac.new(secret, self.challenge, hashlib.md5).hexdigest()
         return expected.encode('ascii') == self.digest
 
 
@@ -60,7 +57,7 @@ class CramMD5Mechanism(ServerMechanism):
     """
 
     #: The SASL name for this mechanism.
-    name = 'CRAM-MD5'
+    name = b'CRAM-MD5'
 
     #: This mechanism is considered secure for non-encrypted sessions.
     insecure = False
@@ -69,27 +66,20 @@ class CramMD5Mechanism(ServerMechanism):
     #: will be used when generating challenge strings.
     hostname = None
 
-    _pattern = re.compile(r'^(.*) ([^ ]+)$')
+    _pattern = re.compile(br'^(.*) ([^ ]+)$')
 
-    def __init__(self):
-        super(CramMD5Mechanism, self).__init__()
-        if self.hostname is None:
-            self.hostname = gethostname()
+    @classmethod
+    def server_attempt(cls, challenges):
+        if not challenges:
+            challenge = email.utils.make_msgid().encode('utf-8')
+            raise ServerChallenge(challenge)
+        challenge = challenges[0].challenge
+        response = challenges[0].response
 
-    def _build_challenge(self):
-        uid = uuid.uuid4().hex
-        timestamp = time.time()
-        return'<{0}.{1:.0f}@{2}>'.format(uid, timestamp, self.hostname)
-
-    def server_attempt(self, responses):
-        if not responses:
-            raise IssueChallenge(self._build_challenge())
-        challenge = responses[0].challenge
-        response = responses[0].response
-
-        match = self._pattern.match(response)
+        match = re.match(cls._pattern, response)
         if not match:
             raise AuthenticationError('Invalid CRAM-MD5 response')
         username, digest = match.groups()
 
-        return CramMD5Result(username, challenge, digest)
+        username_str = username.decode('utf-8')
+        return CramMD5Result(username_str, challenge, digest)

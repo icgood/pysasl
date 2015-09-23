@@ -2,16 +2,14 @@
 from __future__ import absolute_import
 
 import unittest
-import uuid
-import time
+import email.utils
 
 try:
-    from unittest.mock import MagicMock, patch
+    from unittest.mock import patch
 except ImportError:
-    from mock import MagicMock, patch
+    from mock import patch
 
-from pysasl import (ServerMechanism, IssueChallenge, ChallengeResponse,
-    AuthenticationError)
+from pysasl import ServerChallenge, AuthenticationError
 from pysasl.crammd5 import CramMD5Mechanism
 
 
@@ -21,39 +19,30 @@ class TestCramMD5Mechanism(unittest.TestCase):
         CramMD5Mechanism.hostname = 'testhost'
         self.crammd5 = CramMD5Mechanism()
 
-    def test_available(self):
-        avail = ServerMechanism.get_available()
-        self.assertEqual(CramMD5Mechanism, avail.get('CRAM-MD5'))
-
-    @patch.object(uuid, 'uuid4')
-    @patch.object(time, 'time')
-    def test_issues_challenge(self, time_mock, uuid4_mock):
-        time_mock.return_value = 1234.0
-        uuid4_mock.return_value = MagicMock(hex='abc123')
+    @patch.object(email.utils, 'make_msgid')
+    def test_issues_challenge(self, make_msgid_mock):
+        make_msgid_mock.return_value = '<abc123.1234@testhost>'
         try:
             self.crammd5.server_attempt([])
-        except IssueChallenge as exc:
-            self.assertEqual('<abc123.1234@testhost>', exc.challenge.challenge)
+        except ServerChallenge as exc:
+            self.assertEqual(b'<abc123.1234@testhost>', exc.challenge)
         else:
-            self.fail('IssueChallenge not raised')
+            self.fail('ServerChallenge not raised')
 
-    @patch.object(uuid, 'uuid4')
-    @patch.object(time, 'time')
-    def test_bad_response(self, time_mock, uuid4_mock):
-        time_mock.return_value = 1234.0
-        uuid4_mock.return_value = MagicMock(hex='abc123')
-        resp = ChallengeResponse(response='testing')
+    @patch.object(email.utils, 'make_msgid')
+    def test_bad_response(self, make_msgid_mock):
+        make_msgid_mock.return_value = '<abc123.1234@testhost>'
+        resp = ServerChallenge(b'')
+        resp.set_response(b'testing')
         self.assertRaises(AuthenticationError,
                           self.crammd5.server_attempt, [resp])
 
-    @patch.object(uuid, 'uuid4')
-    @patch.object(time, 'time')
-    def test_successful(self, time_mock, uuid4_mock):
-        time_mock.return_value = 1234.0
-        uuid4_mock.return_value = MagicMock(hex='abc123')
-        response = 'testuser 3a569c3950e95c490fd42f5d89e1ef67'
-        resp = ChallengeResponse(challenge='<abc123.1234@testhost>',
-                                 response=response)
+    @patch.object(email.utils, 'make_msgid')
+    def test_successful(self, make_msgid_mock):
+        make_msgid_mock.return_value = '<abc123.1234@testhost>'
+        response = b'testuser 3a569c3950e95c490fd42f5d89e1ef67'
+        resp = ServerChallenge(b'<abc123.1234@testhost>')
+        resp.set_response(response)
         result = self.crammd5.server_attempt([resp])
         self.assertTrue(result.authzid is None)
         self.assertEqual('testuser', result.authcid)

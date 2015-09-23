@@ -19,9 +19,9 @@
 # THE SOFTWARE.
 #
 
-from __future__ import absolute_import, unicode_literals
+from __future__ import absolute_import
 
-from . import ServerMechanism, IssueChallenge, AuthenticationResult
+from . import ServerMechanism, ServerChallenge, AuthenticationCredentials
 
 __all__ = ['LoginMechanism']
 
@@ -32,16 +32,17 @@ class LoginMechanism(ServerMechanism):
     """
 
     #: The SASL name for this mechanism.
-    name = 'LOGIN'
+    name = b'LOGIN'
 
     #: This mechanism is considered insecure for non-encrypted sessions.
     insecure = True
 
-    def server_attempt(self, responses, **kwargs):
-        if len(responses) < 1:
-            raise IssueChallenge('Username:')
-        if len(responses) < 2:
-            raise IssueChallenge('Password:')
-        username = responses[0].response
-        password = responses[1].response
-        return AuthenticationResult(username, password)
+    @classmethod
+    def server_attempt(cls, challenges):
+        if len(challenges) < 1:
+            raise ServerChallenge(b'Username:')
+        if len(challenges) < 2:
+            raise ServerChallenge(b'Password:')
+        username = challenges[0].response.decode('utf-8')
+        password = challenges[1].response.decode('utf-8')
+        return AuthenticationCredentials(username, password)

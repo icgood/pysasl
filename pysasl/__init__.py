@@ -19,14 +19,13 @@
 # THE SOFTWARE.
 #
 
-from __future__ import absolute_import, unicode_literals
-
-import base64
+from __future__ import absolute_import
 
 from pkg_resources import iter_entry_points
 
-__all__ = ['ServerMechanism', 'AuthenticationError', 'IssueChallenge',
-           'ChallengeResponse', 'AuthenticationResult']
+__all__ = ['AuthenticationError', 'AuthenticationCredentials',
+           'ServerChallenge', 'ServerMechanism',
+           'SASLAuth']
 
 
 class AuthenticationError(Exception):
@@ -37,120 +36,139 @@ class AuthenticationError(Exception):
     pass
 
 
-class IssueChallenge(Exception):
-    """Indicates the server must challenge the client before authentication can
-    continue. The :attr:`.challenge` object should have its
-    :attr:`~Challengeresponse.response` populated before calling
-    :meth:`~ServerMechanism.server_attempt` again.
+class AuthenticationCredentials(object):
+    """Object returned by :meth:`~ServerMechanism.server_attempt` and passed in
+    to :meth:`~ClientMechanism.client_attempt` containing information about the
+    authentication credentials in use.
+
+    :param str authcid: Authentication ID string (the username).
+    :param str secret: Secret secret (the password).
+    :param str authzid: Authorization ID string, if applicable.
 
     """
 
-    def __init__(self, message):
-        super(IssueChallenge, self).__init__()
-
-        #: The :class:`ChallengeResponse` object used to track the server's
-        #: challenge and the client's response.
-        self.challenge = ChallengeResponse(message)
-
-
-class ChallengeResponse(object):
-    """Object used to track and respond to challenges issued by the server and
-    the responses from the client.
-
-    Some protocols (e.g. SMTP) allow an initial response from the client,
-    before any challenges have been issued::
-
-        initial = AuthenticationChallenge(response='...')
-
-    :param str challenge: The challenge message issued by the server. This
-                          value may be ``None`` when building an initial
-                          response, used in some protocols.
-    :param str response: Pre-populates the :attr:`.response` field.
-
-    """
-
-    def __init__(self, challenge=None, response=None):
-        super(ChallengeResponse, self).__init__()
-
-        #: The challenge string issued by the server.
-        self.challenge = challenge
-
-        #: The response string from the client.
-        self.response = response
-
-
-class AuthenticationResult(object):
-    """Object returned by :meth:`~ServerMechanism.server_attempt` and
-    :meth:`~ClientMechanism.client_attempt` containing information and methods
-    for checking the result of an authentication attempt.
-
-    """
-
-    def __init__(self, authcid, secret=None, authzid=None):
-        super(AuthenticationResult, self).__init__()
+    def __init__(self, authcid, secret, authzid=None):
+        super(AuthenticationCredentials, self).__init__()
 
         #: The authentication identity string used in the attempt.
-        self.authcid = self._decode(authcid)
-
-        #: The authorization identity string used in the attempt, or ``None``
-        #: if this field is not used by the mechanism.
-        self.authzid = self._decode(authzid)
+        self.authcid = authcid
 
         #: If available, contains the secret string used in the authentication
         #: attempt, ``None`` otherwise.
-        self.secret = self._decode(secret)
+        self.secret = secret
 
-    def _decode(self, data):
-        if isinstance(data, bytes):
-            return data.decode('utf-8')
-        return data
+        #: The authorization identity string used in the attempt, or ``None``
+        #: if this field is not used by the mechanism.
+        self.authzid = authzid
 
     def check_secret(self, secret):
         """Checks if the secret string used in the authentication attempt
-        matches the "known" secret string. The way this comparison is made
-        depends on the SASL mechanism in use.
+        matches the "known" secret string. Some mechanisms will override this
+        method to control how this comparison is made.
 
         :param str secret: The secret string to compare against what was used
                            in the authentication attempt.
         :rtype: bool
 
         """
-        return self._decode(secret) == self.secret
+        return secret == self.secret
+
+
+class ServerChallenge(Exception):
+    """Raised by :meth:`~ServerMechanism.server_attempt` to provide server
+    challenges and to populate client responses.
+
+    """
+
+    def __init__(self, challenge):
+        super(ServerChallenge, self).__init__()
+        self.challenge = challenge
+        self.response = None
+
+    def get_challenge(self):
+        """Return the server challenge that should be sent to the client.
+
+        :rtype: bytes
+
+        """
+        return self.challenge
+
+    def set_response(self, data):
+        """After the challenge is sent to the client, its response should be
+        set with this method.
+
+        :param bytes data: The response string.
+
+        """
+        self.response = data
 
 
 class ServerMechanism(object):
     """Base class for implementing SASL mechanisms that support server-side
     credential verification.
 
-    .. method:: server_attempt(self, responses)
+    .. classmethod:: server_attempt(self, challenges)
 
        For SASL server-side credential verification, receives responses from
        the client and issues challenges until it has everything needed to
        verify the credentials.
 
-       :param list responses: The list of :class:`ChallengeResponse` objects
-                              that have been issued by the mechanism and
-                              responded to by the client.
-       :raises: :class:`IssueChallenge`
-       :rtype: :class:`AuthenticationResult`
+       If a challenge is necessary, an :class:`ServerChallenge` exception will
+       be raised. Send the challenge string to the client with
+       :meth:`~ServerChallenge.get_challenge` and then populate its response
+       with :meth:`~ServerChallenge.set_response`. Finally, append the
+       exception to the ``challenges`` argument before calling again.
+
+       :param list challenges: The list of :class:`ServerChallenge` objects
+                               that have been issued by the mechanism and
+                               responded to by the client.
+       :raises: :class:`ServerChallenge`
+       :rtype: :class:`AuthenticationCredentials`
+
+    """
+    pass
+
+
+class SASLAuth(object):
+    """Manages the mechanisms available for authentication attempts.
+
+    :param list advertized: List of SASL mechanism name strings. The set of
+                            known mechanisms will be intersected with these
+                            names. By default, all known mechanisms are
+                            available.
 
     """
 
+    def __init__(self, advertized=None):
+        super(SASLAuth, self).__init__()
+        self.mechs = self._get_known_mechanisms()
+        if advertized:
+            advertized = set(advertized)
+            self.mechs = dict([(name, mech)
+                               for name, mech in self.mechs.items()
+                               if name in advertized])
+
     @classmethod
-    def get_available(cls, allow_insecure=False):
-        """Returns a mapping of mechanism names to :class:`ServerMechanism`
-        sub-classes that meet the criteria. The name is the uppercase SASL
-        name, e.g. ``PLAIN``.
-
-        :param bool allow_insecure: Usually this will be ``False`` unless the
-                                    connection has been TLS encrypted.
-        :rtype: dict
-
-        """
-        ret = {}
+    def _get_known_mechanisms(cls):
+        mechs = {}
         for entry_point in iter_entry_points('pysasl.mechanisms'):
             mech = entry_point.load()
-            if not allow_insecure and getattr(mech, 'insecure', False):
-                continue
-            ret[mech.name] = mech
-        return ret
+            mechs[mech.name] = mech
+        return mechs
+
+    def __iter__(self):
+        return iter(self.mechs.values())
+
+    def __contains__(self, name):
+        return name in self.mechs
+
+    def get(self, name=b'PLAIN'):
+        """Get a SASL mechanism by name. The resulting class should support
+        either :meth:`~ServerMechanism.server_attempt`,
+        :meth:`~ClientMechanism.client_attempt` or both.
+
+        :param bytes name: The SASL mechanism name.
+        :returns: The mechanism class or ``None``
+
+        """
+        return self.mechs.get(name.upper())
