@@ -44,7 +44,7 @@ class CramMD5Result(AuthenticationCredentials):
         if not isinstance(secret, bytes):
             secret = secret.encode('utf-8')
         expected = hmac.new(secret, self.challenge, hashlib.md5).hexdigest()
-        return expected.encode('ascii') == self.digest
+        return expected == self.digest
 
 
 class CramMD5Mechanism(ServerMechanism, ClientMechanism):
@@ -83,7 +83,8 @@ class CramMD5Mechanism(ServerMechanism, ClientMechanism):
         username, digest = match.groups()
 
         username_str = username.decode('utf-8')
-        return CramMD5Result(username_str, challenge, digest)
+        digest_str = digest.decode('ascii')
+        return CramMD5Result(username_str, challenge, digest_str)
 
     @classmethod
     def client_attempt(cls, creds, responses):
@@ -95,5 +96,5 @@ class CramMD5Mechanism(ServerMechanism, ClientMechanism):
         authcid = creds.authcid.encode('utf-8')
         secret = creds.secret.encode('utf-8')
         digest = hmac.new(secret, challenge, hashlib.md5).hexdigest()
-        response = b' '.join((authcid, digest))
+        response = b' '.join((authcid, digest.encode('ascii')))
         return ClientResponse(response)
