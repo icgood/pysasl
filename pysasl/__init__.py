@@ -232,19 +232,13 @@ class SASLAuth(object):
 
     @property
     def server_mechanisms(self):
-        mechs = {}
-        for key, mech in self.mechs.items():
-            if hasattr(mech, 'server_attempt'):
-                mechs[key] = mech
-        return mechs
+        return [mech for mech in self.mechs.values()
+                if hasattr(mech, 'server_attempt')]
 
     @property
     def client_mechanisms(self):
-        mechs = {}
-        for key, mech in self.mechs.items():
-            if hasattr(mech, 'client_attempt'):
-                mechs[key] = mech
-        return mechs
+        return [mech for mech in self.mechs.values()
+                if hasattr(mech, 'client_attempt')]
 
     def get(self, name=b'PLAIN'):
         """Get a SASL mechanism by name. The resulting class should support

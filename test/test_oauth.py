@@ -12,8 +12,8 @@ class TestOAuth2Mechanism(unittest.TestCase):
 
     def test_availability(self):
         sasl = SASLAuth([b'XOAUTH2'])
-        self.assertTrue(b'XOAUTH2' in sasl.client_mechanisms)
-        self.assertTrue(b'XOAUTH2' not in sasl.server_mechanisms)
+        self.assertEqual([OAuth2Mechanism], sasl.client_mechanisms)
+        self.assertEqual([], sasl.server_mechanisms)
         self.assertEqual(OAuth2Mechanism, sasl.get(b'XOAUTH2'))
 
     def test_client_attempt(self):
