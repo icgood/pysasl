@@ -206,21 +206,21 @@ class ClientMechanism(object):
 class SASLAuth(object):
     """Manages the mechanisms available for authentication attempts.
 
-    :param list advertized: List of SASL mechanism name strings. The set of
+    :param list advertised: List of SASL mechanism name strings. The set of
                             known mechanisms will be intersected with these
                             names. By default, all known mechanisms are
                             available.
 
     """
 
-    def __init__(self, advertized=None):
+    def __init__(self, advertised=None):
         super(SASLAuth, self).__init__()
         self.mechs = self._get_known_mechanisms()
-        if advertized:
-            advertized = set(advertized)
+        if advertised:
+            advertised = set(advertised)
             self.mechs = dict([(name, mech)
                                for name, mech in self.mechs.items()
-                               if name in advertized])
+                               if name in advertised])
 
     @classmethod
     def _get_known_mechanisms(cls):
