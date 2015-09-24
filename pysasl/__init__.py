@@ -215,7 +215,7 @@ class SASLAuth(object):
 
     def __init__(self, advertised=None):
         super(SASLAuth, self).__init__()
-        self.mechs = self._get_known_mechanisms()
+        self.mechs = self._load_known_mechanisms()
         if advertised:
             advertised = set(advertised)
             self.mechs = dict([(name, mech)
@@ -223,18 +223,28 @@ class SASLAuth(object):
                                if name in advertised])
 
     @classmethod
-    def _get_known_mechanisms(cls):
+    def _load_known_mechanisms(cls):
         mechs = {}
         for entry_point in iter_entry_points('pysasl.mechanisms'):
             mech = entry_point.load()
             mechs[mech.name] = mech
         return mechs
 
-    def __iter__(self):
-        return iter(self.mechs.values())
+    @property
+    def server_mechanisms(self):
+        mechs = {}
+        for key, mech in self.mechs.items():
+            if hasattr(mech, 'server_attempt'):
+                mechs[key] = mech
+        return mechs
 
-    def __contains__(self, name):
-        return name in self.mechs
+    @property
+    def client_mechanisms(self):
+        mechs = {}
+        for key, mech in self.mechs.items():
+            if hasattr(mech, 'client_attempt'):
+                mechs[key] = mech
+        return mechs
 
     def get(self, name=b'PLAIN'):
         """Get a SASL mechanism by name. The resulting class should support

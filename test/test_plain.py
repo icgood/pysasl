@@ -12,8 +12,8 @@ class TestPlainMechanism(unittest.TestCase):
 
     def test_availability(self):
         sasl = SASLAuth([b'PLAIN'])
-        self.assertTrue(b'PLAIN' in sasl)
-        self.assertEqual([PlainMechanism], list(sasl))
+        self.assertTrue(b'PLAIN' in sasl.client_mechanisms)
+        self.assertTrue(b'PLAIN' in sasl.server_mechanisms)
         self.assertEqual(PlainMechanism, sasl.get(b'PLAIN'))
 
     def test_server_attempt_issues_challenge(self):
