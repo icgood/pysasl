@@ -240,7 +240,7 @@ class SASLAuth(object):
         return [mech for mech in self.mechs.values()
                 if hasattr(mech, 'client_attempt')]
 
-    def get(self, name=b'PLAIN'):
+    def get(self, name):
         """Get a SASL mechanism by name. The resulting class should support
         either :meth:`~ServerMechanism.server_attempt`,
         :meth:`~ClientMechanism.client_attempt` or both.
