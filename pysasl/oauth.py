@@ -40,8 +40,6 @@ class OAuth2Mechanism(ClientMechanism):
     #: The SASL name for this mechanism.
     name = b'XOAUTH2'
 
-    response_tmpl = 'user={user}\x01auth=Bearer{token}\x01\x01'
-
     @classmethod
     def client_attempt(cls, creds, responses):
         if len(responses) > 1:
