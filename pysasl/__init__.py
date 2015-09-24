@@ -23,7 +23,8 @@ from __future__ import absolute_import
 
 from pkg_resources import iter_entry_points
 
-__all__ = ['AuthenticationError', 'AuthenticationCredentials',
+__all__ = ['AuthenticationError', 'UnexpectedAuthChallenge',
+           'AuthenticationCredentials',
            'ServerChallenge', 'ServerMechanism',
            'ClientResponse', 'ClientMechanism',
            'SASLAuth']
@@ -35,6 +36,17 @@ class AuthenticationError(Exception):
 
     """
     pass
+
+
+class UnexpectedAuthChallenge(AuthenticationError):
+    """During client-side authentication, the SASL mechanism received an
+    authentication challenge from the server that it did not expect.
+
+    """
+
+    def __init__(self):
+        msg = 'Unexpected auth challenge.'
+        super(UnexpectedAuthChallenge, self).__init__(msg)
 
 
 class AuthenticationCredentials(object):

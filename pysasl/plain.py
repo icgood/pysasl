@@ -23,13 +23,14 @@ from __future__ import absolute_import
 
 import re
 
-from . import (ServerMechanism, ServerChallenge, AuthenticationError,
-               AuthenticationCredentials)
+from . import (ServerMechanism, ClientMechanism, ServerChallenge,
+               ClientResponse, AuthenticationError, AuthenticationCredentials,
+               UnexpectedAuthChallenge)
 
 __all__ = ['PlainMechanism']
 
 
-class PlainMechanism(ServerMechanism):
+class PlainMechanism(ServerMechanism, ClientMechanism):
     """Implements the PLAIN authentication mechanism.
 
     """
@@ -57,3 +58,13 @@ class PlainMechanism(ServerMechanism):
         secret_str = secret.decode('utf-8')
         zid_str = zid.decode('utf-8')
         return AuthenticationCredentials(cid_str, secret_str, zid_str)
+
+    @classmethod
+    def client_attempt(cls, creds, responses):
+        if len(responses) > 1:
+            raise UnexpectedAuthChallenge()
+        authzid = creds.authzid.encode('utf-8')
+        authcid = creds.authcid.encode('utf-8')
+        secret = creds.secret.encode('utf-8')
+        response = b'\0'.join((authzid, authcid, secret))
+        return ClientResponse(response)

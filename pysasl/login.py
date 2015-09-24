@@ -21,12 +21,14 @@
 
 from __future__ import absolute_import
 
-from . import ServerMechanism, ServerChallenge, AuthenticationCredentials
+from . import (ServerMechanism, ClientMechanism, ServerChallenge,
+               ClientResponse, AuthenticationCredentials,
+               UnexpectedAuthChallenge)
 
 __all__ = ['LoginMechanism']
 
 
-class LoginMechanism(ServerMechanism):
+class LoginMechanism(ServerMechanism, ClientMechanism):
     """Implements the LOGIN authentication mechanism.
 
     """
@@ -46,3 +48,15 @@ class LoginMechanism(ServerMechanism):
         username = challenges[0].response.decode('utf-8')
         password = challenges[1].response.decode('utf-8')
         return AuthenticationCredentials(username, password)
+
+    @classmethod
+    def client_attempt(cls, creds, responses):
+        if len(responses) < 1:
+            return ClientResponse(b'')
+        if len(responses) < 2:
+            username = creds.authcid.encode('utf-8')
+            return ClientResponse(username)
+        if len(responses) < 3:
+            password = creds.secret.encode('utf-8')
+            return ClientResponse(password)
+        raise UnexpectedAuthChallenge()

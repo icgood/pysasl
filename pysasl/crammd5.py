@@ -26,7 +26,8 @@ import hmac
 import hashlib
 import email.utils
 
-from . import (ServerMechanism, ServerChallenge, AuthenticationError,
+from . import (ServerMechanism, ClientMechanism, ServerChallenge,
+               ClientResponse, AuthenticationError, UnexpectedAuthChallenge,
                AuthenticationCredentials)
 
 __all__ = ['CramMD5Mechanism']
@@ -46,7 +47,7 @@ class CramMD5Result(AuthenticationCredentials):
         return expected.encode('ascii') == self.digest
 
 
-class CramMD5Mechanism(ServerMechanism):
+class CramMD5Mechanism(ServerMechanism, ClientMechanism):
     """Implements the CRAM-MD5 authentication mechanism.
 
     .. warning::
@@ -83,3 +84,16 @@ class CramMD5Mechanism(ServerMechanism):
 
         username_str = username.decode('utf-8')
         return CramMD5Result(username_str, challenge, digest)
+
+    @classmethod
+    def client_attempt(cls, creds, responses):
+        if len(responses) < 1:
+            return ClientResponse(b'')
+        elif len(responses) > 1:
+            raise UnexpectedAuthChallenge()
+        challenge = responses[0].challenge
+        authcid = creds.authcid.encode('utf-8')
+        secret = creds.secret.encode('utf-8')
+        digest = hmac.new(secret, challenge, hashlib.md5).hexdigest()
+        response = b' '.join((authcid, digest))
+        return ClientResponse(response)
