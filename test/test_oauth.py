@@ -23,8 +23,7 @@ class TestOAuth2Mechanism(unittest.TestCase):
                          resp1.get_response())
         resp1.set_challenge(b'')
         resp2 = OAuth2Mechanism.client_attempt(creds, [resp1])
-        self.assertEqual(b'user=testuser\x01auth=Bearertesttoken\x01\x01',
-                         resp2.get_response())
+        self.assertEqual(b'', resp2.get_response())
         self.assertRaises(UnexpectedAuthChallenge,
                           OAuth2Mechanism.client_attempt,
                           creds, [resp1, resp2])

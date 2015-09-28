@@ -44,6 +44,8 @@ class OAuth2Mechanism(ClientMechanism):
     def client_attempt(cls, creds, responses):
         if len(responses) > 1:
             raise UnexpectedAuthChallenge()
+        elif len(responses) > 0:
+            return ClientResponse(b'')
         user = creds.authcid.encode('utf-8')
         token = creds.secret.encode('utf-8')
         response = b''.join((b'user=', user, b'\x01auth=Bearer', token,
