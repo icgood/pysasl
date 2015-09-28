@@ -63,7 +63,7 @@ class PlainMechanism(ServerMechanism, ClientMechanism):
     def client_attempt(cls, creds, responses):
         if len(responses) > 1:
             raise UnexpectedAuthChallenge()
-        authzid = creds.authzid.encode('utf-8')
+        authzid = (creds.authzid or '').encode('utf-8')
         authcid = creds.authcid.encode('utf-8')
         secret = creds.secret.encode('utf-8')
         response = b'\0'.join((authzid, authcid, secret))
