@@ -88,7 +88,7 @@ class AuthenticationCredentials(object):
 
 
 class ClientResponse(object):
-    """Used by :meth:~ClientMechanism.client_attempt` to provide client
+    """Used by :meth:`~ClientMechanism.client_attempt` to provide client
     responses and to populate server challenges.
 
     """
@@ -232,11 +232,13 @@ class SASLAuth(object):
 
     @property
     def server_mechanisms(self):
+        """List of available :class:`ServerMechanism` classes."""
         return [mech for mech in self.mechs.values()
                 if hasattr(mech, 'server_attempt')]
 
     @property
     def client_mechanisms(self):
+        """List of available :class:`ClientMechanism` classes."""
         return [mech for mech in self.mechs.values()
                 if hasattr(mech, 'client_attempt')]
 
