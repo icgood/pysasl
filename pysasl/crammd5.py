@@ -59,18 +59,24 @@ class CramMD5Mechanism(ServerMechanism, ClientMechanism):
        Offering this mechanism can be dangerous, as it usually means that
        credentials are stored in clear-text.
 
+    .. attribute:: name
+
+       The SASL name for this mechanism.
+
+    .. attribute:: insecure
+
+       This mechanism is considered secure for non-encrypted sessions.
+
+    .. attribute:: hostname
+
+       Unless this class-level attribute is set, :py:func:`~socket.gethostname`
+       will be used when generating challenge string.
+
     """
 
-    #: The SASL name for this mechanism.
     name = b'CRAM-MD5'
-
-    #: This mechanism is considered secure for non-encrypted sessions.
     insecure = False
-
-    #: Unless this class-level attribute is set, :py:func:`~socket.gethostname`
-    #: will be used when generating challenge strings.
     hostname = None
-
     _pattern = re.compile(br'^(.*) ([^ ]+)$')
 
     @classmethod

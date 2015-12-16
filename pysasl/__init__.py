@@ -55,23 +55,29 @@ class AuthenticationCredentials(object):
     authentication credentials in use.
 
     :param str authcid: Authentication ID string (the username).
-    :param str secret: Secret secret (the password).
+    :param str secret: Secret string (the password).
     :param str authzid: Authorization ID string, if applicable.
+
+    .. attribute:: authcid
+
+       The authentication identity string used in the attempt.
+
+    .. attribute:: secret
+
+       If available, contains the secret string used in the authentication
+       attempt, ``None`` otherwise.
+
+    .. attribute:: authzid
+
+       The authorization identity string used in the attempt, or ``None`` if
+       this field is not used by the mechanism.
 
     """
 
     def __init__(self, authcid, secret, authzid=None):
         super(AuthenticationCredentials, self).__init__()
-
-        #: The authentication identity string used in the attempt.
         self.authcid = authcid
-
-        #: If available, contains the secret string used in the authentication
-        #: attempt, ``None`` otherwise.
         self.secret = secret
-
-        #: The authorization identity string used in the attempt, or ``None``
-        #: if this field is not used by the mechanism.
         self.authzid = authzid
 
     def check_secret(self, secret):
