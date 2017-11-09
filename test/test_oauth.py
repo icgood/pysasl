@@ -14,12 +14,14 @@ class TestOAuth2Mechanism(unittest.TestCase):
         self.mech = OAuth2Mechanism()
 
     def test_availability(self):
+        sasl = SASLAuth()
+        self.assertIsInstance(sasl.get(b'XOAUTH2'), OAuth2Mechanism)
+        sasl = SASLAuth([b'XOAUTH2'])
+        self.assertIsInstance(sasl.get(b'XOAUTH2'), OAuth2Mechanism)
         sasl = SASLAuth([self.mech])
         self.assertEqual([self.mech], sasl.client_mechanisms)
         self.assertEqual([], sasl.server_mechanisms)
         self.assertEqual(self.mech, sasl.get(b'XOAUTH2'))
-        sasl = SASLAuth([b'XOAUTH2'])
-        self.assertIsInstance(sasl.get(b'XOAUTH2'), OAuth2Mechanism)
 
     def test_client_attempt(self):
         creds = AuthenticationCredentials('testuser', 'testtoken')

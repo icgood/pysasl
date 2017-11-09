@@ -20,12 +20,14 @@ class TestCramMD5Mechanism(unittest.TestCase):
         self.mech = CramMD5Mechanism()
 
     def test_availability(self):
+        sasl = SASLAuth()
+        self.assertIsInstance(sasl.get(b'CRAM-MD5'), CramMD5Mechanism)
+        sasl = SASLAuth([b'CRAM-MD5'])
+        self.assertIsInstance(sasl.get(b'CRAM-MD5'), CramMD5Mechanism)
         sasl = SASLAuth([self.mech])
         self.assertEqual([self.mech], sasl.client_mechanisms)
         self.assertEqual([self.mech], sasl.server_mechanisms)
         self.assertEqual(self.mech, sasl.get(b'CRAM-MD5'))
-        sasl = SASLAuth([b'CRAM-MD5'])
-        self.assertIsInstance(sasl.get(b'CRAM-MD5'), CramMD5Mechanism)
 
     @patch.object(email.utils, 'make_msgid')
     def test_server_attempt_issues_challenge(self, make_msgid_mock):
