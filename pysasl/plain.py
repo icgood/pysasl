@@ -45,16 +45,14 @@ class PlainMechanism(ServerMechanism, ClientMechanism):
 
     name = b'PLAIN'
     insecure = True
-
     _pattern = re.compile(br'^([^\x00]*)\x00([^\x00]+)\x00([^\x00]*)$')
 
-    @classmethod
-    def server_attempt(cls, challenges):
+    def server_attempt(self, challenges):
         if not challenges:
             raise ServerChallenge(b'')
 
         response = challenges[0].response
-        match = re.match(cls._pattern, response)
+        match = re.match(self._pattern, response)
         if not match:
             raise AuthenticationError('Invalid PLAIN response')
         zid, cid, secret = match.groups()
@@ -64,8 +62,7 @@ class PlainMechanism(ServerMechanism, ClientMechanism):
         zid_str = zid.decode('utf-8')
         return AuthenticationCredentials(cid_str, secret_str, zid_str)
 
-    @classmethod
-    def client_attempt(cls, creds, responses):
+    def client_attempt(self, creds, responses):
         if len(responses) > 1:
             raise UnexpectedAuthChallenge()
         authzid = (creds.authzid or '').encode('utf-8')

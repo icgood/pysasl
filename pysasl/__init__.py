@@ -21,6 +21,8 @@
 
 from __future__ import absolute_import
 
+from collections import OrderedDict
+
 from pkg_resources import iter_entry_points
 
 __all__ = ['AuthenticationError', 'UnexpectedAuthChallenge',
@@ -74,6 +76,8 @@ class AuthenticationCredentials(object):
 
     """
 
+    __slots__ = ['authcid', 'secret', 'authzid']
+
     def __init__(self, authcid, secret, authzid=None):
         super(AuthenticationCredentials, self).__init__()
         self.authcid = authcid
@@ -98,6 +102,8 @@ class ClientResponse(object):
     responses and to populate server challenges.
 
     """
+
+    __slots__ = ['response', 'challenge']
 
     def __init__(self, response):
         super(ClientResponse, self).__init__()
@@ -128,6 +134,8 @@ class ServerChallenge(Exception):
 
     """
 
+    __slots__ = ['challenge', 'response']
+
     def __init__(self, challenge):
         super(ServerChallenge, self).__init__()
         self.challenge = challenge
@@ -151,110 +159,127 @@ class ServerChallenge(Exception):
         self.response = data
 
 
-class ServerMechanism(object):
+class _BaseMechanism(object):
+
+    def __init__(self, name=None):
+        super(_BaseMechanism, self).__init__()
+        if name is not None:
+            self.name = name
+
+
+class ServerMechanism(_BaseMechanism):
     """Base class for implementing SASL mechanisms that support server-side
     credential verification.
 
-    .. classmethod:: server_attempt(self, challenges)
-
-       For SASL server-side credential verification, receives responses from
-       the client and issues challenges until it has everything needed to
-       verify the credentials.
-
-       If a challenge is necessary, an :class:`ServerChallenge` exception will
-       be raised. Send the challenge string to the client with
-       :meth:`~ServerChallenge.get_challenge` and then populate its response
-       with :meth:`~ServerChallenge.set_response`. Finally, append the
-       exception to the ``challenges`` argument before calling again.
-
-       :param list challenges: The list of :class:`ServerChallenge` objects
-                               that have been issued by the mechanism and
-                               responded to by the client.
-       :raises: :class:`ServerChallenge`
-       :rtype: :class:`AuthenticationCredentials`
+    :param str name: Override the standard SASL mechanism name.
 
     """
-    pass
+
+    def server_attempt(self, challenges):  # pragma: no cover
+        """For SASL server-side credential verification, receives responses
+        from the client and issues challenges until it has everything needed to
+        verify the credentials.
+
+        If a challenge is necessary, an :class:`ServerChallenge` exception will
+        be raised. Send the challenge string to the client with
+        :meth:`~ServerChallenge.get_challenge` and then populate its response
+        with :meth:`~ServerChallenge.set_response`. Finally, append the
+        exception to the ``challenges`` argument before calling again.
+
+        :param list challenges: The list of :class:`ServerChallenge` objects
+                                that have been issued by the mechanism and
+                                responded to by the client.
+        :raises: :class:`ServerChallenge`
+        :rtype: :class:`AuthenticationCredentials`
+
+        """
+        raise NotImplementedError()
 
 
-class ClientMechanism(object):
+class ClientMechanism(_BaseMechanism):
     """Base class for implementing SASL mechanisms that support client-side
     credential verification.
 
-    .. classmethod:: client_attempt(self, creds, responses)
-
-       For SASL client-side credential verification, produce responses to send
-       to the server and react to its challenges until the server returns a
-       final success or failure.
-
-       Send the response string to the server with the
-       :meth:`~ClientResponse.get_response` method of the returned
-       :class:`ClientResponse` object. If the server returns another challenge,
-       set it with the object's :meth:`~ClientResponse.set_challenge` method
-       and append the object to the ``responses`` argument before calling
-       again.
-
-       The mechanism may raise :class:`AuthenticationError` if it receives
-       unexpected challenges from the server.
-
-       :param creds: The credentials to attempt authentication with.
-       :type creds: :class:`AuthenticationCredentials`
-       :param list responses: The list of :class:`ClientResponse` objects that
-                              have been sent to the server. New attempts begin
-                              with an empty list.
-       :rtype: :class:`ChallengeResponse`
-       :raises: :class:`AuthenticationError`
-
     """
-    pass
+
+    def client_attempt(self, creds, responses):  # pragma: no cover
+        """For SASL client-side credential verification, produce responses to
+        send to the server and react to its challenges until the server returns
+        a final success or failure.
+
+        Send the response string to the server with the
+        :meth:`~ClientResponse.get_response` method of the returned
+        :class:`ClientResponse` object. If the server returns another
+        challenge, set it with the object's
+        :meth:`~ClientResponse.set_challenge` method and append the object to
+        the ``responses`` argument before calling again.
+
+        The mechanism may raise :class:`AuthenticationError` if it receives
+        unexpected challenges from the server.
+
+        :param creds: The credentials to attempt authentication with.
+        :type creds: :class:`AuthenticationCredentials`
+        :param list responses: The list of :class:`ClientResponse` objects that
+                               have been sent to the server. New attempts begin
+                               with an empty list.
+        :rtype: :class:`ChallengeResponse`
+        :raises: :class:`AuthenticationError`
+
+        """
+        raise NotImplementedError()
 
 
 class SASLAuth(object):
     """Manages the mechanisms available for authentication attempts.
 
-    :param list advertised: List of SASL mechanism name strings. The set of
-                            known mechanisms will be intersected with these
-                            names. By default, all known mechanisms are
-                            available.
+    :param list advertised: List of available SASL mechanism objects. Using the
+                            name of a built-in mechanism (e.g. ``b'PLAIN'``)
+                            works as well. By default, all built-in mechanisms
+                            are available.
 
     """
 
+    __slots__ = ['mechs']
+
     def __init__(self, advertised=None):
         super(SASLAuth, self).__init__()
-        self.mechs = self._load_known_mechanisms()
+        known_mechs = self._load_known_mechanisms()
         if advertised:
-            advertised = set(advertised)
-            self.mechs = dict([(name, mech)
-                               for name, mech in self.mechs.items()
-                               if name in advertised])
+            self.mechs = OrderedDict()
+            for mech in advertised:
+                if isinstance(mech, _BaseMechanism):
+                    self.mechs[mech.name] = mech
+                else:
+                    self.mechs[mech] = known_mechs[mech]
+        else:
+            self.mechs = known_mechs
 
     @classmethod
     def _load_known_mechanisms(cls):
-        mechs = {}
+        mechs = OrderedDict()
         for entry_point in iter_entry_points('pysasl.mechanisms'):
             mech = entry_point.load()
-            mechs[mech.name] = mech
+            mechs[mech.name] = mech()
         return mechs
 
     @property
     def server_mechanisms(self):
-        """List of available :class:`ServerMechanism` classes."""
+        """List of available :class:`ServerMechanism` objects."""
         return [mech for mech in self.mechs.values()
-                if hasattr(mech, 'server_attempt')]
+                if isinstance(mech, ServerMechanism)]
 
     @property
     def client_mechanisms(self):
-        """List of available :class:`ClientMechanism` classes."""
+        """List of available :class:`ClientMechanism` objects."""
         return [mech for mech in self.mechs.values()
-                if hasattr(mech, 'client_attempt')]
+                if isinstance(mech, ClientMechanism)]
 
     def get(self, name):
-        """Get a SASL mechanism by name. The resulting class should support
-        either :meth:`~ServerMechanism.server_attempt`,
-        :meth:`~ClientMechanism.client_attempt` or both.
+        """Get a SASL mechanism by name. The resulting object should inherit
+        either :class:`ServerMechanism`, :class:`ClientMechanism`, or both.
 
         :param bytes name: The SASL mechanism name.
-        :returns: The mechanism class or ``None``
+        :returns: The mechanism object or ``None``
 
         """
         return self.mechs.get(name.upper())

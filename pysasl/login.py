@@ -44,8 +44,7 @@ class LoginMechanism(ServerMechanism, ClientMechanism):
     name = b'LOGIN'
     insecure = True
 
-    @classmethod
-    def server_attempt(cls, challenges):
+    def server_attempt(self, challenges):
         if len(challenges) < 1:
             raise ServerChallenge(b'Username:')
         if len(challenges) < 2:
@@ -54,8 +53,7 @@ class LoginMechanism(ServerMechanism, ClientMechanism):
         password = challenges[1].response.decode('utf-8')
         return AuthenticationCredentials(username, password)
 
-    @classmethod
-    def client_attempt(cls, creds, responses):
+    def client_attempt(self, creds, responses):
         if len(responses) < 1:
             return ClientResponse(b'')
         if len(responses) < 2:

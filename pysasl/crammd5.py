@@ -35,6 +35,8 @@ __all__ = ['CramMD5Mechanism']
 
 class CramMD5Result(AuthenticationCredentials):
 
+    __slots__ = ['challenge', 'digest']
+
     def __init__(self, username, challenge, digest):
         super(CramMD5Result, self).__init__(username, None)
         self.challenge = challenge
@@ -47,7 +49,7 @@ class CramMD5Result(AuthenticationCredentials):
         expected = expected_hmac.hexdigest().encode('ascii')
         try:
             return hmac.compare_digest(expected, self.digest)
-        except AttributeError:
+        except AttributeError:  # pragma: no cover
             return expected == self.digest
 
 
@@ -67,27 +69,20 @@ class CramMD5Mechanism(ServerMechanism, ClientMechanism):
 
        This mechanism is considered secure for non-encrypted sessions.
 
-    .. attribute:: hostname
-
-       Unless this class-level attribute is set, :py:func:`~socket.gethostname`
-       will be used when generating challenge string.
-
     """
 
     name = b'CRAM-MD5'
     insecure = False
-    hostname = None
     _pattern = re.compile(br'^(.*) ([^ ]+)$')
 
-    @classmethod
-    def server_attempt(cls, challenges):
+    def server_attempt(self, challenges):
         if not challenges:
             challenge = email.utils.make_msgid().encode('utf-8')
             raise ServerChallenge(challenge)
         challenge = challenges[0].challenge
         response = challenges[0].response
 
-        match = re.match(cls._pattern, response)
+        match = re.match(self._pattern, response)
         if not match:
             raise AuthenticationError('Invalid CRAM-MD5 response')
         username, digest = match.groups()
@@ -95,8 +90,7 @@ class CramMD5Mechanism(ServerMechanism, ClientMechanism):
         username_str = username.decode('utf-8')
         return CramMD5Result(username_str, challenge, digest)
 
-    @classmethod
-    def client_attempt(cls, creds, responses):
+    def client_attempt(self, creds, responses):
         if len(responses) < 1:
             return ClientResponse(b'')
         elif len(responses) > 1:
