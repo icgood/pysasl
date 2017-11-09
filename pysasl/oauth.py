@@ -43,8 +43,7 @@ class OAuth2Mechanism(ClientMechanism):
 
     name = b'XOAUTH2'
 
-    @classmethod
-    def client_attempt(cls, creds, responses):
+    def client_attempt(self, creds, responses):
         if len(responses) > 1:
             raise UnexpectedAuthChallenge()
         elif len(responses) > 0:
