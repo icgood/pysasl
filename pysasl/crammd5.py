@@ -73,6 +73,7 @@ class CramMD5Mechanism(ServerMechanism, ClientMechanism):
 
     name = b'CRAM-MD5'
     insecure = False
+    _priority = 10
     _pattern = re.compile(br'^(.*) ([^ ]+)$')
 
     def server_attempt(self, challenges):

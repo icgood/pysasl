@@ -23,7 +23,7 @@ from setuptools import setup, find_packages
 
 
 setup(name='pysasl',
-      version='0.2.0',
+      version='0.2.1',
       author='Ian Good',
       author_email='icgood@gmail.com',
       description='Pure Python SASL client and server library.',

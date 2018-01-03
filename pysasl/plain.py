@@ -45,6 +45,7 @@ class PlainMechanism(ServerMechanism, ClientMechanism):
 
     name = b'PLAIN'
     insecure = True
+    _priority = 1
     _pattern = re.compile(br'^([^\x00]*)\x00([^\x00]+)\x00([^\x00]*)$')
 
     def server_attempt(self, challenges):
