@@ -21,7 +21,9 @@
 
 from __future__ import absolute_import
 
+import heapq
 from collections import OrderedDict
+from functools import total_ordering
 
 from pkg_resources import iter_entry_points
 
@@ -159,12 +161,20 @@ class ServerChallenge(Exception):
         self.response = data
 
 
+@total_ordering
 class _BaseMechanism(object):
 
     def __init__(self, name=None):
         super(_BaseMechanism, self).__init__()
         if name is not None:
             self.name = name
+
+    def __lt__(self, other):
+        if not isinstance(other, _BaseMechanism):
+            return NotImplemented
+        my_priority = getattr(self, '_priority', 5)
+        other_priority = getattr(other, '_priority', 5)
+        return my_priority < other_priority
 
 
 class ServerMechanism(_BaseMechanism):
@@ -256,10 +266,14 @@ class SASLAuth(object):
 
     @classmethod
     def _load_known_mechanisms(cls):
+        heap = []
         mechs = OrderedDict()
         for entry_point in iter_entry_points('pysasl.mechanisms'):
-            mech = entry_point.load()
-            mechs[mech.name] = mech()
+            mech_cls = entry_point.load()
+            heapq.heappush(heap, mech_cls())
+        for i in range(len(heap)):
+            mech = heapq.heappop(heap)
+            mechs[mech.name] = mech
         return mechs
 
     @property
