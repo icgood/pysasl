@@ -19,17 +19,18 @@
 # THE SOFTWARE.
 #
 
-from setuptools import setup, find_packages
+from setuptools import setup, find_packages  # type: ignore
 
 
 setup(name='pysasl',
-      version='0.2.1',
+      version='0.2.2',
       author='Ian Good',
       author_email='icgood@gmail.com',
       description='Pure Python SASL client and server library.',
       license='MIT',
       url='http://github.com/icgood/pysasl/',
       packages=find_packages(),
+      package_data={'pysasl': ['py.typed']},
       entry_points={'pysasl.mechanisms': [
           'PLAIN = pysasl.plain:PlainMechanism',
           'LOGIN = pysasl.login:LoginMechanism',
@@ -44,4 +45,5 @@ setup(name='pysasl',
                    'Programming Language :: Python :: 2.7',
                    'Programming Language :: Python :: 3.4',
                    'Programming Language :: Python :: 3.5',
-                   'Programming Language :: Python :: 3.6'])
+                   'Programming Language :: Python :: 3.6',
+                   'Programming Language :: Python :: 3.7'])

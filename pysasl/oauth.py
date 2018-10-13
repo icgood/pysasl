@@ -35,13 +35,11 @@ class OAuth2Mechanism(ClientMechanism):
     .. _XOAUTH2: https://developers.google.com/gmail/xoauth2_protocol
     .. _OAuth 2.0: http://tools.ietf.org/html/draft-ietf-oauth-v2-22
 
-    .. attribute:: name
-
-       The SASL name for this mechanism.
-
     """
 
-    name = b'XOAUTH2'
+    @property
+    def name(self):
+        return b'XOAUTH2'
 
     def client_attempt(self, creds, responses):
         if len(responses) > 1:

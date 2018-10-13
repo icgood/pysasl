@@ -7,7 +7,7 @@ import email.utils
 try:
     from unittest.mock import patch
 except ImportError:
-    from mock import patch
+    from mock import patch  # type: ignore
 
 from pysasl import (SASLAuth, ServerChallenge, AuthenticationError,
                     UnexpectedAuthChallenge, AuthenticationCredentials)

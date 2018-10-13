@@ -29,20 +29,15 @@ __all__ = ['LoginMechanism']
 
 
 class LoginMechanism(ServerMechanism, ClientMechanism):
-    """Implements the LOGIN authentication mechanism.
+    """Implements the LOGIN authentication mechanism."""
 
-    .. attribute:: name
+    @property
+    def name(self):
+        return b'LOGIN'
 
-       The SASL name for this mechanism.
-
-    .. attribute:: insecure
-
-       This mechanism is *not* considered secure for non-encrypted sessions.
-
-    """
-
-    name = b'LOGIN'
-    insecure = True
+    @property
+    def insecure(self):
+        return True
 
     def server_attempt(self, challenges):
         if len(challenges) < 1:
