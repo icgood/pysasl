@@ -31,22 +31,21 @@ __all__ = ['PlainMechanism']
 
 
 class PlainMechanism(ServerMechanism, ClientMechanism):
-    """Implements the PLAIN authentication mechanism.
+    """Implements the PLAIN authentication mechanism."""
 
-    .. attribute:: name
-
-       The SASL name for this mechanism.
-
-    .. attribute:: insecure
-
-       This mechanism is *not* considered secure for non-encrypted sessions.
-
-    """
-
-    name = b'PLAIN'
-    insecure = True
-    _priority = 1
     _pattern = re.compile(br'^([^\x00]*)\x00([^\x00]+)\x00([^\x00]*)$')
+
+    @property
+    def name(self):
+        return b'PLAIN'
+
+    @property
+    def insecure(self):
+        return True
+
+    @property
+    def priority(self):
+        return 1
 
     def server_attempt(self, challenges):
         if not challenges:

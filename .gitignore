@@ -1,5 +1,6 @@
 .venv2/
 .venv3/
+.idea/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -42,6 +43,8 @@ htmlcov/
 .cache
 nosetests.xml
 coverage.xml
+.pytest_cache/
+.mypy_cache/
 
 # Translations
 *.mo

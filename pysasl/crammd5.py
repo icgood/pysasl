@@ -38,9 +38,13 @@ class CramMD5Result(AuthenticationCredentials):
     __slots__ = ['challenge', 'digest']
 
     def __init__(self, username, challenge, digest):
-        super(CramMD5Result, self).__init__(username, None)
+        super(CramMD5Result, self).__init__(username, '')
         self.challenge = challenge
         self.digest = digest
+
+    @property
+    def secret(self):
+        raise NotImplementedError()
 
     def check_secret(self, secret):
         if not isinstance(secret, bytes):
@@ -58,23 +62,21 @@ class CramMD5Mechanism(ServerMechanism, ClientMechanism):
 
     .. warning::
 
-       Offering this mechanism can be dangerous, as it usually means that
-       credentials are stored in clear-text.
-
-    .. attribute:: name
-
-       The SASL name for this mechanism.
-
-    .. attribute:: insecure
-
-       This mechanism is considered secure for non-encrypted sessions.
+       Although secure during transport, offering this mechanism can be
+       dangerous, as it can have implications about how the credentials are
+       stored server-side.
 
     """
 
-    name = b'CRAM-MD5'
-    insecure = False
-    _priority = 10
     _pattern = re.compile(br'^(.*) ([^ ]+)$')
+
+    @property
+    def name(self):
+        return b'CRAM-MD5'
+
+    @property
+    def priority(self):
+        return 10
 
     def server_attempt(self, challenges):
         if not challenges:
