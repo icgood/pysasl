@@ -22,13 +22,19 @@
 from setuptools import setup, find_packages  # type: ignore
 
 
+with open('README.md', 'r') as fh:
+    long_description = fh.read()
+
+
 setup(name='pysasl',
       version='0.2.2',
       author='Ian Good',
       author_email='icgood@gmail.com',
       description='Pure Python SASL client and server library.',
+      long_description=long_description,
+      long_description_content_type='text/markdown',
       license='MIT',
-      url='http://github.com/icgood/pysasl/',
+      url='https://github.com/icgood/pysasl/',
       packages=find_packages(),
       package_data={'pysasl': ['py.typed']},
       entry_points={'pysasl.mechanisms': [
