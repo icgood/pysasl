@@ -1,24 +1,3 @@
-# Copyright (c) 2014 Ian C. Good
-#
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in
-# all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-# THE SOFTWARE.
-#
-
 from __future__ import absolute_import
 
 import heapq
@@ -58,9 +37,10 @@ class AuthenticationCredentials(object):
     to :meth:`~ClientMechanism.client_attempt` containing information about the
     authentication credentials in use.
 
-    :param authcid: Authentication ID string (the username).
-    :param secret: Secret string (the password).
-    :param authzid: Authorization ID string, if applicable.
+    Args:
+        authcid: Authentication ID string (the username).
+        secret: Secret string (the password).
+        authzid: Authorization ID string, if applicable.
 
     """
 
@@ -98,8 +78,12 @@ class AuthenticationCredentials(object):
         matches the "known" secret string. Some mechanisms will override this
         method to control how this comparison is made.
 
-        :param secret: The secret string to compare against what was used in
-                       the authentication attempt.
+        Args:
+            secret: The secret string to compare against what was used in the
+                authentication attempt.
+
+        Returns:
+            True if the given secret matches the authentication attempt.
 
         """
         if isinstance(secret, bytes):
@@ -110,6 +94,9 @@ class AuthenticationCredentials(object):
 class ClientResponse(object):
     """Used by :meth:`~ClientMechanism.client_attempt` to provide client
     responses and to populate server challenges.
+
+    Args:
+        response: The response string that should be sent to the server.
 
     """
 
@@ -128,7 +115,8 @@ class ClientResponse(object):
         """If the server reacts to the response with a challenge, set it with
         this method.
 
-        :param data: The challenge string.
+        Args:
+            data: The challenge string.
 
         """
         self.challenge = data
@@ -137,6 +125,9 @@ class ClientResponse(object):
 class ServerChallenge(Exception):
     """Raised by :meth:`~ServerMechanism.server_attempt` to provide server
     challenges and to populate client responses.
+
+    Args:
+        challenge: The challenge string that should be sent to the client.
 
     """
 
@@ -155,7 +146,8 @@ class ServerChallenge(Exception):
         """After the challenge is sent to the client, its response should be
         set with this method.
 
-        :param data: The response string.
+        Args:
+            data: The response string.
 
         """
         self.response = data
@@ -196,7 +188,7 @@ class ServerMechanism(_BaseMechanism):
     """
 
     @property
-    def name(self):
+    def name(self):  # pragma: no cover
         raise NotImplementedError()
 
     def server_attempt(self, challenges):  # pragma: no cover
@@ -210,9 +202,16 @@ class ServerMechanism(_BaseMechanism):
         with :meth:`~ServerChallenge.set_response`. Finally, append the
         exception to the ``challenges`` argument before calling again.
 
-        :param challenges: The server challenges that have been issued by
-                           the mechanism and responded to by the client.
-        :raises: :class:`ServerChallenge`
+        Args:
+            challenges: The server challenges that have been issued by the
+                mechanism and responded to by the client.
+
+        Returns:
+            The authentication credentials received from the client once no
+            more challenges are necessary.
+
+        Raises:
+            ServerChallenge: The server challenge needing a client response.
 
         """
         raise NotImplementedError()
@@ -225,7 +224,7 @@ class ClientMechanism(_BaseMechanism):
     """
 
     @property
-    def name(self):
+    def name(self):  # pragma: no cover
         raise NotImplementedError()
 
     def client_attempt(self, creds, responses):  # pragma: no cover
@@ -240,13 +239,17 @@ class ClientMechanism(_BaseMechanism):
         :meth:`~ClientResponse.set_challenge` method and append the object to
         the ``responses`` argument before calling again.
 
-        The mechanism may raise :class:`AuthenticationError` if it receives
-        unexpected challenges from the server.
+        Args:
+            creds: The credentials to attempt authentication with.
+            responses: The client responses that have been sent to the server.
+                New attempts begin with an empty list.
 
-        :param creds: The credentials to attempt authentication with.
-        :param responses: The client responses that have been sent to the
-                          server. New attempts begin with an empty list.
-        :raises: :class:`AuthenticationError`
+        Returns:
+            The client response to the most recent server challenge.
+
+        Raises:
+            UnexpectedAuthChallenge: The server has issued an unexpected
+                challenge the client mechanism does not recognize.
 
         """
         raise NotImplementedError()
@@ -255,10 +258,10 @@ class ClientMechanism(_BaseMechanism):
 class SASLAuth(object):
     """Manages the mechanisms available for authentication attempts.
 
-    :param advertised: List of available SASL mechanism objects. Using the
-                       name of a built-in mechanism (e.g. ``b'PLAIN'``) works
-                       as well. By default, all built-in mechanisms are
-                       available.
+    Args:
+        advertised: List of available SASL mechanism objects. Using the name
+            of a built-in mechanism (e.g. ``b'PLAIN'``) works as well. By
+            default, all built-in mechanisms are available.
 
     """
 
@@ -283,6 +286,9 @@ class SASLAuth(object):
     def secure(cls):
         """Uses only authentication mechanisms that are secure for use in
         non-encrypted sessions.
+
+        Returns:
+            A new :class:`SASLAuth` object.
 
         """
         known_mechs = cls._get_known_mechanisms()
@@ -320,8 +326,11 @@ class SASLAuth(object):
         """Get a SASL mechanism by name. The resulting object should inherit
         either :class:`ServerMechanism`, :class:`ClientMechanism`, or both.
 
-        :param name: The SASL mechanism name.
-        :returns: The mechanism object or ``None``
+        Args:
+            name: The SASL mechanism name.
+
+        Returns:
+            The mechanism object or ``None``
 
         """
         return self.mechs.get(name.upper())
@@ -330,8 +339,11 @@ class SASLAuth(object):
         """Like :meth:`.get`, but only mechanisms inheriting
         :class:`ServerMechanism` will be returned.
 
-        :param name: The SASL mechanism name.
-        :returns: The mechanism object or ``None``
+        Args:
+            name: The SASL mechanism name.
+
+        Returns:
+            The mechanism object or ``None``
 
         """
         mech = self.get(name)
@@ -341,8 +353,11 @@ class SASLAuth(object):
         """Like :meth:`.get`, but only mechanisms inheriting
         :class:`ClientMechanism` will be returned.
 
-        :param name: The SASL mechanism name.
-        :returns: The mechanism object or ``None``
+        Args:
+            name: The SASL mechanism name.
+
+        Returns:
+            The mechanism object or ``None``
 
         """
         mech = self.get(name)

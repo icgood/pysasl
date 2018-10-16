@@ -60,11 +60,10 @@ class CramMD5Result(AuthenticationCredentials):
 class CramMD5Mechanism(ServerMechanism, ClientMechanism):
     """Implements the CRAM-MD5 authentication mechanism.
 
-    .. warning::
-
-       Although secure during transport, offering this mechanism can be
-       dangerous, as it can have implications about how the credentials are
-       stored server-side.
+    Warning:
+        Although secure during transport, offering this mechanism can be
+        dangerous, as it can have implications about how the credentials are
+        stored server-side.
 
     """
 
