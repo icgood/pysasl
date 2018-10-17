@@ -1,24 +1,3 @@
-# Copyright (c) 2014 Ian C. Good
-#
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in
-# all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-# THE SOFTWARE.
-#
-
 from __future__ import absolute_import
 
 import re
@@ -31,21 +10,21 @@ __all__ = ['PlainMechanism']
 
 
 class PlainMechanism(ServerMechanism, ClientMechanism):
-    """Implements the PLAIN authentication mechanism."""
+    """Implements the PLAIN authentication mechanism.
+
+    Attributes:
+        name: The SASL name for this mechanism.
+        priority: Determines the sort ordering of this mechanism.
+        insecure: This mechanism is not considered secure for non-encrypted
+            sessions.
+
+    """
 
     _pattern = re.compile(br'^([^\x00]*)\x00([^\x00]+)\x00([^\x00]*)$')
 
-    @property
-    def name(self):
-        return b'PLAIN'
-
-    @property
-    def insecure(self):
-        return True
-
-    @property
-    def priority(self):
-        return 1
+    name = b'PLAIN'
+    priority = 1
+    insecure = True
 
     def server_attempt(self, challenges):
         if not challenges:

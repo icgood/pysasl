@@ -27,7 +27,7 @@ with open('README.md', 'r') as fh:
 
 
 setup(name='pysasl',
-      version='0.2.3',
+      version='0.3.0',
       author='Ian Good',
       author_email='icgood@gmail.com',
       description='Pure Python SASL client and server library.',
@@ -41,6 +41,7 @@ setup(name='pysasl',
           'PLAIN = pysasl.plain:PlainMechanism',
           'LOGIN = pysasl.login:LoginMechanism',
           'CRAM-MD5 = pysasl.crammd5:CramMD5Mechanism',
+          'EXTERNAL = pysasl.external:ExternalMechanism',
           'XOAUTH2 = pysasl.oauth:OAuth2Mechanism',
       ]},
       classifiers=['Development Status :: 3 - Alpha',

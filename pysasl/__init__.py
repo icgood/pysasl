@@ -7,7 +7,7 @@ from functools import total_ordering
 from pkg_resources import iter_entry_points
 
 __all__ = ['AuthenticationError', 'UnexpectedAuthChallenge',
-           'AuthenticationCredentials',
+           'AuthenticationCredentials', 'BaseMechanism',
            'ServerChallenge', 'ServerMechanism',
            'ClientResponse', 'ClientMechanism',
            'SASLAuth']
@@ -154,42 +154,38 @@ class ServerChallenge(Exception):
 
 
 @total_ordering
-class _BaseMechanism(object):
+class BaseMechanism(object):
+    """Base class for all server- and client-side SASL mechanisms.
 
-    @property
-    def name(self):
-        """The SASL name for this mechanism."""
-        raise NotImplementedError()
+    Attributes:
+        name: The SASL name for this mechanism.
+        priority: Determines the sort ordering of this mechanism.
+        insecure: Whether this mechanism is considered secure for non-encrypted
+            sessions. This value should be used by implementations to determine
+            which mechanisms are chosen or offered.
 
-    @property
-    def insecure(self):
-        """Whether this mechanism is considered secure for non-encrypted
-        sessions. This value should be used to determine which mechanisms are
-        exposed.
+    """
 
-        """
-        return False
-
-    @property
-    def priority(self):
-        """Determines the sort ordering of this mechanism."""
-        return 5
+    name = b''
+    priority = None
+    insecure = False
 
     def __lt__(self, other):
-        if not isinstance(other, _BaseMechanism):
+        if not isinstance(other, BaseMechanism):
             return NotImplemented
-        return self.priority < other.priority
+        elif other.priority is None:
+            return False
+        elif self.priority is None:
+            return True
+        else:
+            return self.priority < other.priority
 
 
-class ServerMechanism(_BaseMechanism):
+class ServerMechanism(BaseMechanism):
     """Base class for implementing SASL mechanisms that support server-side
     credential verification.
 
     """
-
-    @property
-    def name(self):  # pragma: no cover
-        raise NotImplementedError()
 
     def server_attempt(self, challenges):  # pragma: no cover
         """For SASL server-side credential verification, receives responses
@@ -217,15 +213,11 @@ class ServerMechanism(_BaseMechanism):
         raise NotImplementedError()
 
 
-class ClientMechanism(_BaseMechanism):
+class ClientMechanism(BaseMechanism):
     """Base class for implementing SASL mechanisms that support client-side
     credential verification.
 
     """
-
-    @property
-    def name(self):  # pragma: no cover
-        raise NotImplementedError()
 
     def client_attempt(self, creds, responses):  # pragma: no cover
         """For SASL client-side credential verification, produce responses to
@@ -267,20 +259,21 @@ class SASLAuth(object):
 
     __slots__ = ['mechs']
 
-    _known_mechanisms = None
+    _builtin_mechanisms = None
 
     def __init__(self, advertised=None):
         super(SASLAuth, self).__init__()
-        if advertised:
-            self.mechs = OrderedDict()
-            for mech in advertised:
-                if isinstance(mech, _BaseMechanism):
-                    self.mechs[mech.name] = mech
-                else:
-                    known_mechs = self._get_known_mechanisms()
-                    self.mechs[mech] = known_mechs[mech]
-        else:
-            self.mechs = self._get_known_mechanisms()
+        if not advertised:
+            builtin_mechs = self._get_builtin_mechanisms()
+            advertised = [mech for mech in builtin_mechs.values()
+                          if mech.priority is not None]
+        self.mechs = OrderedDict()
+        for mech in advertised:
+            if isinstance(mech, BaseMechanism):
+                self.mechs[mech.name] = mech
+            else:
+                builtin_mechs = self._get_builtin_mechanisms()
+                self.mechs[mech] = builtin_mechs[mech]
 
     @classmethod
     def secure(cls):
@@ -291,14 +284,14 @@ class SASLAuth(object):
             A new :class:`SASLAuth` object.
 
         """
-        known_mechs = cls._get_known_mechanisms()
-        secure_mechs = [mech for _, mech in known_mechs.items()
-                        if not mech.insecure]
+        builtin_mechs = cls._get_builtin_mechanisms()
+        secure_mechs = [mech for _, mech in builtin_mechs.items()
+                        if not mech.insecure and mech.priority is not None]
         return SASLAuth(secure_mechs)
 
     @classmethod
-    def _get_known_mechanisms(cls):
-        if cls._known_mechanisms is None:
+    def _get_builtin_mechanisms(cls):
+        if cls._builtin_mechanisms is None:
             heap = []
             mechs = OrderedDict()
             for entry_point in iter_entry_points('pysasl.mechanisms'):
@@ -307,8 +300,8 @@ class SASLAuth(object):
             for i in range(len(heap)):
                 mech = heapq.heappop(heap)
                 mechs[mech.name] = mech
-            cls._known_mechanisms = mechs
-        return cls._known_mechanisms
+            cls._builtin_mechanisms = mechs
+        return cls._builtin_mechanisms
 
     @property
     def server_mechanisms(self):
