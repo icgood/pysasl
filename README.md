@@ -1,9 +1,12 @@
 pysasl
 ======
 
-Pure Python SASL client and server library. Currently, this library
-supports `PLAIN`, `LOGIN`, and `CRAM-MD5`. The design of the library is
+Pure Python SASL client and server library. The design of the library is
 intended to be agnostic of the protocol or network library.
+
+The library currently offers `PLAIN`, `LOGIN`, and `CRAM-MD5` mechanisms by
+default. The `EXTERNAL` mechanism can be chosen as well, and the `XOAUTH2`
+mechanism is available for client-side auth.
 
 [![Build Status](https://travis-ci.org/icgood/pysasl.svg)](https://travis-ci.org/icgood/pysasl)
 [![Coverage Status](https://coveralls.io/repos/icgood/pysasl/badge.svg?branch=master)](https://coveralls.io/r/icgood/pysasl?branch=master)

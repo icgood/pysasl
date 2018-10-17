@@ -1,24 +1,3 @@
-# Copyright (c) 2014 Ian C. Good
-#
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in
-# all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-# THE SOFTWARE.
-#
-
 from __future__ import absolute_import
 
 import re
@@ -30,10 +9,19 @@ from . import (ServerMechanism, ClientMechanism, ServerChallenge,
                ClientResponse, AuthenticationError, UnexpectedAuthChallenge,
                AuthenticationCredentials)
 
-__all__ = ['CramMD5Mechanism']
+__all__ = ['CramMD5Result', 'CramMD5Mechanism']
 
 
 class CramMD5Result(AuthenticationCredentials):
+    """Because this mechanism uses hash algorithms to compare secrets, the
+    :meth:`~CramMD5Mechanism.server_attempt` method returns this sub-class
+    which overrides the :meth:`.check_secret` method.
+
+    Attributes:
+        challenge: The challenge string issued by the server.
+        digest: The digest computed by the client.
+
+    """
 
     __slots__ = ['challenge', 'digest']
 
@@ -44,6 +32,12 @@ class CramMD5Result(AuthenticationCredentials):
 
     @property
     def secret(self):
+        """The secret string is not available in this mechanism.
+
+        Raises:
+            NotImplementedError
+
+        """
         raise NotImplementedError()
 
     def check_secret(self, secret):
@@ -65,17 +59,19 @@ class CramMD5Mechanism(ServerMechanism, ClientMechanism):
         dangerous, as it can have implications about how the credentials are
         stored server-side.
 
+    Attributes:
+        name: The SASL name for this mechanism.
+        priority: Determines the sort ordering of this mechanism.
+        insecure: This mechanism is considered secure for non-encrypted
+            sessions.
+
     """
 
     _pattern = re.compile(br'^(.*) ([^ ]+)$')
 
-    @property
-    def name(self):
-        return b'CRAM-MD5'
-
-    @property
-    def priority(self):
-        return 10
+    name = b'CRAM-MD5'
+    priority = 10
+    insecure = False
 
     def server_attempt(self, challenges):
         if not challenges:

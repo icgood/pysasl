@@ -15,7 +15,7 @@ class TestOAuth2Mechanism(unittest.TestCase):
 
     def test_availability(self):
         sasl = SASLAuth()
-        self.assertIsInstance(sasl.get(b'XOAUTH2'), OAuth2Mechanism)
+        self.assertIsNone(sasl.get(b'XOAUTH2'))
         sasl = SASLAuth([b'XOAUTH2'])
         self.assertIsInstance(sasl.get(b'XOAUTH2'), OAuth2Mechanism)
         sasl = SASLAuth([self.mech])
