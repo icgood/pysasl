@@ -18,35 +18,34 @@ class ExternalResult(AuthenticationCredentials):
         super(ExternalResult, self).__init__('', '', authzid)
 
     @property
-    def authcid(self):
-        """The authentication identity string is not available for this
-        mechanism.
+    def has_secret(self):
+        return False
 
-        Raises:
-            NotImplementedError
+    @property
+    def authcid(self):
+        """The authentication identity string is an alias of the
+        :attr:`.authzid` string for this mechanism, except it will return an
+        empty string instead of ``None``.
 
         """
-        raise NotImplementedError()
+        return self.authzid or ''
 
     @property
     def secret(self):
         """The secret string is not available for this mechanism.
 
         Raises:
-            NotImplementedError
+            AttributeError
 
         """
-        raise NotImplementedError()
+        raise AttributeError('secret')
 
     def check_secret(self, secret):
-        """This mechanism does not use secret strings, so this method is not
-        available for this mechanism.
-
-        Raises:
-            NotImplementedError
+        """This method always returns True for this mechanism, unless
+        overridden by a subclass to provide external enforcement rules.
 
         """
-        raise NotImplementedError()
+        return True
 
 
 class ExternalMechanism(ServerMechanism, ClientMechanism):
