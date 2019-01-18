@@ -27,7 +27,7 @@ with open('README.md', 'r') as fh:
 
 
 setup(name='pysasl',
-      version='0.3.0',
+      version='0.3.1',
       author='Ian Good',
       author_email='icgood@gmail.com',
       description='Pure Python SASL client and server library.',
