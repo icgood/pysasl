@@ -5,7 +5,7 @@ from typing import Sequence, Optional
 
 
 class ExternalResult(AuthenticationCredentials):
-    def __init__(self, authzid: Optional[str]) -> None: ...
+    def __init__(self, authzid: Optional[str] = ...) -> None: ...
 
 class ExternalMechanism(ServerMechanism, ClientMechanism):
     def server_attempt(self, challenges: Sequence[ServerChallenge]) \

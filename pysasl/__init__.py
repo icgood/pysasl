@@ -1,6 +1,7 @@
 from __future__ import absolute_import
 
 import heapq
+import hmac
 from collections import OrderedDict
 from functools import total_ordering
 
@@ -50,7 +51,18 @@ class AuthenticationCredentials(object):
         super(AuthenticationCredentials, self).__init__()
         self._authcid = authcid
         self._secret = secret
-        self._authzid = authzid
+        self._authzid = authzid or None
+
+    @property
+    def has_secret(self):
+        """True if the :attr:`.secret` attribute is valid for this credentials
+        type.
+
+        If this returns False, the :attr:`.secret` attribute should raise
+        :exc:`AttributeError`.
+
+        """
+        return True
 
     @property
     def authcid(self):
@@ -68,7 +80,7 @@ class AuthenticationCredentials(object):
     @property
     def authzid(self):
         """The authorization identity string used in the attempt, or ``None``
-        if this field is not used by the mechanism.
+        if this field is empty or unused.
 
         """
         return self._authzid
@@ -88,7 +100,10 @@ class AuthenticationCredentials(object):
         """
         if isinstance(secret, bytes):
             secret = secret.decode('utf-8')
-        return secret == self.secret
+        try:
+            return hmac.compare_digest(secret, self.secret)
+        except AttributeError:  # pragma: no cover
+            return secret == self.secret
 
 
 class ClientResponse(object):

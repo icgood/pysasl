@@ -43,9 +43,11 @@ class TestLoginMechanism(unittest.TestCase):
         resp2 = ServerChallenge(b'Password:')
         resp2.set_response(b'testpass')
         result = self.mech.server_attempt([resp1, resp2])
-        self.assertTrue(result.authzid is None)
+        self.assertTrue(result.has_secret)
+        self.assertIsNone(result.authzid)
         self.assertEqual('testuser', result.authcid)
         self.assertTrue(result.check_secret('testpass'))
+        self.assertFalse(result.check_secret('invalid'))
 
     def test_client_attempt(self):
         creds = AuthenticationCredentials('testuser', 'testpass')

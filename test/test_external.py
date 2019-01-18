@@ -35,10 +35,19 @@ class TestExternalMechanism(unittest.TestCase):
         resp = ServerChallenge(b'')
         resp.set_response(b'abcdefghi')
         result = self.mech.server_attempt([resp])
+        self.assertFalse(result.has_secret)
         self.assertEqual('abcdefghi', result.authzid)
-        self.assertRaises(NotImplementedError, getattr, result, 'authcid')
-        self.assertRaises(NotImplementedError, getattr, result, 'secret')
-        self.assertRaises(NotImplementedError, result.check_secret, 'secret')
+        self.assertEqual('abcdefghi', result.authcid)
+        self.assertRaises(AttributeError, getattr, result, 'secret')
+        self.assertTrue(result.check_secret('secret'))
+        self.assertTrue(result.check_secret('invalid'))
+
+    def test_server_attempt_successful_empty(self):
+        resp = ServerChallenge(b'')
+        resp.set_response(b'')
+        result = self.mech.server_attempt([resp])
+        self.assertIsNone(result.authzid)
+        self.assertEqual('', result.authcid)
 
     def test_client_attempt(self):
         creds = AuthenticationCredentials('', '', 'testzid')

@@ -31,14 +31,18 @@ class CramMD5Result(AuthenticationCredentials):
         self.digest = digest
 
     @property
+    def has_secret(self):
+        return False
+
+    @property
     def secret(self):
         """The secret string is not available in this mechanism.
 
         Raises:
-            NotImplementedError
+            AttributeError
 
         """
-        raise NotImplementedError()
+        raise AttributeError('secret')
 
     def check_secret(self, secret):
         if not isinstance(secret, bytes):
