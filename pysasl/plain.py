@@ -39,7 +39,7 @@ class PlainMechanism(ServerMechanism, ClientMechanism):
         cid_str = cid.decode('utf-8')
         secret_str = secret.decode('utf-8')
         zid_str = zid.decode('utf-8')
-        return AuthenticationCredentials(cid_str, secret_str, zid_str)
+        return AuthenticationCredentials(cid_str, secret_str, zid_str), None
 
     def client_attempt(self, creds, responses):
         if len(responses) > 1:

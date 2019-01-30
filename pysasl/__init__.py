@@ -85,6 +85,25 @@ class AuthenticationCredentials(object):
         """
         return self._authzid
 
+    @property
+    def identity(self):
+        """The canonical identity being assumed by the authentication attempt.
+        This is :attr:`.authzid` if available, :attr:`.authcid` otherwise.
+
+        Consider a UNIX system where ``root`` is the superuser and only it may
+        assume the identity of other users. With an :attr:`.authcid` of
+        ``root`` and an :attr:`.authzid` of ``terry``, the authorization would
+        succeed and :attr:`.identity` would be ``terry``. With an
+        :attr:`.authcid` of ``greg``, authorization would fail because ``greg``
+        is not the superuser and cannot assume the :attr:`.identity` of
+        ``terry``.
+
+        """
+        if self.authzid is not None:
+            return self.authzid
+        else:
+            return self.authcid
+
     def check_secret(self, secret):
         """Checks if the secret string used in the authentication attempt
         matches the "known" secret string. Some mechanisms will override this
@@ -218,8 +237,9 @@ class ServerMechanism(BaseMechanism):
                 mechanism and responded to by the client.
 
         Returns:
-            The authentication credentials received from the client once no
-            more challenges are necessary.
+            A tuple of the authentication credentials received from the client
+            once no more challenges are necessary, and an optional final
+            response string from the server used by some mechanisms.
 
         Raises:
             ServerChallenge: The server challenge needing a client response.

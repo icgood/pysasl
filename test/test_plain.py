@@ -40,10 +40,12 @@ class TestPlainMechanism(unittest.TestCase):
     def test_server_attempt_successful(self):
         resp = ServerChallenge(b'')
         resp.set_response(b'abc\x00def\x00ghi')
-        result = self.mech.server_attempt([resp])
+        result, final = self.mech.server_attempt([resp])
+        self.assertIsNone(final)
         self.assertTrue(result.has_secret)
         self.assertEqual('abc', result.authzid)
         self.assertEqual('def', result.authcid)
+        self.assertEqual('abc', result.identity)
         self.assertTrue(result.check_secret('ghi'))
         self.assertFalse(result.check_secret('invalid'))
 

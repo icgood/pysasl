@@ -90,7 +90,7 @@ class CramMD5Mechanism(ServerMechanism, ClientMechanism):
         username, digest = match.groups()
 
         username_str = username.decode('utf-8')
-        return CramMD5Result(username_str, challenge, digest)
+        return CramMD5Result(username_str, challenge, digest), None
 
     def client_attempt(self, creds, responses):
         if len(responses) < 1:

@@ -34,10 +34,12 @@ class TestExternalMechanism(unittest.TestCase):
     def test_server_attempt_successful(self):
         resp = ServerChallenge(b'')
         resp.set_response(b'abcdefghi')
-        result = self.mech.server_attempt([resp])
+        result, final = self.mech.server_attempt([resp])
+        self.assertIsNone(final)
         self.assertFalse(result.has_secret)
         self.assertEqual('abcdefghi', result.authzid)
         self.assertEqual('abcdefghi', result.authcid)
+        self.assertEqual('abcdefghi', result.identity)
         self.assertRaises(AttributeError, getattr, result, 'secret')
         self.assertTrue(result.check_secret('secret'))
         self.assertTrue(result.check_secret('invalid'))
@@ -45,7 +47,7 @@ class TestExternalMechanism(unittest.TestCase):
     def test_server_attempt_successful_empty(self):
         resp = ServerChallenge(b'')
         resp.set_response(b'')
-        result = self.mech.server_attempt([resp])
+        result, _ = self.mech.server_attempt([resp])
         self.assertIsNone(result.authzid)
         self.assertEqual('', result.authcid)
 

@@ -1,12 +1,12 @@
 
 from . import ClientMechanism, ServerMechanism, ServerChallenge, \
     AuthenticationCredentials, ClientResponse
-from typing import Sequence
+from typing import Optional, Tuple, Sequence
 
 
 class PlainMechanism(ServerMechanism, ClientMechanism):
     def server_attempt(self, challenges: Sequence[ServerChallenge]) \
-            -> AuthenticationCredentials: ...
+            -> Tuple[AuthenticationCredentials, Optional[bytes]]: ...
     def client_attempt(self, creds: AuthenticationCredentials,
                        responses: Sequence[ClientResponse]) \
             -> ClientResponse: ...

@@ -53,10 +53,12 @@ class TestCramMD5Mechanism(unittest.TestCase):
         response = b'testuser 3a569c3950e95c490fd42f5d89e1ef67'
         resp = ServerChallenge(b'<abc123.1234@testhost>')
         resp.set_response(response)
-        result = self.mech.server_attempt([resp])
+        result, final = self.mech.server_attempt([resp])
+        self.assertIsNone(final)
         self.assertFalse(result.has_secret)
         self.assertIsNone(result.authzid)
         self.assertEqual('testuser', result.authcid)
+        self.assertEqual('testuser', result.identity)
         self.assertRaises(AttributeError, getattr, result, 'secret')
         self.assertTrue(result.check_secret(u'testpass'))
         self.assertTrue(result.check_secret(b'testpass'))

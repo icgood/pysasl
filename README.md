@@ -8,6 +8,8 @@ The library currently offers `PLAIN`, `LOGIN`, and `CRAM-MD5` mechanisms by
 default. The `EXTERNAL` and `XOAUTH2` mechanisms are also available for special
 circumstances.
 
+There are currently no plans to implement security layer negotiation support.
+
 [![Build Status](https://travis-ci.org/icgood/pysasl.svg)](https://travis-ci.org/icgood/pysasl)
 [![Coverage Status](https://coveralls.io/repos/icgood/pysasl/badge.svg?branch=master)](https://coveralls.io/r/icgood/pysasl?branch=master)
 [![PyPI](https://img.shields.io/pypi/v/pysasl.svg)](https://pypi.python.org/pypi/pysasl)
@@ -82,14 +84,15 @@ def server_side_authentication(sock, mech):
     challenges = []
     while True:
         try:
-            return mech.server_attempt(challenges)
+            creds, _ = mech.server_attempt(challenges)
+            return creds
         except ServerChallenge as chal:
             challenges.append(chal)
             sock.send(chal.get_challenge() + b'\r\n')
             chal.set_response(sock.recv(1024).rstrip(b'\r\n'))
 ```
 
-It's worth noting that implemenations are not quite that simple. Most will
+It's worth noting that implementations are not quite that simple. Most will
 expect all transmissions to base64-encoded, often with a prefix before the
 server challenges such as `334` or `+`. See the appropriate RFC for your
 protocol, such as [RFC 4954 for SMTP][3] or [RFC 3501 for IMAP][4].
@@ -103,6 +106,7 @@ attempt:
 ```python
 print('Authenticated as:', result.authcid)
 print('Authorization ID:', result.authzid)
+print('Assumed identity:', result.identity)
 
 # To compare to a known password...
 assert result.check_secret('s3kr3t')
