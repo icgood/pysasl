@@ -1,7 +1,7 @@
 
 from . import AuthenticationCredentials, ClientMechanism, ServerMechanism, \
     ServerChallenge, ClientResponse
-from typing import Sequence
+from typing import Optional, Tuple, Sequence
 from typing_extensions import Final
 
 
@@ -13,7 +13,7 @@ class CramMD5Result(AuthenticationCredentials):
 
 class CramMD5Mechanism(ServerMechanism, ClientMechanism):
     def server_attempt(self, challenges: Sequence[ServerChallenge]) \
-            -> CramMD5Result: ...
+            -> Tuple[CramMD5Result, Optional[bytes]]: ...
     def client_attempt(self, creds: AuthenticationCredentials,
                        responses: Sequence[ClientResponse]) \
             -> ClientResponse: ...

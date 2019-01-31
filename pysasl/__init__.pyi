@@ -1,5 +1,5 @@
 
-from typing import Any, Optional, Sequence, Mapping, Union, ClassVar
+from typing import Any, Optional, Tuple, Sequence, Mapping, Union, ClassVar
 from typing_extensions import Final
 
 _Advertised = Optional[Sequence[Union[bytes, 'BaseMechanism']]]
@@ -14,6 +14,8 @@ class AuthenticationCredentials:
     authcid: Final[str]
     secret: Final[str]
     authzid: Final[Optional[str]]
+    @property
+    def identity(self) -> str: ...
     def __init__(self, authcid: str, secret: str,
                  authzid: Optional[str] = ...) -> None: ...
     def check_secret(self, secret: Union[bytes, str]) -> bool: ...
@@ -33,14 +35,14 @@ class ServerChallenge(Exception):
     def set_response(self, data: Optional[bytes]) -> None: ...
 
 class BaseMechanism:
-    name: Final[ClassVar[bytes]]
-    priority: Final[ClassVar[Optional[int]]]
-    insecure: Final[ClassVar[bool]]
+    name: ClassVar[bytes]
+    priority: ClassVar[Optional[int]]
+    insecure: ClassVar[bool]
     def __lt__(self, other: Any) -> bool: ...
 
 class ServerMechanism(BaseMechanism):
     def server_attempt(self, challenges: Sequence[ServerChallenge]) \
-            -> AuthenticationCredentials: ...
+            -> Tuple[AuthenticationCredentials, Optional[bytes]]: ...
 
 class ClientMechanism(BaseMechanism):
     def client_attempt(self, creds: AuthenticationCredentials,

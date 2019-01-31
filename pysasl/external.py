@@ -71,7 +71,7 @@ class ExternalMechanism(ServerMechanism, ClientMechanism):
             raise ServerChallenge(b'')
         authzid = challenges[0].response
         authzid_str = authzid.decode('utf-8')
-        return ExternalResult(authzid_str)
+        return ExternalResult(authzid_str), None
 
     def client_attempt(self, creds, responses):
         if len(responses) > 1:

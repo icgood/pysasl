@@ -42,10 +42,12 @@ class TestLoginMechanism(unittest.TestCase):
         resp1.set_response(b'testuser')
         resp2 = ServerChallenge(b'Password:')
         resp2.set_response(b'testpass')
-        result = self.mech.server_attempt([resp1, resp2])
+        result, final = self.mech.server_attempt([resp1, resp2])
+        self.assertIsNone(final)
         self.assertTrue(result.has_secret)
         self.assertIsNone(result.authzid)
         self.assertEqual('testuser', result.authcid)
+        self.assertEqual('testuser', result.identity)
         self.assertTrue(result.check_secret('testpass'))
         self.assertFalse(result.check_secret('invalid'))
 

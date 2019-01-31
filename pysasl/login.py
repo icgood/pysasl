@@ -29,7 +29,7 @@ class LoginMechanism(ServerMechanism, ClientMechanism):
             raise ServerChallenge(b'Password:')
         username = challenges[0].response.decode('utf-8')
         password = challenges[1].response.decode('utf-8')
-        return AuthenticationCredentials(username, password)
+        return AuthenticationCredentials(username, password), None
 
     def client_attempt(self, creds, responses):
         if len(responses) < 1:

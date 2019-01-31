@@ -1,7 +1,7 @@
 
 from . import AuthenticationCredentials, ClientMechanism, ServerMechanism, \
     ServerChallenge, ClientResponse
-from typing import Sequence, Optional
+from typing import Optional, Tuple, Sequence
 
 
 class ExternalResult(AuthenticationCredentials):
@@ -9,7 +9,7 @@ class ExternalResult(AuthenticationCredentials):
 
 class ExternalMechanism(ServerMechanism, ClientMechanism):
     def server_attempt(self, challenges: Sequence[ServerChallenge]) \
-            -> ExternalResult: ...
+            -> Tuple[ExternalResult, Optional[bytes]]: ...
     def client_attempt(self, creds: AuthenticationCredentials,
                        responses: Sequence[ClientResponse]) \
             -> ClientResponse: ...
