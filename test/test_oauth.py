@@ -24,7 +24,7 @@ class TestOAuth2Mechanism(unittest.TestCase):
         self.assertEqual(self.mech, sasl.get(b'XOAUTH2'))
 
     def test_client_attempt(self):
-        creds = AuthenticationCredentials('testuser', 'testtoken')
+        creds = AuthenticationCredentials(u'testuser', u'testtoken')
         resp1 = self.mech.client_attempt(creds, [])
         self.assertEqual(b'user=testuser\x01auth=Bearertesttoken\x01\x01',
                          resp1.get_response())

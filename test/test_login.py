@@ -16,6 +16,10 @@ class TestLoginMechanism(unittest.TestCase):
     def test_availability(self):
         sasl = SASLAuth()
         self.assertIsInstance(sasl.get(b'LOGIN'), LoginMechanism)
+        sasl = SASLAuth.secure()
+        self.assertIsNone(sasl.get(b'LOGIN'))
+        sasl = SASLAuth.plaintext()
+        self.assertIsInstance(sasl.get(b'LOGIN'), LoginMechanism)
         sasl = SASLAuth([b'LOGIN'])
         self.assertIsInstance(sasl.get(b'LOGIN'), LoginMechanism)
         sasl = SASLAuth([self.mech])
@@ -48,11 +52,11 @@ class TestLoginMechanism(unittest.TestCase):
         self.assertIsNone(result.authzid)
         self.assertEqual('testuser', result.authcid)
         self.assertEqual('testuser', result.identity)
-        self.assertTrue(result.check_secret('testpass'))
-        self.assertFalse(result.check_secret('invalid'))
+        self.assertTrue(result.check_secret(u'testpass'))
+        self.assertFalse(result.check_secret(u'invalid'))
 
     def test_client_attempt(self):
-        creds = AuthenticationCredentials('testuser', 'testpass')
+        creds = AuthenticationCredentials(u'testuser', u'testpass')
         resp1 = self.mech.client_attempt(creds, [])
         self.assertEqual(b'', resp1.get_response())
         resp1.set_challenge(b'Username:')

@@ -1,8 +1,10 @@
 
-from typing import Any, Optional, Tuple, Sequence, Mapping, Union, ClassVar
+from typing import Any, Text, ClassVar, Union, Optional, Tuple, \
+    Sequence, Mapping
 from typing_extensions import Final
 
 _Advertised = Optional[Sequence[Union[bytes, 'BaseMechanism']]]
+
 
 class AuthenticationError(Exception): ...
 
@@ -11,14 +13,14 @@ class UnexpectedAuthChallenge(AuthenticationError):
 
 class AuthenticationCredentials:
     has_secret: Final[bool]
-    authcid: Final[str]
-    secret: Final[str]
-    authzid: Final[Optional[str]]
+    authcid: Final[Text]
+    secret: Final[Text]
+    authzid: Final[Optional[Text]]
     @property
-    def identity(self) -> str: ...
-    def __init__(self, authcid: str, secret: str,
-                 authzid: Optional[str] = ...) -> None: ...
-    def check_secret(self, secret: Union[bytes, str]) -> bool: ...
+    def identity(self) -> Text: ...
+    def __init__(self, authcid: Text, secret: Text,
+                 authzid: Optional[Text] = ...) -> None: ...
+    def check_secret(self, secret: Text) -> bool: ...
 
 class ClientResponse:
     response: Final[bytes]
@@ -54,6 +56,8 @@ class SASLAuth:
     def __init__(self, advertised: _Advertised = ...) -> None: ...
     @classmethod
     def secure(cls) -> SASLAuth: ...
+    @classmethod
+    def plaintext(cls) -> SASLAuth: ...
     @property
     def server_mechanisms(self) -> Sequence[ServerMechanism]: ...
     @property

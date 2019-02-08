@@ -22,6 +22,10 @@ class TestCramMD5Mechanism(unittest.TestCase):
     def test_availability(self):
         sasl = SASLAuth()
         self.assertIsInstance(sasl.get(b'CRAM-MD5'), CramMD5Mechanism)
+        sasl = SASLAuth.secure()
+        self.assertIsInstance(sasl.get(b'CRAM-MD5'), CramMD5Mechanism)
+        sasl = SASLAuth.plaintext()
+        self.assertIsNone(sasl.get(b'CRAM-MD5'))
         sasl = SASLAuth([b'CRAM-MD5'])
         self.assertIsInstance(sasl.get(b'CRAM-MD5'), CramMD5Mechanism)
         sasl = SASLAuth([self.mech])
@@ -61,11 +65,11 @@ class TestCramMD5Mechanism(unittest.TestCase):
         self.assertEqual('testuser', result.identity)
         self.assertRaises(AttributeError, getattr, result, 'secret')
         self.assertTrue(result.check_secret(u'testpass'))
-        self.assertTrue(result.check_secret(b'testpass'))
-        self.assertFalse(result.check_secret('badpass'))
+        self.assertTrue(result.check_secret(u'testpass'))
+        self.assertFalse(result.check_secret(u'badpass'))
 
     def test_client_attempt(self):
-        creds = AuthenticationCredentials('testuser', 'testpass')
+        creds = AuthenticationCredentials(u'testuser', u'testpass')
         resp1 = self.mech.client_attempt(creds, [])
         self.assertEqual(b'', resp1.get_response())
         resp1.set_challenge(b'<abc123.1234@testhost>')

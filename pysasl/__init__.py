@@ -117,8 +117,6 @@ class AuthenticationCredentials(object):
             True if the given secret matches the authentication attempt.
 
         """
-        if isinstance(secret, bytes):
-            secret = secret.decode('utf-8')
         try:
             return hmac.compare_digest(secret, self.secret)
         except AttributeError:  # pragma: no cover
@@ -298,7 +296,7 @@ class SASLAuth(object):
 
     def __init__(self, advertised=None):
         super(SASLAuth, self).__init__()
-        if not advertised:
+        if advertised is None:
             builtin_mechs = self._get_builtin_mechanisms()
             advertised = [mech for mech in builtin_mechs.values()
                           if mech.priority is not None]
@@ -323,6 +321,21 @@ class SASLAuth(object):
         secure_mechs = [mech for _, mech in builtin_mechs.items()
                         if not mech.insecure and mech.priority is not None]
         return SASLAuth(secure_mechs)
+
+    @classmethod
+    def plaintext(cls):
+        """Uses only authentication mechanisms that provide the credentials in
+        un-hashed form, typically meaning
+        :attr:`~pysasl.AuthenticationCredentials.has_secret` is True.
+
+        Returns:
+            A new :class:`SASLAuth` object.
+
+        """
+        builtin_mechs = cls._get_builtin_mechanisms()
+        plaintext_mechs = [mech for _, mech in builtin_mechs.items()
+                           if mech.insecure and mech.priority is not None]
+        return SASLAuth(plaintext_mechs)
 
     @classmethod
     def _get_builtin_mechanisms(cls):

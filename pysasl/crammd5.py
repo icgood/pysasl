@@ -9,6 +9,12 @@ from . import (ServerMechanism, ClientMechanism, ServerChallenge,
                ClientResponse, AuthenticationError, UnexpectedAuthChallenge,
                AuthenticationCredentials)
 
+try:
+    from passlib.utils import saslprep  # type: ignore
+except ImportError:
+    def saslprep(source):
+        return source
+
 __all__ = ['CramMD5Result', 'CramMD5Mechanism']
 
 
@@ -45,8 +51,7 @@ class CramMD5Result(AuthenticationCredentials):
         raise AttributeError('secret')
 
     def check_secret(self, secret):
-        if not isinstance(secret, bytes):
-            secret = secret.encode('utf-8')
+        secret = saslprep(secret).encode('utf-8')
         expected_hmac = hmac.new(secret, self.challenge, hashlib.md5)
         expected = expected_hmac.hexdigest().encode('ascii')
         try:
@@ -98,8 +103,8 @@ class CramMD5Mechanism(ServerMechanism, ClientMechanism):
         elif len(responses) > 1:
             raise UnexpectedAuthChallenge()
         challenge = responses[0].challenge
-        authcid = creds.authcid.encode('utf-8')
-        secret = creds.secret.encode('utf-8')
+        authcid = saslprep(creds.authcid).encode('utf-8')
+        secret = saslprep(creds.secret).encode('utf-8')
         digest = hmac.new(secret, challenge, hashlib.md5).hexdigest()
         response = b' '.join((authcid, digest.encode('ascii')))
         return ClientResponse(response)

@@ -41,8 +41,8 @@ class TestExternalMechanism(unittest.TestCase):
         self.assertEqual('abcdefghi', result.authcid)
         self.assertEqual('abcdefghi', result.identity)
         self.assertRaises(AttributeError, getattr, result, 'secret')
-        self.assertTrue(result.check_secret('secret'))
-        self.assertTrue(result.check_secret('invalid'))
+        self.assertTrue(result.check_secret(u'secret'))
+        self.assertTrue(result.check_secret(u'invalid'))
 
     def test_server_attempt_successful_empty(self):
         resp = ServerChallenge(b'')
@@ -52,7 +52,7 @@ class TestExternalMechanism(unittest.TestCase):
         self.assertEqual('', result.authcid)
 
     def test_client_attempt(self):
-        creds = AuthenticationCredentials('', '', 'testzid')
+        creds = AuthenticationCredentials(u'', u'', u'testzid')
         resp1 = self.mech.client_attempt(creds, [])
         self.assertEqual(b'testzid', resp1.get_response())
         resp2 = self.mech.client_attempt(creds, [resp1])
