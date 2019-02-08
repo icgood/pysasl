@@ -1,14 +1,14 @@
 
 from . import AuthenticationCredentials, ClientMechanism, ServerMechanism, \
     ServerChallenge, ClientResponse
-from typing import Optional, Tuple, Sequence
+from typing import Text, Optional, Tuple, Sequence
 from typing_extensions import Final
 
 
 class CramMD5Result(AuthenticationCredentials):
     challenge: Final[bytes] = ...
     digest: Final[bytes] = ...
-    def __init__(self, username: str, challenge: bytes,
+    def __init__(self, username: Text, challenge: bytes,
                  digest: bytes) -> None: ...
 
 class CramMD5Mechanism(ServerMechanism, ClientMechanism):

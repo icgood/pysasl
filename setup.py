@@ -27,7 +27,7 @@ with open('README.md', 'r') as fh:
 
 
 setup(name='pysasl',
-      version='0.4.0',
+      version='0.4.1',
       author='Ian Good',
       author_email='icgood@gmail.com',
       description='Pure Python SASL client and server library.',
@@ -38,6 +38,7 @@ setup(name='pysasl',
       python_requires='>=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, <4',
       packages=find_packages(),
       package_data={'pysasl': ['py.typed']},
+      extras_require={'passlib': ['passlib']},
       entry_points={'pysasl.mechanisms': [
           'PLAIN = pysasl.plain:PlainMechanism',
           'LOGIN = pysasl.login:LoginMechanism',

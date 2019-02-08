@@ -16,6 +16,10 @@ class TestPlainMechanism(unittest.TestCase):
     def test_availability(self):
         sasl = SASLAuth()
         self.assertIsInstance(sasl.get(b'PLAIN'), PlainMechanism)
+        sasl = SASLAuth.secure()
+        self.assertIsNone(sasl.get(b'PLAIN'))
+        sasl = SASLAuth.plaintext()
+        self.assertIsInstance(sasl.get(b'PLAIN'), PlainMechanism)
         sasl = SASLAuth([b'PLAIN'])
         self.assertIsInstance(sasl.get(b'PLAIN'), PlainMechanism)
         sasl = SASLAuth([self.mech])
@@ -46,11 +50,11 @@ class TestPlainMechanism(unittest.TestCase):
         self.assertEqual('abc', result.authzid)
         self.assertEqual('def', result.authcid)
         self.assertEqual('abc', result.identity)
-        self.assertTrue(result.check_secret('ghi'))
-        self.assertFalse(result.check_secret('invalid'))
+        self.assertTrue(result.check_secret(u'ghi'))
+        self.assertFalse(result.check_secret(u'invalid'))
 
     def test_client_attempt(self):
-        creds = AuthenticationCredentials('testuser', 'testpass', 'testzid')
+        creds = AuthenticationCredentials(u'testuser', u'testpass', u'testzid')
         resp1 = self.mech.client_attempt(creds, [])
         self.assertEqual(b'testzid\x00testuser\x00testpass',
                          resp1.get_response())

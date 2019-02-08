@@ -1,11 +1,11 @@
 
 from . import AuthenticationCredentials, ClientMechanism, ServerMechanism, \
     ServerChallenge, ClientResponse
-from typing import Optional, Tuple, Sequence
+from typing import Text, Optional, Tuple, Sequence
 
 
 class ExternalResult(AuthenticationCredentials):
-    def __init__(self, authzid: Optional[str] = ...) -> None: ...
+    def __init__(self, authzid: Optional[Text] = ...) -> None: ...
 
 class ExternalMechanism(ServerMechanism, ClientMechanism):
     def server_attempt(self, challenges: Sequence[ServerChallenge]) \
