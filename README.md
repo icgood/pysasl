@@ -16,7 +16,7 @@ There are currently no plans to implement security layer negotiation support.
 [![PyPI](https://img.shields.io/pypi/pyversions/pysasl.svg)](https://pypi.python.org/pypi/pysasl)
 [![PyPI](https://img.shields.io/pypi/l/pysasl.svg)](https://pypi.python.org/pypi/pysasl)
 
-#### [API Documentation](http://pysasl.readthedocs.org/)
+#### [API Documentation](https://icgood.github.io/pysasl/)
 
 Installation
 ============
@@ -193,7 +193,7 @@ to get the initial response before starting the transmission. All
 mechanisms should either return an initial response or an empty string
 when given an empty list for the second argument.
 
-[1]: http://pysasl.readthedocs.org/en/latest/#pysasl.SASLAuth
-[2]: http://pysasl.readthedocs.org/en/latest/#pysasl.AuthenticationCredentials
+[1]: https://icgood.github.io/pysasl/#pysasl.SASLAuth
+[2]: https://icgood.github.io/pysasl/#pysasl.AuthenticationCredentials
 [3]: https://tools.ietf.org/html/rfc4954
 [4]: https://tools.ietf.org/html/rfc3501#section-6.2.2
