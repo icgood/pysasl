@@ -5,15 +5,24 @@ python:
   - "3.5"
   - "3.6"
   - "3.7"
-dist: xenial     # https://github.com/travis-ci/travis-ci/issues/9069#issuecomment-425720905
-sudo: required   # https://github.com/travis-ci/travis-ci/issues/9069#issuecomment-425720905
+dist: xenial     # https://docs.travis-ci.com/user/languages/python/#python-37-and-higher
 install:
   - travis_retry pip install -r test/requirements.txt
+  - travis_retry pip install -r doc/requirements.txt
   - travis_retry pip install coveralls
   - travis_retry pip install -e .
 script: py.test --cov=pysasl
 after_success:
   - coveralls
+  - make -C doc html
 branches:
   only:
     - master
+deploy:
+  provider: pages
+  skip_cleanup: true
+  github_token: $GH_TOKEN
+  keep_history: true
+  on:
+    branch: master
+  local_dir: doc/build/html

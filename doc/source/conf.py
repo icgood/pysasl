@@ -24,7 +24,7 @@ import cloud_sptheme as csp
 # -- Project information -----------------------------------------------------
 
 project = 'pysasl'
-copyright = '2018, Ian Good'
+copyright = '2019, Ian Good'
 author = 'Ian Good'
 
 # The short X.Y version
@@ -48,6 +48,7 @@ extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.intersphinx',
     'sphinx.ext.napoleon',
+    'sphinx.ext.githubpages',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
