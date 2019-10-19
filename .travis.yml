@@ -1,17 +1,19 @@
 language: python
 python:
-  - "2.7"
-  - "3.4"
-  - "3.5"
   - "3.6"
   - "3.7"
-dist: xenial     # https://docs.travis-ci.com/user/languages/python/#python-37-and-higher
+  - "3.8"
+dist: bionic     # https://docs.travis-ci.com/user/languages/python/#python-37-and-higher
 install:
+  - travis_retry pip install -r doc/requirements.txt
   - travis_retry pip install -r test/requirements.txt
   - travis_retry pip install -r doc/requirements.txt
   - travis_retry pip install coveralls
   - travis_retry pip install -e .
-script: py.test --cov=pysasl
+script:
+  - py.test --cov=pysasl
+  - mypy pysasl test
+  - flake8 pysasl test
 after_success:
   - coveralls
   - make -C doc html

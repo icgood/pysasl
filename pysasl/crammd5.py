@@ -1,18 +1,18 @@
-from __future__ import absolute_import
 
 import re
 import hmac
 import hashlib
 import email.utils
+from typing import Tuple, Sequence
 
 from . import (ServerMechanism, ClientMechanism, ServerChallenge,
-               ClientResponse, AuthenticationError, UnexpectedAuthChallenge,
+               ChallengeResponse, AuthenticationError, UnexpectedChallenge,
                AuthenticationCredentials)
 
 try:
     from passlib.utils import saslprep  # type: ignore
-except ImportError:
-    def saslprep(source):
+except ImportError:  # pragma: no cover
+    def saslprep(source: str) -> str:
         return source
 
 __all__ = ['CramMD5Result', 'CramMD5Mechanism']
@@ -23,25 +23,32 @@ class CramMD5Result(AuthenticationCredentials):
     :meth:`~CramMD5Mechanism.server_attempt` method returns this sub-class
     which overrides the :meth:`.check_secret` method.
 
-    Attributes:
-        challenge: The challenge string issued by the server.
-        digest: The digest computed by the client.
-
     """
 
-    __slots__ = ['challenge', 'digest']
+    __slots__ = ['_challenge', '_digest']
 
-    def __init__(self, username, challenge, digest):
-        super(CramMD5Result, self).__init__(username, '')
-        self.challenge = challenge
-        self.digest = digest
+    def __init__(self, username: str, challenge: bytes,
+                 digest: bytes) -> None:
+        super().__init__(username, '')
+        self._challenge = challenge
+        self._digest = digest
 
     @property
-    def has_secret(self):
+    def has_secret(self) -> bool:
         return False
 
     @property
-    def secret(self):
+    def challenge(self) -> bytes:
+        """The challenge string issued by the server."""
+        return self._challenge
+
+    @property
+    def digest(self) -> bytes:
+        """The digest computed by the client."""
+        return self._digest
+
+    @property
+    def secret(self) -> str:
         """The secret string is not available in this mechanism.
 
         Raises:
@@ -50,14 +57,11 @@ class CramMD5Result(AuthenticationCredentials):
         """
         raise AttributeError('secret')
 
-    def check_secret(self, secret):
-        secret = saslprep(secret).encode('utf-8')
-        expected_hmac = hmac.new(secret, self.challenge, hashlib.md5)
+    def check_secret(self, secret: str) -> bool:
+        secret_b = saslprep(secret).encode('utf-8')
+        expected_hmac = hmac.new(secret_b, self.challenge, hashlib.md5)
         expected = expected_hmac.hexdigest().encode('ascii')
-        try:
-            return hmac.compare_digest(expected, self.digest)
-        except AttributeError:  # pragma: no cover
-            return expected == self.digest
+        return hmac.compare_digest(expected, self.digest)
 
 
 class CramMD5Mechanism(ServerMechanism, ClientMechanism):
@@ -68,43 +72,38 @@ class CramMD5Mechanism(ServerMechanism, ClientMechanism):
         dangerous, as it can have implications about how the credentials are
         stored server-side.
 
-    Attributes:
-        name: The SASL name for this mechanism.
-        priority: Determines the sort ordering of this mechanism.
-        insecure: This mechanism is considered secure for non-encrypted
-            sessions.
-
     """
 
     _pattern = re.compile(br'^(.*) ([^ ]+)$')
 
     name = b'CRAM-MD5'
-    priority = 10
-    insecure = False
 
-    def server_attempt(self, challenges):
-        if not challenges:
+    def server_attempt(self, responses: Sequence[ChallengeResponse]) \
+            -> Tuple[CramMD5Result, None]:
+        try:
+            first = responses[0]
+        except IndexError as exc:
             challenge = email.utils.make_msgid().encode('utf-8')
-            raise ServerChallenge(challenge)
-        challenge = challenges[0].challenge
-        response = challenges[0].response
+            raise ServerChallenge(challenge) from exc
 
-        match = re.match(self._pattern, response)
+        match = re.match(self._pattern, first.response)
         if not match:
             raise AuthenticationError('Invalid CRAM-MD5 response')
         username, digest = match.groups()
 
         username_str = username.decode('utf-8')
-        return CramMD5Result(username_str, challenge, digest), None
+        return CramMD5Result(username_str, first.challenge, digest), None
 
-    def client_attempt(self, creds, responses):
-        if len(responses) < 1:
-            return ClientResponse(b'')
-        elif len(responses) > 1:
-            raise UnexpectedAuthChallenge()
-        challenge = responses[0].challenge
+    def client_attempt(self, creds: AuthenticationCredentials,
+                       challenges: Sequence[ServerChallenge]) \
+            -> ChallengeResponse:
+        if len(challenges) < 1:
+            return ChallengeResponse(b'', b'')
+        elif len(challenges) > 1:
+            raise UnexpectedChallenge()
+        challenge = challenges[0].data
         authcid = saslprep(creds.authcid).encode('utf-8')
         secret = saslprep(creds.secret).encode('utf-8')
         digest = hmac.new(secret, challenge, hashlib.md5).hexdigest()
         response = b' '.join((authcid, digest.encode('ascii')))
-        return ClientResponse(response)
+        return ChallengeResponse(challenge, response)
