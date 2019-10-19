@@ -9,7 +9,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Index &#8212; pysasl 0.4.1 documentation</title>
+    <title>Index &#8212; pysasl 0.5.0 documentation</title>
     <link rel="stylesheet" href="_static/cloud.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Noticia+Text|Open+Sans|Droid+Sans+Mono" />
@@ -36,7 +36,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> &nbsp; &nbsp;</li>
-    <li><a href="index.html">pysasl 0.4.1 documentation</a> &#187;</li>
+    <li><a href="index.html">pysasl 0.5.0 documentation</a> &#187;</li>
  
       </ul>
     </div>
@@ -120,8 +120,6 @@
 </li>
       <li><a href="index.html#pysasl.ClientMechanism">ClientMechanism (class in pysasl)</a>
 </li>
-      <li><a href="index.html#pysasl.ClientResponse">ClientResponse (class in pysasl)</a>
-</li>
       <li><a href="index.html#pysasl.crammd5.CramMD5Mechanism">CramMD5Mechanism (class in pysasl.crammd5)</a>
 </li>
       <li><a href="index.html#pysasl.crammd5.CramMD5Result">CramMD5Result (class in pysasl.crammd5)</a>
@@ -132,6 +130,12 @@
 <h2 id="D">D</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="index.html#pysasl.ServerChallenge.data">data (pysasl.ServerChallenge attribute)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="index.html#pysasl.SASLAuth.defaults">defaults() (pysasl.SASLAuth class method)</a>
+</li>
       <li><a href="index.html#pysasl.crammd5.CramMD5Result.digest">digest (pysasl.crammd5.CramMD5Result attribute)</a>
 </li>
   </ul></td>
@@ -142,13 +146,9 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="index.html#pysasl.SASLAuth.get">get() (pysasl.SASLAuth method)</a>
 </li>
-      <li><a href="index.html#pysasl.ServerChallenge.get_challenge">get_challenge() (pysasl.ServerChallenge method)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="index.html#pysasl.SASLAuth.get_client">get_client() (pysasl.SASLAuth method)</a>
-</li>
-      <li><a href="index.html#pysasl.ClientResponse.get_response">get_response() (pysasl.ClientResponse method)</a>
 </li>
       <li><a href="index.html#pysasl.SASLAuth.get_server">get_server() (pysasl.SASLAuth method)</a>
 </li>
@@ -172,18 +172,6 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="index.html#pysasl.AuthenticationCredentials.identity">identity (pysasl.AuthenticationCredentials attribute)</a>
 </li>
-      <li><a href="index.html#pysasl.BaseMechanism.insecure">insecure (pysasl.BaseMechanism attribute)</a>
-
-      <ul>
-        <li><a href="index.html#pysasl.crammd5.CramMD5Mechanism.insecure">(pysasl.crammd5.CramMD5Mechanism attribute)</a>
-</li>
-        <li><a href="index.html#pysasl.login.LoginMechanism.insecure">(pysasl.login.LoginMechanism attribute)</a>
-</li>
-        <li><a href="index.html#pysasl.oauth.OAuth2Mechanism.insecure">(pysasl.oauth.OAuth2Mechanism attribute)</a>
-</li>
-        <li><a href="index.html#pysasl.plain.PlainMechanism.insecure">(pysasl.plain.PlainMechanism attribute)</a>
-</li>
-      </ul></li>
   </ul></td>
 </tr></table>
 
@@ -199,17 +187,11 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="index.html#pysasl.BaseMechanism.name">name (pysasl.BaseMechanism attribute)</a>
-
-      <ul>
-        <li><a href="index.html#pysasl.crammd5.CramMD5Mechanism.name">(pysasl.crammd5.CramMD5Mechanism attribute)</a>
 </li>
-        <li><a href="index.html#pysasl.login.LoginMechanism.name">(pysasl.login.LoginMechanism attribute)</a>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="index.html#pysasl.SASLAuth.named">named() (pysasl.SASLAuth class method)</a>
 </li>
-        <li><a href="index.html#pysasl.oauth.OAuth2Mechanism.name">(pysasl.oauth.OAuth2Mechanism attribute)</a>
-</li>
-        <li><a href="index.html#pysasl.plain.PlainMechanism.name">(pysasl.plain.PlainMechanism attribute)</a>
-</li>
-      </ul></li>
   </ul></td>
 </tr></table>
 
@@ -226,26 +208,12 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="index.html#pysasl.plain.PlainMechanism">PlainMechanism (class in pysasl.plain)</a>
 </li>
-      <li><a href="index.html#pysasl.SASLAuth.plaintext">plaintext() (pysasl.SASLAuth class method)</a>
-</li>
-      <li><a href="index.html#pysasl.BaseMechanism.priority">priority (pysasl.BaseMechanism attribute)</a>
-
-      <ul>
-        <li><a href="index.html#pysasl.crammd5.CramMD5Mechanism.priority">(pysasl.crammd5.CramMD5Mechanism attribute)</a>
-</li>
-        <li><a href="index.html#pysasl.login.LoginMechanism.priority">(pysasl.login.LoginMechanism attribute)</a>
-</li>
-        <li><a href="index.html#pysasl.oauth.OAuth2Mechanism.priority">(pysasl.oauth.OAuth2Mechanism attribute)</a>
-</li>
-        <li><a href="index.html#pysasl.plain.PlainMechanism.priority">(pysasl.plain.PlainMechanism attribute)</a>
-</li>
-      </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="index.html#module-pysasl">pysasl (module)</a>
 </li>
       <li><a href="index.html#module-pysasl.crammd5">pysasl.crammd5 (module)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="index.html#module-pysasl.login">pysasl.login (module)</a>
 </li>
       <li><a href="index.html#module-pysasl.oauth">pysasl.oauth (module)</a>
@@ -266,8 +234,6 @@
         <li><a href="index.html#pysasl.crammd5.CramMD5Result.secret">(pysasl.crammd5.CramMD5Result attribute)</a>
 </li>
       </ul></li>
-      <li><a href="index.html#pysasl.SASLAuth.secure">secure() (pysasl.SASLAuth class method)</a>
-</li>
       <li><a href="index.html#pysasl.crammd5.CramMD5Mechanism.server_attempt">server_attempt() (pysasl.crammd5.CramMD5Mechanism method)</a>
 
       <ul>
@@ -286,17 +252,13 @@
 </li>
       <li><a href="index.html#pysasl.ServerMechanism">ServerMechanism (class in pysasl)</a>
 </li>
-      <li><a href="index.html#pysasl.ClientResponse.set_challenge">set_challenge() (pysasl.ClientResponse method)</a>
-</li>
-      <li><a href="index.html#pysasl.ServerChallenge.set_response">set_response() (pysasl.ServerChallenge method)</a>
-</li>
   </ul></td>
 </tr></table>
 
 <h2 id="U">U</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="index.html#pysasl.UnexpectedAuthChallenge">UnexpectedAuthChallenge</a>
+      <li><a href="index.html#pysasl.UnexpectedChallenge">UnexpectedChallenge</a>
 </li>
   </ul></td>
 </tr></table>
@@ -352,7 +314,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> &nbsp; &nbsp;</li>
-    <li><a href="index.html">pysasl 0.4.1 documentation</a> &#187;</li>
+    <li><a href="index.html">pysasl 0.5.0 documentation</a> &#187;</li>
  
       </ul>
     </div>

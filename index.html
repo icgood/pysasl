@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>pysasl Documentation &#8212; pysasl 0.4.1 documentation</title>
+    <title>pysasl Documentation &#8212; pysasl 0.5.0 documentation</title>
     <link rel="stylesheet" href="_static/cloud.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Noticia+Text|Open+Sans|Droid+Sans+Mono" />
@@ -35,7 +35,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> &nbsp; &nbsp;</li>
-    <li><a href="#">pysasl 0.4.1 documentation</a> &#187;</li>
+    <li><a href="#">pysasl 0.5.0 documentation</a> &#187;</li>
  
       </ul>
     </div>
@@ -57,15 +57,36 @@ to any provided credentials.</p>
 </dd></dl>
 
 <dl class="exception">
-<dt id="pysasl.UnexpectedAuthChallenge">
-<em class="property">exception </em><code class="descclassname">pysasl.</code><code class="descname">UnexpectedAuthChallenge</code><a class="headerlink" href="#pysasl.UnexpectedAuthChallenge" title="Permalink to this definition">¶</a></dt>
+<dt id="pysasl.UnexpectedChallenge">
+<em class="property">exception </em><code class="descclassname">pysasl.</code><code class="descname">UnexpectedChallenge</code><a class="headerlink" href="#pysasl.UnexpectedChallenge" title="Permalink to this definition">¶</a></dt>
 <dd><p>During client-side authentication, the SASL mechanism received an
 authentication challenge from the server that it did not expect.</p>
 </dd></dl>
 
+<dl class="exception">
+<dt id="pysasl.ServerChallenge">
+<em class="property">exception </em><code class="descclassname">pysasl.</code><code class="descname">ServerChallenge</code><span class="sig-paren">(</span><em>data: bytes</em><span class="sig-paren">)</span><a class="headerlink" href="#pysasl.ServerChallenge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Raised by <a class="reference internal" href="#pysasl.ServerMechanism.server_attempt" title="pysasl.ServerMechanism.server_attempt"><code class="xref py py-meth docutils literal notranslate"><span class="pre">server_attempt()</span></code></a> to provide server
+challenges.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> – The challenge string that should be sent to the client.</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="pysasl.ServerChallenge.data">
+<code class="descname">data</code><a class="headerlink" href="#pysasl.ServerChallenge.data" title="Permalink to this definition">¶</a></dt>
+<dd><p>The server challenge that should be sent to the client.</p>
+</dd></dl>
+
+</dd></dl>
+
 <dl class="class">
 <dt id="pysasl.AuthenticationCredentials">
-<em class="property">class </em><code class="descclassname">pysasl.</code><code class="descname">AuthenticationCredentials</code><span class="sig-paren">(</span><em>authcid</em>, <em>secret</em>, <em>authzid=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pysasl.AuthenticationCredentials" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">pysasl.</code><code class="descname">AuthenticationCredentials</code><span class="sig-paren">(</span><em>authcid: str</em>, <em>secret: str</em>, <em>authzid: Optional[str] = None</em><span class="sig-paren">)</span><a class="headerlink" href="#pysasl.AuthenticationCredentials" title="Permalink to this definition">¶</a></dt>
 <dd><p>Object returned by <a class="reference internal" href="#pysasl.ServerMechanism.server_attempt" title="pysasl.ServerMechanism.server_attempt"><code class="xref py py-meth docutils literal notranslate"><span class="pre">server_attempt()</span></code></a> and passed in
 to <a class="reference internal" href="#pysasl.ClientMechanism.client_attempt" title="pysasl.ClientMechanism.client_attempt"><code class="xref py py-meth docutils literal notranslate"><span class="pre">client_attempt()</span></code></a> containing information about the
 authentication credentials in use.</p>
@@ -88,7 +109,7 @@ authentication credentials in use.</p>
 <dd><p>True if the <a class="reference internal" href="#pysasl.AuthenticationCredentials.secret" title="pysasl.AuthenticationCredentials.secret"><code class="xref py py-attr docutils literal notranslate"><span class="pre">secret</span></code></a> attribute is valid for this credentials
 type.</p>
 <p>If this returns False, the <a class="reference internal" href="#pysasl.AuthenticationCredentials.secret" title="pysasl.AuthenticationCredentials.secret"><code class="xref py py-attr docutils literal notranslate"><span class="pre">secret</span></code></a> attribute should raise
-<a class="reference external" href="https://docs.python.org/3/library/exceptions.html#AttributeError" title="(in Python v3.7)"><code class="xref py py-exc docutils literal notranslate"><span class="pre">AttributeError</span></code></a>.</p>
+<a class="reference external" href="https://docs.python.org/3/library/exceptions.html#AttributeError" title="(in Python v3.8)"><code class="xref py py-exc docutils literal notranslate"><span class="pre">AttributeError</span></code></a>.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -127,7 +148,7 @@ is not the superuser and cannot assume the <a class="reference internal" href="#
 
 <dl class="method">
 <dt id="pysasl.AuthenticationCredentials.check_secret">
-<code class="descname">check_secret</code><span class="sig-paren">(</span><em>secret</em><span class="sig-paren">)</span><a class="headerlink" href="#pysasl.AuthenticationCredentials.check_secret" title="Permalink to this definition">¶</a></dt>
+<code class="descname">check_secret</code><span class="sig-paren">(</span><em>secret: str</em><span class="sig-paren">)</span> &#x2192; bool<a class="headerlink" href="#pysasl.AuthenticationCredentials.check_secret" title="Permalink to this definition">¶</a></dt>
 <dd><p>Checks if the secret string used in the authentication attempt
 matches the “known” secret string. Some mechanisms will override this
 method to control how this comparison is made.</p>
@@ -147,78 +168,6 @@ authentication attempt.</td>
 </dd></dl>
 
 <dl class="class">
-<dt id="pysasl.ClientResponse">
-<em class="property">class </em><code class="descclassname">pysasl.</code><code class="descname">ClientResponse</code><span class="sig-paren">(</span><em>response</em><span class="sig-paren">)</span><a class="headerlink" href="#pysasl.ClientResponse" title="Permalink to this definition">¶</a></dt>
-<dd><p>Used by <a class="reference internal" href="#pysasl.ClientMechanism.client_attempt" title="pysasl.ClientMechanism.client_attempt"><code class="xref py py-meth docutils literal notranslate"><span class="pre">client_attempt()</span></code></a> to provide client
-responses and to populate server challenges.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>response</strong> – The response string that should be sent to the server.</td>
-</tr>
-</tbody>
-</table>
-<dl class="method">
-<dt id="pysasl.ClientResponse.get_response">
-<code class="descname">get_response</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pysasl.ClientResponse.get_response" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the client response that should be sent to the server.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="pysasl.ClientResponse.set_challenge">
-<code class="descname">set_challenge</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="headerlink" href="#pysasl.ClientResponse.set_challenge" title="Permalink to this definition">¶</a></dt>
-<dd><p>If the server reacts to the response with a challenge, set it with
-this method.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> – The challenge string.</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="exception">
-<dt id="pysasl.ServerChallenge">
-<em class="property">exception </em><code class="descclassname">pysasl.</code><code class="descname">ServerChallenge</code><span class="sig-paren">(</span><em>challenge</em><span class="sig-paren">)</span><a class="headerlink" href="#pysasl.ServerChallenge" title="Permalink to this definition">¶</a></dt>
-<dd><p>Raised by <a class="reference internal" href="#pysasl.ServerMechanism.server_attempt" title="pysasl.ServerMechanism.server_attempt"><code class="xref py py-meth docutils literal notranslate"><span class="pre">server_attempt()</span></code></a> to provide server
-challenges and to populate client responses.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>challenge</strong> – The challenge string that should be sent to the client.</td>
-</tr>
-</tbody>
-</table>
-<dl class="method">
-<dt id="pysasl.ServerChallenge.get_challenge">
-<code class="descname">get_challenge</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pysasl.ServerChallenge.get_challenge" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the server challenge that should be sent to the client.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="pysasl.ServerChallenge.set_response">
-<code class="descname">set_response</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="headerlink" href="#pysasl.ServerChallenge.set_response" title="Permalink to this definition">¶</a></dt>
-<dd><p>After the challenge is sent to the client, its response should be
-set with this method.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> – The response string.</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
 <dt id="pysasl.BaseMechanism">
 <em class="property">class </em><code class="descclassname">pysasl.</code><code class="descname">BaseMechanism</code><a class="headerlink" href="#pysasl.BaseMechanism" title="Permalink to this definition">¶</a></dt>
 <dd><p>Base class for all server- and client-side SASL mechanisms.</p>
@@ -226,20 +175,6 @@ set with this method.</p>
 <dt id="pysasl.BaseMechanism.name">
 <code class="descname">name</code><a class="headerlink" href="#pysasl.BaseMechanism.name" title="Permalink to this definition">¶</a></dt>
 <dd><p>The SASL name for this mechanism.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="pysasl.BaseMechanism.priority">
-<code class="descname">priority</code><a class="headerlink" href="#pysasl.BaseMechanism.priority" title="Permalink to this definition">¶</a></dt>
-<dd><p>Determines the sort ordering of this mechanism.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="pysasl.BaseMechanism.insecure">
-<code class="descname">insecure</code><a class="headerlink" href="#pysasl.BaseMechanism.insecure" title="Permalink to this definition">¶</a></dt>
-<dd><p>Whether this mechanism is considered secure for non-encrypted
-sessions. This value should be used by implementations to determine
-which mechanisms are chosen or offered.</p>
 </dd></dl>
 
 </dd></dl>
@@ -251,21 +186,18 @@ which mechanisms are chosen or offered.</p>
 credential verification.</p>
 <dl class="method">
 <dt id="pysasl.ServerMechanism.server_attempt">
-<code class="descname">server_attempt</code><span class="sig-paren">(</span><em>challenges</em><span class="sig-paren">)</span><a class="headerlink" href="#pysasl.ServerMechanism.server_attempt" title="Permalink to this definition">¶</a></dt>
+<code class="descname">server_attempt</code><span class="sig-paren">(</span><em>responses: Sequence[pysasl.ChallengeResponse]</em><span class="sig-paren">)</span> &#x2192; Tuple[pysasl.AuthenticationCredentials, Optional[bytes]]<a class="headerlink" href="#pysasl.ServerMechanism.server_attempt" title="Permalink to this definition">¶</a></dt>
 <dd><p>For SASL server-side credential verification, receives responses
 from the client and issues challenges until it has everything needed to
 verify the credentials.</p>
-<p>If a challenge is necessary, an <a class="reference internal" href="#pysasl.ServerChallenge" title="pysasl.ServerChallenge"><code class="xref py py-class docutils literal notranslate"><span class="pre">ServerChallenge</span></code></a> exception will
-be raised. Send the challenge string to the client with
-<a class="reference internal" href="#pysasl.ServerChallenge.get_challenge" title="pysasl.ServerChallenge.get_challenge"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_challenge()</span></code></a> and then populate its response
-with <a class="reference internal" href="#pysasl.ServerChallenge.set_response" title="pysasl.ServerChallenge.set_response"><code class="xref py py-meth docutils literal notranslate"><span class="pre">set_response()</span></code></a>. Finally, append the
-exception to the <code class="docutils literal notranslate"><span class="pre">challenges</span></code> argument before calling again.</p>
+<p>If a challenge is necessary, a <a class="reference internal" href="#pysasl.ServerChallenge" title="pysasl.ServerChallenge"><code class="xref py py-class docutils literal notranslate"><span class="pre">ServerChallenge</span></code></a> exception will
+be raised. The response to this challenge must then be added to
+<em>responses</em> in the next call to <a class="reference internal" href="#pysasl.ServerMechanism.server_attempt" title="pysasl.ServerMechanism.server_attempt"><code class="xref py py-meth docutils literal notranslate"><span class="pre">server_attempt()</span></code></a>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>challenges</strong> – The server challenges that have been issued by the
-mechanism and responded to by the client.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>responses</strong> – The challenge-response exchanges thus far.</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A tuple of the authentication credentials received from the client
 once no more challenges are necessary, and an optional final
@@ -286,32 +218,25 @@ response string from the server used by some mechanisms.</td>
 credential verification.</p>
 <dl class="method">
 <dt id="pysasl.ClientMechanism.client_attempt">
-<code class="descname">client_attempt</code><span class="sig-paren">(</span><em>creds</em>, <em>responses</em><span class="sig-paren">)</span><a class="headerlink" href="#pysasl.ClientMechanism.client_attempt" title="Permalink to this definition">¶</a></dt>
+<code class="descname">client_attempt</code><span class="sig-paren">(</span><em>creds: pysasl.AuthenticationCredentials, challenges: Sequence[pysasl.ServerChallenge]</em><span class="sig-paren">)</span> &#x2192; pysasl.ChallengeResponse<a class="headerlink" href="#pysasl.ClientMechanism.client_attempt" title="Permalink to this definition">¶</a></dt>
 <dd><p>For SASL client-side credential verification, produce responses to
 send to the server and react to its challenges until the server returns
 a final success or failure.</p>
-<p>Send the response string to the server with the
-<a class="reference internal" href="#pysasl.ClientResponse.get_response" title="pysasl.ClientResponse.get_response"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_response()</span></code></a> method of the returned
-<a class="reference internal" href="#pysasl.ClientResponse" title="pysasl.ClientResponse"><code class="xref py py-class docutils literal notranslate"><span class="pre">ClientResponse</span></code></a> object. If the server returns another
-challenge, set it with the object’s
-<a class="reference internal" href="#pysasl.ClientResponse.set_challenge" title="pysasl.ClientResponse.set_challenge"><code class="xref py py-meth docutils literal notranslate"><span class="pre">set_challenge()</span></code></a> method and append the object to
-the <code class="docutils literal notranslate"><span class="pre">responses</span></code> argument before calling again.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>creds</strong> – The credentials to attempt authentication with.</li>
-<li><strong>responses</strong> – The client responses that have been sent to the server.
-New attempts begin with an empty list.</li>
+<li><strong>challenges</strong> – The server challenges received.</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The client response to the most recent server challenge.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The response to the most recent server challenge.</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#pysasl.UnexpectedAuthChallenge" title="pysasl.UnexpectedAuthChallenge"><code class="xref py py-exc docutils literal notranslate"><span class="pre">UnexpectedAuthChallenge</span></code></a> – The server has issued an unexpected
-challenge the client mechanism does not recognize.</p>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#pysasl.UnexpectedChallenge" title="pysasl.UnexpectedChallenge"><code class="xref py py-exc docutils literal notranslate"><span class="pre">UnexpectedChallenge</span></code></a> – The server has issued a challenge the client
+mechanism does not recognize.</p>
 </td>
 </tr>
 </tbody>
@@ -322,23 +247,21 @@ challenge the client mechanism does not recognize.</p>
 
 <dl class="class">
 <dt id="pysasl.SASLAuth">
-<em class="property">class </em><code class="descclassname">pysasl.</code><code class="descname">SASLAuth</code><span class="sig-paren">(</span><em>advertised=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pysasl.SASLAuth" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">pysasl.</code><code class="descname">SASLAuth</code><span class="sig-paren">(</span><em>mechanisms: Iterable[pysasl.BaseMechanism]</em><span class="sig-paren">)</span><a class="headerlink" href="#pysasl.SASLAuth" title="Permalink to this definition">¶</a></dt>
 <dd><p>Manages the mechanisms available for authentication attempts.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>advertised</strong> – List of available SASL mechanism objects. Using the name
-of a built-in mechanism (e.g. <code class="docutils literal notranslate"><span class="pre">b'PLAIN'</span></code>) works as well. By
-default, all built-in mechanisms are available.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>mechanisms</strong> – List of available SASL mechanism objects.</td>
 </tr>
 </tbody>
 </table>
 <dl class="classmethod">
-<dt id="pysasl.SASLAuth.secure">
-<em class="property">classmethod </em><code class="descname">secure</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pysasl.SASLAuth.secure" title="Permalink to this definition">¶</a></dt>
-<dd><p>Uses only authentication mechanisms that are secure for use in
-non-encrypted sessions.</p>
+<dt id="pysasl.SASLAuth.defaults">
+<em class="property">classmethod </em><code class="descname">defaults</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; pysasl.SASLAuth<a class="headerlink" href="#pysasl.SASLAuth.defaults" title="Permalink to this definition">¶</a></dt>
+<dd><p>Uses the default built-in authentication mechanisms, <code class="docutils literal notranslate"><span class="pre">PLAIN</span></code> and
+<code class="docutils literal notranslate"><span class="pre">LOGIN</span></code>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -350,16 +273,19 @@ non-encrypted sessions.</p>
 </dd></dl>
 
 <dl class="classmethod">
-<dt id="pysasl.SASLAuth.plaintext">
-<em class="property">classmethod </em><code class="descname">plaintext</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pysasl.SASLAuth.plaintext" title="Permalink to this definition">¶</a></dt>
-<dd><p>Uses only authentication mechanisms that provide the credentials in
-un-hashed form, typically meaning
-<a class="reference internal" href="#pysasl.AuthenticationCredentials.has_secret" title="pysasl.AuthenticationCredentials.has_secret"><code class="xref py py-attr docutils literal notranslate"><span class="pre">has_secret</span></code></a> is True.</p>
+<dt id="pysasl.SASLAuth.named">
+<em class="property">classmethod </em><code class="descname">named</code><span class="sig-paren">(</span><em>names: Iterable[bytes]</em><span class="sig-paren">)</span> &#x2192; pysasl.SASLAuth<a class="headerlink" href="#pysasl.SASLAuth.named" title="Permalink to this definition">¶</a></dt>
+<dd><p>Uses the built-in authentication mechanisms that match a provided
+name.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A new <a class="reference internal" href="#pysasl.SASLAuth" title="pysasl.SASLAuth"><code class="xref py py-class docutils literal notranslate"><span class="pre">SASLAuth</span></code></a> object.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>names</strong> – The authentication mechanism names.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A new <a class="reference internal" href="#pysasl.SASLAuth" title="pysasl.SASLAuth"><code class="xref py py-class docutils literal notranslate"><span class="pre">SASLAuth</span></code></a> object.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#KeyError" title="(in Python v3.8)"><code class="xref py py-exc docutils literal notranslate"><span class="pre">KeyError</span></code></a> – A mechanism name was not recognized.</td>
 </tr>
 </tbody>
 </table>
@@ -379,9 +305,8 @@ un-hashed form, typically meaning
 
 <dl class="method">
 <dt id="pysasl.SASLAuth.get">
-<code class="descname">get</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#pysasl.SASLAuth.get" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get a SASL mechanism by name. The resulting object should inherit
-either <a class="reference internal" href="#pysasl.ServerMechanism" title="pysasl.ServerMechanism"><code class="xref py py-class docutils literal notranslate"><span class="pre">ServerMechanism</span></code></a>, <a class="reference internal" href="#pysasl.ClientMechanism" title="pysasl.ClientMechanism"><code class="xref py py-class docutils literal notranslate"><span class="pre">ClientMechanism</span></code></a>, or both.</p>
+<code class="descname">get</code><span class="sig-paren">(</span><em>name: bytes</em><span class="sig-paren">)</span> &#x2192; Optional[pysasl.BaseMechanism]<a class="headerlink" href="#pysasl.SASLAuth.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a SASL mechanism by name.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -396,7 +321,7 @@ either <a class="reference internal" href="#pysasl.ServerMechanism" title="pysas
 
 <dl class="method">
 <dt id="pysasl.SASLAuth.get_server">
-<code class="descname">get_server</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#pysasl.SASLAuth.get_server" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_server</code><span class="sig-paren">(</span><em>name: bytes</em><span class="sig-paren">)</span> &#x2192; Optional[pysasl.ServerMechanism]<a class="headerlink" href="#pysasl.SASLAuth.get_server" title="Permalink to this definition">¶</a></dt>
 <dd><p>Like <a class="reference internal" href="#pysasl.SASLAuth.get" title="pysasl.SASLAuth.get"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get()</span></code></a>, but only mechanisms inheriting
 <a class="reference internal" href="#pysasl.ServerMechanism" title="pysasl.ServerMechanism"><code class="xref py py-class docutils literal notranslate"><span class="pre">ServerMechanism</span></code></a> will be returned.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -413,7 +338,7 @@ either <a class="reference internal" href="#pysasl.ServerMechanism" title="pysas
 
 <dl class="method">
 <dt id="pysasl.SASLAuth.get_client">
-<code class="descname">get_client</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#pysasl.SASLAuth.get_client" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_client</code><span class="sig-paren">(</span><em>name: bytes</em><span class="sig-paren">)</span> &#x2192; Optional[pysasl.ClientMechanism]<a class="headerlink" href="#pysasl.SASLAuth.get_client" title="Permalink to this definition">¶</a></dt>
 <dd><p>Like <a class="reference internal" href="#pysasl.SASLAuth.get" title="pysasl.SASLAuth.get"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get()</span></code></a>, but only mechanisms inheriting
 <a class="reference internal" href="#pysasl.ClientMechanism" title="pysasl.ClientMechanism"><code class="xref py py-class docutils literal notranslate"><span class="pre">ClientMechanism</span></code></a> will be returned.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -434,42 +359,20 @@ either <a class="reference internal" href="#pysasl.ServerMechanism" title="pysas
 <dt id="pysasl.plain.PlainMechanism">
 <em class="property">class </em><code class="descclassname">pysasl.plain.</code><code class="descname">PlainMechanism</code><a class="headerlink" href="#pysasl.plain.PlainMechanism" title="Permalink to this definition">¶</a></dt>
 <dd><p>Implements the PLAIN authentication mechanism.</p>
-<dl class="attribute">
-<dt id="pysasl.plain.PlainMechanism.name">
-<code class="descname">name</code><a class="headerlink" href="#pysasl.plain.PlainMechanism.name" title="Permalink to this definition">¶</a></dt>
-<dd><p>The SASL name for this mechanism.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="pysasl.plain.PlainMechanism.priority">
-<code class="descname">priority</code><a class="headerlink" href="#pysasl.plain.PlainMechanism.priority" title="Permalink to this definition">¶</a></dt>
-<dd><p>Determines the sort ordering of this mechanism.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="pysasl.plain.PlainMechanism.insecure">
-<code class="descname">insecure</code><a class="headerlink" href="#pysasl.plain.PlainMechanism.insecure" title="Permalink to this definition">¶</a></dt>
-<dd><p>This mechanism is not considered secure for non-encrypted
-sessions.</p>
-</dd></dl>
-
 <dl class="method">
 <dt id="pysasl.plain.PlainMechanism.server_attempt">
-<code class="descname">server_attempt</code><span class="sig-paren">(</span><em>challenges</em><span class="sig-paren">)</span><a class="headerlink" href="#pysasl.plain.PlainMechanism.server_attempt" title="Permalink to this definition">¶</a></dt>
+<code class="descname">server_attempt</code><span class="sig-paren">(</span><em>responses: Sequence[pysasl.ChallengeResponse]</em><span class="sig-paren">)</span> &#x2192; Tuple[pysasl.AuthenticationCredentials, None]<a class="headerlink" href="#pysasl.plain.PlainMechanism.server_attempt" title="Permalink to this definition">¶</a></dt>
 <dd><p>For SASL server-side credential verification, receives responses
 from the client and issues challenges until it has everything needed to
 verify the credentials.</p>
-<p>If a challenge is necessary, an <code class="xref py py-class docutils literal notranslate"><span class="pre">ServerChallenge</span></code> exception will
-be raised. Send the challenge string to the client with
-<code class="xref py py-meth docutils literal notranslate"><span class="pre">get_challenge()</span></code> and then populate its response
-with <code class="xref py py-meth docutils literal notranslate"><span class="pre">set_response()</span></code>. Finally, append the
-exception to the <code class="docutils literal notranslate"><span class="pre">challenges</span></code> argument before calling again.</p>
+<p>If a challenge is necessary, a <code class="xref py py-class docutils literal notranslate"><span class="pre">ServerChallenge</span></code> exception will
+be raised. The response to this challenge must then be added to
+<em>responses</em> in the next call to <a class="reference internal" href="#pysasl.plain.PlainMechanism.server_attempt" title="pysasl.plain.PlainMechanism.server_attempt"><code class="xref py py-meth docutils literal notranslate"><span class="pre">server_attempt()</span></code></a>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>challenges</strong> – The server challenges that have been issued by the
-mechanism and responded to by the client.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>responses</strong> – The challenge-response exchanges thus far.</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A tuple of the authentication credentials received from the client
 once no more challenges are necessary, and an optional final
@@ -483,32 +386,25 @@ response string from the server used by some mechanisms.</td>
 
 <dl class="method">
 <dt id="pysasl.plain.PlainMechanism.client_attempt">
-<code class="descname">client_attempt</code><span class="sig-paren">(</span><em>creds</em>, <em>responses</em><span class="sig-paren">)</span><a class="headerlink" href="#pysasl.plain.PlainMechanism.client_attempt" title="Permalink to this definition">¶</a></dt>
+<code class="descname">client_attempt</code><span class="sig-paren">(</span><em>creds: pysasl.AuthenticationCredentials, challenges: Sequence[pysasl.ServerChallenge]</em><span class="sig-paren">)</span> &#x2192; pysasl.ChallengeResponse<a class="headerlink" href="#pysasl.plain.PlainMechanism.client_attempt" title="Permalink to this definition">¶</a></dt>
 <dd><p>For SASL client-side credential verification, produce responses to
 send to the server and react to its challenges until the server returns
 a final success or failure.</p>
-<p>Send the response string to the server with the
-<code class="xref py py-meth docutils literal notranslate"><span class="pre">get_response()</span></code> method of the returned
-<code class="xref py py-class docutils literal notranslate"><span class="pre">ClientResponse</span></code> object. If the server returns another
-challenge, set it with the object’s
-<code class="xref py py-meth docutils literal notranslate"><span class="pre">set_challenge()</span></code> method and append the object to
-the <code class="docutils literal notranslate"><span class="pre">responses</span></code> argument before calling again.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>creds</strong> – The credentials to attempt authentication with.</li>
-<li><strong>responses</strong> – The client responses that have been sent to the server.
-New attempts begin with an empty list.</li>
+<li><strong>challenges</strong> – The server challenges received.</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The client response to the most recent server challenge.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The response to the most recent server challenge.</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal notranslate"><span class="pre">UnexpectedAuthChallenge</span></code> – The server has issued an unexpected
-challenge the client mechanism does not recognize.</p>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal notranslate"><span class="pre">UnexpectedChallenge</span></code> – The server has issued a challenge the client
+mechanism does not recognize.</p>
 </td>
 </tr>
 </tbody>
@@ -521,42 +417,20 @@ challenge the client mechanism does not recognize.</p>
 <dt id="pysasl.login.LoginMechanism">
 <em class="property">class </em><code class="descclassname">pysasl.login.</code><code class="descname">LoginMechanism</code><a class="headerlink" href="#pysasl.login.LoginMechanism" title="Permalink to this definition">¶</a></dt>
 <dd><p>Implements the LOGIN authentication mechanism.</p>
-<dl class="attribute">
-<dt id="pysasl.login.LoginMechanism.name">
-<code class="descname">name</code><a class="headerlink" href="#pysasl.login.LoginMechanism.name" title="Permalink to this definition">¶</a></dt>
-<dd><p>The SASL name for this mechanism.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="pysasl.login.LoginMechanism.priority">
-<code class="descname">priority</code><a class="headerlink" href="#pysasl.login.LoginMechanism.priority" title="Permalink to this definition">¶</a></dt>
-<dd><p>Determines the sort ordering of this mechanism.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="pysasl.login.LoginMechanism.insecure">
-<code class="descname">insecure</code><a class="headerlink" href="#pysasl.login.LoginMechanism.insecure" title="Permalink to this definition">¶</a></dt>
-<dd><p>This mechanism is not considered secure for non-encrypted
-sessions.</p>
-</dd></dl>
-
 <dl class="method">
 <dt id="pysasl.login.LoginMechanism.server_attempt">
-<code class="descname">server_attempt</code><span class="sig-paren">(</span><em>challenges</em><span class="sig-paren">)</span><a class="headerlink" href="#pysasl.login.LoginMechanism.server_attempt" title="Permalink to this definition">¶</a></dt>
+<code class="descname">server_attempt</code><span class="sig-paren">(</span><em>responses: Sequence[pysasl.ChallengeResponse]</em><span class="sig-paren">)</span> &#x2192; Tuple[pysasl.AuthenticationCredentials, None]<a class="headerlink" href="#pysasl.login.LoginMechanism.server_attempt" title="Permalink to this definition">¶</a></dt>
 <dd><p>For SASL server-side credential verification, receives responses
 from the client and issues challenges until it has everything needed to
 verify the credentials.</p>
-<p>If a challenge is necessary, an <code class="xref py py-class docutils literal notranslate"><span class="pre">ServerChallenge</span></code> exception will
-be raised. Send the challenge string to the client with
-<code class="xref py py-meth docutils literal notranslate"><span class="pre">get_challenge()</span></code> and then populate its response
-with <code class="xref py py-meth docutils literal notranslate"><span class="pre">set_response()</span></code>. Finally, append the
-exception to the <code class="docutils literal notranslate"><span class="pre">challenges</span></code> argument before calling again.</p>
+<p>If a challenge is necessary, a <code class="xref py py-class docutils literal notranslate"><span class="pre">ServerChallenge</span></code> exception will
+be raised. The response to this challenge must then be added to
+<em>responses</em> in the next call to <a class="reference internal" href="#pysasl.login.LoginMechanism.server_attempt" title="pysasl.login.LoginMechanism.server_attempt"><code class="xref py py-meth docutils literal notranslate"><span class="pre">server_attempt()</span></code></a>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>challenges</strong> – The server challenges that have been issued by the
-mechanism and responded to by the client.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>responses</strong> – The challenge-response exchanges thus far.</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A tuple of the authentication credentials received from the client
 once no more challenges are necessary, and an optional final
@@ -570,32 +444,25 @@ response string from the server used by some mechanisms.</td>
 
 <dl class="method">
 <dt id="pysasl.login.LoginMechanism.client_attempt">
-<code class="descname">client_attempt</code><span class="sig-paren">(</span><em>creds</em>, <em>responses</em><span class="sig-paren">)</span><a class="headerlink" href="#pysasl.login.LoginMechanism.client_attempt" title="Permalink to this definition">¶</a></dt>
+<code class="descname">client_attempt</code><span class="sig-paren">(</span><em>creds: pysasl.AuthenticationCredentials, challenges: Sequence[pysasl.ServerChallenge]</em><span class="sig-paren">)</span> &#x2192; pysasl.ChallengeResponse<a class="headerlink" href="#pysasl.login.LoginMechanism.client_attempt" title="Permalink to this definition">¶</a></dt>
 <dd><p>For SASL client-side credential verification, produce responses to
 send to the server and react to its challenges until the server returns
 a final success or failure.</p>
-<p>Send the response string to the server with the
-<code class="xref py py-meth docutils literal notranslate"><span class="pre">get_response()</span></code> method of the returned
-<code class="xref py py-class docutils literal notranslate"><span class="pre">ClientResponse</span></code> object. If the server returns another
-challenge, set it with the object’s
-<code class="xref py py-meth docutils literal notranslate"><span class="pre">set_challenge()</span></code> method and append the object to
-the <code class="docutils literal notranslate"><span class="pre">responses</span></code> argument before calling again.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>creds</strong> – The credentials to attempt authentication with.</li>
-<li><strong>responses</strong> – The client responses that have been sent to the server.
-New attempts begin with an empty list.</li>
+<li><strong>challenges</strong> – The server challenges received.</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The client response to the most recent server challenge.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The response to the most recent server challenge.</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal notranslate"><span class="pre">UnexpectedAuthChallenge</span></code> – The server has issued an unexpected
-challenge the client mechanism does not recognize.</p>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal notranslate"><span class="pre">UnexpectedChallenge</span></code> – The server has issued a challenge the client
+mechanism does not recognize.</p>
 </td>
 </tr>
 </tbody>
@@ -606,10 +473,19 @@ challenge the client mechanism does not recognize.</p>
 
 <span class="target" id="module-pysasl.crammd5"></span><dl class="class">
 <dt id="pysasl.crammd5.CramMD5Result">
-<em class="property">class </em><code class="descclassname">pysasl.crammd5.</code><code class="descname">CramMD5Result</code><span class="sig-paren">(</span><em>username</em>, <em>challenge</em>, <em>digest</em><span class="sig-paren">)</span><a class="headerlink" href="#pysasl.crammd5.CramMD5Result" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">pysasl.crammd5.</code><code class="descname">CramMD5Result</code><span class="sig-paren">(</span><em>username: str</em>, <em>challenge: bytes</em>, <em>digest: bytes</em><span class="sig-paren">)</span><a class="headerlink" href="#pysasl.crammd5.CramMD5Result" title="Permalink to this definition">¶</a></dt>
 <dd><p>Because this mechanism uses hash algorithms to compare secrets, the
 <a class="reference internal" href="#pysasl.crammd5.CramMD5Mechanism.server_attempt" title="pysasl.crammd5.CramMD5Mechanism.server_attempt"><code class="xref py py-meth docutils literal notranslate"><span class="pre">server_attempt()</span></code></a> method returns this sub-class
 which overrides the <a class="reference internal" href="#pysasl.crammd5.CramMD5Result.check_secret" title="pysasl.crammd5.CramMD5Result.check_secret"><code class="xref py py-meth docutils literal notranslate"><span class="pre">check_secret()</span></code></a> method.</p>
+<dl class="attribute">
+<dt id="pysasl.crammd5.CramMD5Result.has_secret">
+<code class="descname">has_secret</code><a class="headerlink" href="#pysasl.crammd5.CramMD5Result.has_secret" title="Permalink to this definition">¶</a></dt>
+<dd><p>True if the <a class="reference internal" href="#pysasl.crammd5.CramMD5Result.secret" title="pysasl.crammd5.CramMD5Result.secret"><code class="xref py py-attr docutils literal notranslate"><span class="pre">secret</span></code></a> attribute is valid for this credentials
+type.</p>
+<p>If this returns False, the <a class="reference internal" href="#pysasl.crammd5.CramMD5Result.secret" title="pysasl.crammd5.CramMD5Result.secret"><code class="xref py py-attr docutils literal notranslate"><span class="pre">secret</span></code></a> attribute should raise
+<a class="reference external" href="https://docs.python.org/3/library/exceptions.html#AttributeError" title="(in Python v3.8)"><code class="xref py py-exc docutils literal notranslate"><span class="pre">AttributeError</span></code></a>.</p>
+</dd></dl>
+
 <dl class="attribute">
 <dt id="pysasl.crammd5.CramMD5Result.challenge">
 <code class="descname">challenge</code><a class="headerlink" href="#pysasl.crammd5.CramMD5Result.challenge" title="Permalink to this definition">¶</a></dt>
@@ -623,15 +499,6 @@ which overrides the <a class="reference internal" href="#pysasl.crammd5.CramMD5R
 </dd></dl>
 
 <dl class="attribute">
-<dt id="pysasl.crammd5.CramMD5Result.has_secret">
-<code class="descname">has_secret</code><a class="headerlink" href="#pysasl.crammd5.CramMD5Result.has_secret" title="Permalink to this definition">¶</a></dt>
-<dd><p>True if the <a class="reference internal" href="#pysasl.crammd5.CramMD5Result.secret" title="pysasl.crammd5.CramMD5Result.secret"><code class="xref py py-attr docutils literal notranslate"><span class="pre">secret</span></code></a> attribute is valid for this credentials
-type.</p>
-<p>If this returns False, the <a class="reference internal" href="#pysasl.crammd5.CramMD5Result.secret" title="pysasl.crammd5.CramMD5Result.secret"><code class="xref py py-attr docutils literal notranslate"><span class="pre">secret</span></code></a> attribute should raise
-<a class="reference external" href="https://docs.python.org/3/library/exceptions.html#AttributeError" title="(in Python v3.7)"><code class="xref py py-exc docutils literal notranslate"><span class="pre">AttributeError</span></code></a>.</p>
-</dd></dl>
-
-<dl class="attribute">
 <dt id="pysasl.crammd5.CramMD5Result.secret">
 <code class="descname">secret</code><a class="headerlink" href="#pysasl.crammd5.CramMD5Result.secret" title="Permalink to this definition">¶</a></dt>
 <dd><p>The secret string is not available in this mechanism.</p>
@@ -639,7 +506,7 @@ type.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#AttributeError" title="(in Python v3.7)"><code class="xref py py-exc docutils literal notranslate"><span class="pre">AttributeError</span></code></a></td>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#AttributeError" title="(in Python v3.8)"><code class="xref py py-exc docutils literal notranslate"><span class="pre">AttributeError</span></code></a></td>
 </tr>
 </tbody>
 </table>
@@ -647,7 +514,7 @@ type.</p>
 
 <dl class="method">
 <dt id="pysasl.crammd5.CramMD5Result.check_secret">
-<code class="descname">check_secret</code><span class="sig-paren">(</span><em>secret</em><span class="sig-paren">)</span><a class="headerlink" href="#pysasl.crammd5.CramMD5Result.check_secret" title="Permalink to this definition">¶</a></dt>
+<code class="descname">check_secret</code><span class="sig-paren">(</span><em>secret: str</em><span class="sig-paren">)</span> &#x2192; bool<a class="headerlink" href="#pysasl.crammd5.CramMD5Result.check_secret" title="Permalink to this definition">¶</a></dt>
 <dd><p>Checks if the secret string used in the authentication attempt
 matches the “known” secret string. Some mechanisms will override this
 method to control how this comparison is made.</p>
@@ -676,42 +543,20 @@ authentication attempt.</td>
 dangerous, as it can have implications about how the credentials are
 stored server-side.</p>
 </div>
-<dl class="attribute">
-<dt id="pysasl.crammd5.CramMD5Mechanism.name">
-<code class="descname">name</code><a class="headerlink" href="#pysasl.crammd5.CramMD5Mechanism.name" title="Permalink to this definition">¶</a></dt>
-<dd><p>The SASL name for this mechanism.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="pysasl.crammd5.CramMD5Mechanism.priority">
-<code class="descname">priority</code><a class="headerlink" href="#pysasl.crammd5.CramMD5Mechanism.priority" title="Permalink to this definition">¶</a></dt>
-<dd><p>Determines the sort ordering of this mechanism.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="pysasl.crammd5.CramMD5Mechanism.insecure">
-<code class="descname">insecure</code><a class="headerlink" href="#pysasl.crammd5.CramMD5Mechanism.insecure" title="Permalink to this definition">¶</a></dt>
-<dd><p>This mechanism is considered secure for non-encrypted
-sessions.</p>
-</dd></dl>
-
 <dl class="method">
 <dt id="pysasl.crammd5.CramMD5Mechanism.server_attempt">
-<code class="descname">server_attempt</code><span class="sig-paren">(</span><em>challenges</em><span class="sig-paren">)</span><a class="headerlink" href="#pysasl.crammd5.CramMD5Mechanism.server_attempt" title="Permalink to this definition">¶</a></dt>
+<code class="descname">server_attempt</code><span class="sig-paren">(</span><em>responses: Sequence[pysasl.ChallengeResponse]</em><span class="sig-paren">)</span> &#x2192; Tuple[pysasl.crammd5.CramMD5Result, None]<a class="headerlink" href="#pysasl.crammd5.CramMD5Mechanism.server_attempt" title="Permalink to this definition">¶</a></dt>
 <dd><p>For SASL server-side credential verification, receives responses
 from the client and issues challenges until it has everything needed to
 verify the credentials.</p>
-<p>If a challenge is necessary, an <code class="xref py py-class docutils literal notranslate"><span class="pre">ServerChallenge</span></code> exception will
-be raised. Send the challenge string to the client with
-<code class="xref py py-meth docutils literal notranslate"><span class="pre">get_challenge()</span></code> and then populate its response
-with <code class="xref py py-meth docutils literal notranslate"><span class="pre">set_response()</span></code>. Finally, append the
-exception to the <code class="docutils literal notranslate"><span class="pre">challenges</span></code> argument before calling again.</p>
+<p>If a challenge is necessary, a <code class="xref py py-class docutils literal notranslate"><span class="pre">ServerChallenge</span></code> exception will
+be raised. The response to this challenge must then be added to
+<em>responses</em> in the next call to <a class="reference internal" href="#pysasl.crammd5.CramMD5Mechanism.server_attempt" title="pysasl.crammd5.CramMD5Mechanism.server_attempt"><code class="xref py py-meth docutils literal notranslate"><span class="pre">server_attempt()</span></code></a>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>challenges</strong> – The server challenges that have been issued by the
-mechanism and responded to by the client.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>responses</strong> – The challenge-response exchanges thus far.</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A tuple of the authentication credentials received from the client
 once no more challenges are necessary, and an optional final
@@ -725,32 +570,25 @@ response string from the server used by some mechanisms.</td>
 
 <dl class="method">
 <dt id="pysasl.crammd5.CramMD5Mechanism.client_attempt">
-<code class="descname">client_attempt</code><span class="sig-paren">(</span><em>creds</em>, <em>responses</em><span class="sig-paren">)</span><a class="headerlink" href="#pysasl.crammd5.CramMD5Mechanism.client_attempt" title="Permalink to this definition">¶</a></dt>
+<code class="descname">client_attempt</code><span class="sig-paren">(</span><em>creds: pysasl.AuthenticationCredentials, challenges: Sequence[pysasl.ServerChallenge]</em><span class="sig-paren">)</span> &#x2192; pysasl.ChallengeResponse<a class="headerlink" href="#pysasl.crammd5.CramMD5Mechanism.client_attempt" title="Permalink to this definition">¶</a></dt>
 <dd><p>For SASL client-side credential verification, produce responses to
 send to the server and react to its challenges until the server returns
 a final success or failure.</p>
-<p>Send the response string to the server with the
-<code class="xref py py-meth docutils literal notranslate"><span class="pre">get_response()</span></code> method of the returned
-<code class="xref py py-class docutils literal notranslate"><span class="pre">ClientResponse</span></code> object. If the server returns another
-challenge, set it with the object’s
-<code class="xref py py-meth docutils literal notranslate"><span class="pre">set_challenge()</span></code> method and append the object to
-the <code class="docutils literal notranslate"><span class="pre">responses</span></code> argument before calling again.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>creds</strong> – The credentials to attempt authentication with.</li>
-<li><strong>responses</strong> – The client responses that have been sent to the server.
-New attempts begin with an empty list.</li>
+<li><strong>challenges</strong> – The server challenges received.</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The client response to the most recent server challenge.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The response to the most recent server challenge.</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal notranslate"><span class="pre">UnexpectedAuthChallenge</span></code> – The server has issued an unexpected
-challenge the client mechanism does not recognize.</p>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal notranslate"><span class="pre">UnexpectedChallenge</span></code> – The server has issued a challenge the client
+mechanism does not recognize.</p>
 </td>
 </tr>
 </tbody>
@@ -765,53 +603,27 @@ challenge the client mechanism does not recognize.</p>
 <dd><p>Implements the <a class="reference external" href="https://developers.google.com/gmail/xoauth2_protocol">XOAUTH2</a> authentication mechanism, used by <a class="reference external" href="http://tools.ietf.org/html/draft-ietf-oauth-v2-22">Oauth 2.0</a>
 systems to authenticate using access tokens.</p>
 <p>This mechanism is only available for client-side authentication.</p>
-<dl class="attribute">
-<dt id="pysasl.oauth.OAuth2Mechanism.name">
-<code class="descname">name</code><a class="headerlink" href="#pysasl.oauth.OAuth2Mechanism.name" title="Permalink to this definition">¶</a></dt>
-<dd><p>The SASL name for this mechanism.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="pysasl.oauth.OAuth2Mechanism.priority">
-<code class="descname">priority</code><a class="headerlink" href="#pysasl.oauth.OAuth2Mechanism.priority" title="Permalink to this definition">¶</a></dt>
-<dd><p>Determines the sort ordering of this mechanism.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="pysasl.oauth.OAuth2Mechanism.insecure">
-<code class="descname">insecure</code><a class="headerlink" href="#pysasl.oauth.OAuth2Mechanism.insecure" title="Permalink to this definition">¶</a></dt>
-<dd><p>This mechanism is considered secure for non-encrypted
-sessions.</p>
-</dd></dl>
-
 <dl class="method">
 <dt id="pysasl.oauth.OAuth2Mechanism.client_attempt">
-<code class="descname">client_attempt</code><span class="sig-paren">(</span><em>creds</em>, <em>responses</em><span class="sig-paren">)</span><a class="headerlink" href="#pysasl.oauth.OAuth2Mechanism.client_attempt" title="Permalink to this definition">¶</a></dt>
+<code class="descname">client_attempt</code><span class="sig-paren">(</span><em>creds: pysasl.AuthenticationCredentials, challenges: Sequence[pysasl.ServerChallenge]</em><span class="sig-paren">)</span> &#x2192; pysasl.ChallengeResponse<a class="headerlink" href="#pysasl.oauth.OAuth2Mechanism.client_attempt" title="Permalink to this definition">¶</a></dt>
 <dd><p>For SASL client-side credential verification, produce responses to
 send to the server and react to its challenges until the server returns
 a final success or failure.</p>
-<p>Send the response string to the server with the
-<code class="xref py py-meth docutils literal notranslate"><span class="pre">get_response()</span></code> method of the returned
-<code class="xref py py-class docutils literal notranslate"><span class="pre">ClientResponse</span></code> object. If the server returns another
-challenge, set it with the object’s
-<code class="xref py py-meth docutils literal notranslate"><span class="pre">set_challenge()</span></code> method and append the object to
-the <code class="docutils literal notranslate"><span class="pre">responses</span></code> argument before calling again.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>creds</strong> – The credentials to attempt authentication with.</li>
-<li><strong>responses</strong> – The client responses that have been sent to the server.
-New attempts begin with an empty list.</li>
+<li><strong>challenges</strong> – The server challenges received.</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The client response to the most recent server challenge.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The response to the most recent server challenge.</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal notranslate"><span class="pre">UnexpectedAuthChallenge</span></code> – The server has issued an unexpected
-challenge the client mechanism does not recognize.</p>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal notranslate"><span class="pre">UnexpectedChallenge</span></code> – The server has issued a challenge the client
+mechanism does not recognize.</p>
 </td>
 </tr>
 </tbody>
@@ -894,7 +706,7 @@ challenge the client mechanism does not recognize.</p>
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> &nbsp; &nbsp;</li>
-    <li><a href="#">pysasl 0.4.1 documentation</a> &#187;</li>
+    <li><a href="#">pysasl 0.5.0 documentation</a> &#187;</li>
  
       </ul>
     </div>
