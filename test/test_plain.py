@@ -3,48 +3,43 @@ from __future__ import absolute_import
 
 import unittest
 
-from pysasl import (SASLAuth, ServerChallenge, AuthenticationError,
-                    UnexpectedAuthChallenge, AuthenticationCredentials)
+from pysasl import (SASLAuth, ServerChallenge, ChallengeResponse,
+                    AuthenticationError, UnexpectedChallenge,
+                    AuthenticationCredentials)
 from pysasl.plain import PlainMechanism
 
 
 class TestPlainMechanism(unittest.TestCase):
 
-    def setUp(self):
+    def setUp(self) -> None:
         self.mech = PlainMechanism()
 
-    def test_availability(self):
-        sasl = SASLAuth()
+    def test_availability(self) -> None:
+        sasl = SASLAuth.defaults()
         self.assertIsInstance(sasl.get(b'PLAIN'), PlainMechanism)
-        sasl = SASLAuth.secure()
-        self.assertIsNone(sasl.get(b'PLAIN'))
-        sasl = SASLAuth.plaintext()
-        self.assertIsInstance(sasl.get(b'PLAIN'), PlainMechanism)
-        sasl = SASLAuth([b'PLAIN'])
+        sasl = SASLAuth.named([b'PLAIN'])
         self.assertIsInstance(sasl.get(b'PLAIN'), PlainMechanism)
         sasl = SASLAuth([self.mech])
         self.assertEqual([self.mech], sasl.client_mechanisms)
         self.assertEqual([self.mech], sasl.server_mechanisms)
         self.assertEqual(self.mech, sasl.get(b'PLAIN'))
 
-    def test_server_attempt_issues_challenge(self):
+    def test_server_attempt_issues_challenge(self) -> None:
         try:
             self.mech.server_attempt([])
         except ServerChallenge as exc:
-            self.assertEqual(b'', exc.challenge)
+            self.assertEqual(b'', exc.data)
         else:
             self.fail('ServerChallenge not raised')
 
-    def test_server_attempt_bad_response(self):
-        resp = ServerChallenge(b'')
-        resp.set_response(b'abcdefghi')
+    def test_server_attempt_bad_response(self) -> None:
         self.assertRaises(AuthenticationError,
-                          self.mech.server_attempt, [resp])
+                          self.mech.server_attempt,
+                          [ChallengeResponse(b'', b'abcdefghi')])
 
-    def test_server_attempt_successful(self):
-        resp = ServerChallenge(b'')
-        resp.set_response(b'abc\x00def\x00ghi')
-        result, final = self.mech.server_attempt([resp])
+    def test_server_attempt_successful(self) -> None:
+        result, final = self.mech.server_attempt([
+            ChallengeResponse(b'', b'abc\x00def\x00ghi')])
         self.assertIsNone(final)
         self.assertTrue(result.has_secret)
         self.assertEqual('abc', result.authzid)
@@ -53,15 +48,12 @@ class TestPlainMechanism(unittest.TestCase):
         self.assertTrue(result.check_secret(u'ghi'))
         self.assertFalse(result.check_secret(u'invalid'))
 
-    def test_client_attempt(self):
+    def test_client_attempt(self) -> None:
         creds = AuthenticationCredentials(u'testuser', u'testpass', u'testzid')
         resp1 = self.mech.client_attempt(creds, [])
-        self.assertEqual(b'testzid\x00testuser\x00testpass',
-                         resp1.get_response())
-        resp1.set_challenge(b'')
-        resp2 = self.mech.client_attempt(creds, [resp1])
-        self.assertEqual(b'testzid\x00testuser\x00testpass',
-                         resp2.get_response())
-        self.assertRaises(UnexpectedAuthChallenge,
+        self.assertEqual(b'testzid\x00testuser\x00testpass', resp1.response)
+        resp2 = self.mech.client_attempt(creds, [ServerChallenge(b'')])
+        self.assertEqual(b'testzid\x00testuser\x00testpass', resp2.response)
+        self.assertRaises(UnexpectedChallenge,
                           self.mech.client_attempt,
-                          creds, [resp1, resp2])
+                          creds, [ServerChallenge(b'')]*2)

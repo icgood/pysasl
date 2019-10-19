@@ -32,11 +32,11 @@ pip install pysasl
 Install into a virtual environment:
 
 ```
-virtualenv env
-source env/bin/activate
+python3 -m venv .venv
+source .venv/bin/activate
 
-python setup.py develop
 pip install -r test/requirements.txt
+pip install -e .
 ```
 
 Run the tests and report coverage metrics:
@@ -63,8 +63,9 @@ choice when instantiating the [`SASLAuth`][1] object:
 
 ```python
 from pysasl import SASLAuth
-auth1 = SASLAuth()  # or...
-auth2 = SASLAuth([b'PLAIN', b'LOGIN'])
+
+auth1 = SASLAuth.defaults()  # equivalent to...
+auth2 = SASLAuth.named([b'PLAIN', b'LOGIN'])
 ```
 
 To get the names of all available mechanisms:
@@ -87,9 +88,9 @@ def server_side_authentication(sock, mech):
             creds, _ = mech.server_attempt(challenges)
             return creds
         except ServerChallenge as chal:
-            challenges.append(chal)
-            sock.send(chal.get_challenge() + b'\r\n')
-            chal.set_response(sock.recv(1024).rstrip(b'\r\n'))
+            sock.send(chal.data + b'\r\n')
+            resp = sock.recv(1024).rstrip(b'\r\n')
+            challenges.append(ChallengeResponse(chal.data, resp))
 ```
 
 It's worth noting that implementations are not quite that simple. Most will
@@ -130,13 +131,12 @@ to advertise to the client which mechanisms are available to it:
 
 ```python
 from pysasl import SASLAuth
-auth = SASLAuth(advertised_mechanism_names)
-mechanisms = [mech.name for mech in auth.client_mechanisms]
-mech = auth.get(b'PLAIN')
+
+auth = SASLAuth.named(advertised_mechanism_names)
+mech = auth.client_mechanisms[0]
 ```
 
-The resulting mechanisms will be the intersection of those advertised by the
-server and those supported by pysasl.
+Any mechanism name that is not recognized will be ignored.
 
 #### Issuing Responses
 
@@ -145,19 +145,19 @@ challenges:
 
 ```python
 from pysasl import AuthenticationCredentials
+
 def client_side_authentication(sock, mech, username, password):
     creds = AuthenticationCredentials(username, password)
-    responses = []
+    challenges = []
     while True:
-        resp = mech.client_attempt(creds, responses)
-        sock.send(resp.get_response() + b'\r\n')
+        resp = mech.client_attempt(creds, challenges)
+        sock.send(resp + b'\r\n')
         data = sock.recv(1024).rstrip(b'\r\n')
         if data == 'SUCCESS':
             return True
         elif data == 'FAILURE':
             return False
-        resp.set_challenge(data)
-        responses.append(resp)
+        challenges.append(ServerChallenge(data))
 ```
 
 As you might expect, a real protocol probably won't return `SUCCESS` or
@@ -178,14 +178,9 @@ In this case, both client-side and server-side authentication should be
 handled a bit differently. For example for server-side:
 
 ```python
-except ServerChallenge as chal:
-    challenges.append(chal)
-    if initial_response:
-        chal.set_response(initial_response)
-        initial_response = None
-    else:
-        sock.send(chal.get_challenge() + b'\r\n')
-        chal.set_response(sock.recv(1024).rstrip(b'\r\n'))
+challenges = []
+if initial_response:
+    challenges.append(ChallengeResponse(b'', initial_response))
 ```
 
 And for client-side, just call `resp = mech.client_attempt(creds, [])`
