@@ -7,8 +7,8 @@ from typing import ClassVar, Optional, Iterable, Tuple, Mapping, Sequence
 from pkg_resources import iter_entry_points
 
 __all__ = ['AuthenticationError', 'UnexpectedChallenge', 'ServerChallenge',
-           'AuthenticationCredentials', 'BaseMechanism', 'ServerMechanism',
-           'ClientMechanism', 'SASLAuth']
+           'ChallengeResponse', 'AuthenticationCredentials', 'BaseMechanism',
+           'ServerMechanism', 'ClientMechanism', 'SASLAuth']
 
 
 class AuthenticationError(Exception):
