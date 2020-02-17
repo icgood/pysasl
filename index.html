@@ -100,6 +100,36 @@ challenges.</p>
 </dd></dl>
 
 <dl class="class">
+<dt id="pysasl.ChallengeResponse">
+<em class="property">class </em><code class="descclassname">pysasl.</code><code class="descname">ChallengeResponse</code><span class="sig-paren">(</span><em>challenge: bytes</em>, <em>response: bytes</em><span class="sig-paren">)</span><a class="headerlink" href="#pysasl.ChallengeResponse" title="Permalink to this definition">¶</a></dt>
+<dd><p>A challenge-response exchange between server and client.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>challenge</strong> – The server challenge string.</li>
+<li><strong>response</strong> – The client response string.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="pysasl.ChallengeResponse.challenge">
+<code class="descname">challenge</code><a class="headerlink" href="#pysasl.ChallengeResponse.challenge" title="Permalink to this definition">¶</a></dt>
+<dd><p>The server challenge string.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pysasl.ChallengeResponse.response">
+<code class="descname">response</code><a class="headerlink" href="#pysasl.ChallengeResponse.response" title="Permalink to this definition">¶</a></dt>
+<dd><p>The client response string.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="pysasl.AuthenticationCredentials">
 <em class="property">class </em><code class="descclassname">pysasl.</code><code class="descname">AuthenticationCredentials</code><span class="sig-paren">(</span><em>authcid: str</em>, <em>secret: str</em>, <em>authzid: Optional[str] = None</em><span class="sig-paren">)</span><a class="headerlink" href="#pysasl.AuthenticationCredentials" title="Permalink to this definition">¶</a></dt>
 <dd><p>Object returned by <a class="reference internal" href="#pysasl.ServerMechanism.server_attempt" title="pysasl.ServerMechanism.server_attempt"><code class="xref py py-meth docutils literal notranslate"><span class="pre">server_attempt()</span></code></a> and passed in
