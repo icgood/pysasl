@@ -21,17 +21,18 @@
 
 from setuptools import setup, find_packages  # type: ignore
 
-
 with open('README.md', 'r') as fh:
-    long_description = fh.read()
+    readme = fh.read()
 
+with open('LICENSE.md') as fh:
+    license = fh.read()
 
 setup(name='pysasl',
       version='0.5.0',
       author='Ian Good',
       author_email='icgood@gmail.com',
       description='Pure Python SASL client and server library.',
-      long_description=long_description,
+      long_description=readme + license,
       long_description_content_type='text/markdown',
       license='MIT',
       url='https://github.com/icgood/pysasl/',
