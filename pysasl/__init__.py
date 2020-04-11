@@ -44,13 +44,16 @@ class ServerChallenge(Exception):
     __slots__ = ['_data']
 
     def __init__(self, data: bytes) -> None:
-        super().__init__()
+        super().__init__(data)
         self._data = data
 
     @property
     def data(self) -> bytes:
         """The server challenge that should be sent to the client."""
         return self._data
+
+    def __repr__(self) -> str:
+        return f'ServerChallenge({self.data!r})'
 
 
 class ChallengeResponse:
@@ -78,6 +81,9 @@ class ChallengeResponse:
     def response(self) -> bytes:
         """The client response string."""
         return self._response
+
+    def __repr__(self) -> str:
+        return f'ChallengeResponse({self.challenge!r}, {self.response!r})'
 
 
 class AuthenticationCredentials:
