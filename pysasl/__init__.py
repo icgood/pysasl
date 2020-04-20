@@ -1,8 +1,9 @@
 
-import hmac
 from abc import abstractmethod, ABCMeta
 from collections import OrderedDict
 from typing import ClassVar, Optional, Iterable, Tuple, Mapping, Sequence
+
+from .hashing import HashInterface, Cleartext
 
 from pkg_resources import iter_entry_points
 
@@ -158,7 +159,8 @@ class AuthenticationCredentials:
         else:
             return self.authcid
 
-    def check_secret(self, secret: str) -> bool:
+    def check_secret(self, secret: str, *,
+                     hash: HashInterface = Cleartext()) -> bool:
         """Checks if the secret string used in the authentication attempt
         matches the "known" secret string. Some mechanisms will override this
         method to control how this comparison is made.
@@ -166,12 +168,13 @@ class AuthenticationCredentials:
         Args:
             secret: The secret string to compare against what was used in the
                 authentication attempt.
+            hash: The hash implementation to use to verify the secret.
 
         Returns:
             True if the given secret matches the authentication attempt.
 
         """
-        return hmac.compare_digest(secret, self.secret)
+        return hash.verify(self.secret, secret)
 
 
 class BaseMechanism(metaclass=ABCMeta):

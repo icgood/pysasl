@@ -8,6 +8,7 @@ from typing import Tuple, Sequence
 from . import (ServerMechanism, ClientMechanism, ServerChallenge,
                ChallengeResponse, AuthenticationError, UnexpectedChallenge,
                AuthenticationCredentials)
+from .hashing import HashInterface
 
 try:
     from passlib.utils import saslprep  # type: ignore
@@ -57,7 +58,7 @@ class CramMD5Result(AuthenticationCredentials):
         """
         raise AttributeError('secret')
 
-    def check_secret(self, secret: str) -> bool:
+    def check_secret(self, secret: str, *, hash: HashInterface = None) -> bool:
         secret_b = saslprep(secret).encode('utf-8')
         expected_hmac = hmac.new(secret_b, self.challenge, hashlib.md5)
         expected = expected_hmac.hexdigest().encode('ascii')
