@@ -107,12 +107,12 @@ def get_hash(*, no_passlib: bool = False,
     :func:`hashlib.pbkdf2_hmac`. The *passlib_config* parameter is ignored.
 
     If :mod:`passlib` is available, a :class:`~passlib.context.CryptContext` is
-    loaded from the *config_file* parameter. If *config_file* is ``None``, then
-    :attr:`passlib.apps.custom_app_context` is returned.
+    loaded from the *passlib_config* parameter. If *passlib_config* is
+    ``None``, then :attr:`passlib.apps.custom_app_context` is returned.
 
     Args:
         no_passlib: If true, do not use :mod:`passlib` even if available.
-        config_file: A passlib config file.
+        passlib_config: A passlib config file.
 
     """
     if no_passlib or not _has_passlib:
