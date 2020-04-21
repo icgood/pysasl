@@ -1,1 +1,1 @@
-include README.md LICENSE.md pymap/py.typed
+include README.md LICENSE.md pysasl/py.typed
