@@ -28,7 +28,7 @@ with open('LICENSE.md') as fh:
     license = fh.read()
 
 setup(name='pysasl',
-      version='0.6.1',
+      version='0.6.2',
       author='Ian Good',
       author_email='icgood@gmail.com',
       description='Pure Python SASL client and server library.',
@@ -39,7 +39,7 @@ setup(name='pysasl',
       python_requires='~=3.6',
       include_package_data=True,
       packages=find_packages(),
-      install_requiers=['typing-extensions'],
+      install_requires=['typing-extensions'],
       extras_require={'passlib': ['passlib']},
       entry_points={'pysasl.mechanisms': [
           'crammd5 = pysasl.crammd5:CramMD5Mechanism',
