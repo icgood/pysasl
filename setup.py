@@ -30,7 +30,7 @@ with open('LICENSE.md') as fh:
 setup(name='pysasl',
       version='0.6.2',
       author='Ian Good',
-      author_email='icgood@gmail.com',
+      author_email='ian@icgood.net',
       description='Pure Python SASL client and server library.',
       long_description=readme + license,
       long_description_content_type='text/markdown',
