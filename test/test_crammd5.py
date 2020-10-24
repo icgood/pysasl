@@ -7,9 +7,9 @@ import email.utils
 from unittest.mock import patch
 
 from pysasl import (SASLAuth, ServerChallenge, ChallengeResponse,
-                    AuthenticationError, UnexpectedChallenge,
-                    AuthenticationCredentials)
-from pysasl.crammd5 import CramMD5Mechanism
+                    AuthenticationError, UnexpectedChallenge)
+from pysasl.creds import StoredSecret, AuthenticationCredentials
+from pysasl.mechanisms.crammd5 import CramMD5Mechanism
 
 
 class TestCramMD5Mechanism(unittest.TestCase):
@@ -56,12 +56,13 @@ class TestCramMD5Mechanism(unittest.TestCase):
         self.assertEqual('testuser', result.authcid)
         self.assertEqual('testuser', result.identity)
         self.assertRaises(AttributeError, getattr, result, 'secret')
-        self.assertTrue(result.check_secret(u'testpass'))
-        self.assertTrue(result.check_secret(u'testpass'))
-        self.assertFalse(result.check_secret(u'badpass'))
+        self.assertTrue(result.check_secret(StoredSecret('testpass')))
+        self.assertTrue(result.check_secret(StoredSecret('testpass')))
+        self.assertFalse(result.check_secret(StoredSecret('badpass')))
+        self.assertFalse(result.check_secret(None))
 
     def test_client_attempt(self) -> None:
-        creds = AuthenticationCredentials(u'testuser', u'testpass')
+        creds = AuthenticationCredentials('testuser', 'testpass')
         resp1 = self.mech.client_attempt(creds, [])
         self.assertEqual(b'', resp1.response)
         resp2 = self.mech.client_attempt(creds, [

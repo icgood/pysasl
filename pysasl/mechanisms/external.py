@@ -1,10 +1,9 @@
 
 from typing import Optional, Tuple, Sequence
 
-from . import (ServerMechanism, ClientMechanism, ServerChallenge,
-               ChallengeResponse, AuthenticationCredentials,
-               UnexpectedChallenge)
-from .hashing import HashInterface
+from .. import (ServerMechanism, ClientMechanism, ServerChallenge,
+                ChallengeResponse, UnexpectedChallenge)
+from ..creds import StoredSecret, AuthenticationCredentials
 
 __all__ = ['ExternalResult', 'ExternalMechanism']
 
@@ -42,7 +41,7 @@ class ExternalResult(AuthenticationCredentials):
         """
         raise AttributeError('secret')
 
-    def check_secret(self, secret: str, *, hash: HashInterface = None) -> bool:
+    def check_secret(self, secret: Optional[StoredSecret], **other) -> bool:
         """This method always returns True for this mechanism, unless
         overridden by a subclass to provide external enforcement rules.
 

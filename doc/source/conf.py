@@ -24,7 +24,7 @@ import cloud_sptheme as csp
 # -- Project information -----------------------------------------------------
 
 project = 'pysasl'
-copyright = '2019, Ian Good'
+copyright = '2020, Ian Good'
 author = 'Ian Good'
 
 # The short X.Y version

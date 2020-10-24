@@ -4,8 +4,9 @@ from __future__ import absolute_import
 import unittest
 
 from pysasl import (SASLAuth, ServerChallenge, ChallengeResponse,
-                    AuthenticationCredentials, UnexpectedChallenge)
-from pysasl.login import LoginMechanism
+                    UnexpectedChallenge)
+from pysasl.creds import StoredSecret, AuthenticationCredentials
+from pysasl.mechanisms.login import LoginMechanism
 
 
 class TestLoginMechanism(unittest.TestCase):
@@ -47,11 +48,11 @@ class TestLoginMechanism(unittest.TestCase):
         self.assertIsNone(result.authzid)
         self.assertEqual('testuser', result.authcid)
         self.assertEqual('testuser', result.identity)
-        self.assertTrue(result.check_secret(u'testpass'))
-        self.assertFalse(result.check_secret(u'invalid'))
+        self.assertTrue(result.check_secret(StoredSecret('testpass')))
+        self.assertFalse(result.check_secret(StoredSecret('invalid')))
 
     def test_client_attempt(self) -> None:
-        creds = AuthenticationCredentials(u'testuser', u'testpass')
+        creds = AuthenticationCredentials('testuser', 'testpass')
         resp1 = self.mech.client_attempt(creds, [])
         self.assertEqual(b'', resp1.response)
         resp2 = self.mech.client_attempt(creds, [

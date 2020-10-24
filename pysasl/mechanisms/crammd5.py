@@ -3,12 +3,11 @@ import re
 import hmac
 import hashlib
 import email.utils
-from typing import Tuple, Sequence
+from typing import Optional, Tuple, Sequence
 
-from . import (ServerMechanism, ClientMechanism, ServerChallenge,
-               ChallengeResponse, AuthenticationError, UnexpectedChallenge,
-               AuthenticationCredentials)
-from .hashing import HashInterface
+from .. import (ServerMechanism, ClientMechanism, ServerChallenge,
+                ChallengeResponse, AuthenticationError, UnexpectedChallenge)
+from ..creds import StoredSecret, AuthenticationCredentials
 
 try:
     from passlib.utils import saslprep  # type: ignore
@@ -53,16 +52,18 @@ class CramMD5Result(AuthenticationCredentials):
         """The secret string is not available in this mechanism.
 
         Raises:
-            AttributeError
+            :exc:`AttributeError`
 
         """
         raise AttributeError('secret')
 
-    def check_secret(self, secret: str, *, hash: HashInterface = None) -> bool:
-        secret_b = saslprep(secret).encode('utf-8')
-        expected_hmac = hmac.new(secret_b, self.challenge, hashlib.md5)
-        expected = expected_hmac.hexdigest().encode('ascii')
-        return hmac.compare_digest(expected, self.digest)
+    def check_secret(self, secret: Optional[StoredSecret], **other) -> bool:
+        if secret is not None:
+            secret_b = saslprep(secret.raw).encode('utf-8')
+            expected_hmac = hmac.new(secret_b, self.challenge, hashlib.md5)
+            expected = expected_hmac.hexdigest().encode('ascii')
+            return hmac.compare_digest(expected, self.digest)
+        return False
 
 
 class CramMD5Mechanism(ServerMechanism, ClientMechanism):
