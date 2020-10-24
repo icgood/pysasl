@@ -7,20 +7,10 @@
 ``pysasl`` Documentation
 ========================
 
-.. automodule:: pysasl
-   :members:
+.. toctree::
 
-.. automodule:: pysasl.plain
-   :members:
-
-.. automodule:: pysasl.login
-   :members:
-
-.. automodule:: pysasl.crammd5
-   :members:
-
-.. automodule:: pysasl.oauth
-   :members:
+   pysasl
+   pysasl.mechanisms
 
 
 Indices and tables
