@@ -1,4 +1,4 @@
-# Copyright (c) 2019 Ian C. Good
+# Copyright (c) 2020 Ian C. Good
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -28,7 +28,7 @@ with open('LICENSE.md') as fh:
     license = fh.read()
 
 setup(name='pysasl',
-      version='0.6.2',
+      version='0.7.0',
       author='Ian Good',
       author_email='ian@icgood.net',
       description='Pure Python SASL client and server library.',
@@ -42,11 +42,11 @@ setup(name='pysasl',
       install_requires=['typing-extensions'],
       extras_require={'passlib': ['passlib']},
       entry_points={'pysasl.mechanisms': [
-          'crammd5 = pysasl.crammd5:CramMD5Mechanism',
-          'external = pysasl.external:ExternalMechanism',
-          'login = pysasl.login:LoginMechanism',
-          'plain = pysasl.plain:PlainMechanism',
-          'oauth = pysasl.oauth:OAuth2Mechanism',
+          'crammd5 = pysasl.mechanisms.crammd5:CramMD5Mechanism',
+          'external = pysasl.mechanisms.external:ExternalMechanism',
+          'login = pysasl.mechanisms.login:LoginMechanism',
+          'plain = pysasl.mechanisms.plain:PlainMechanism',
+          'oauth = pysasl.mechanisms.oauth:OAuth2Mechanism',
       ]},
       classifiers=['Development Status :: 3 - Alpha',
                    'Intended Audience :: Developers',

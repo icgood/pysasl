@@ -2,9 +2,9 @@
 import re
 from typing import Tuple, Sequence
 
-from . import (ServerMechanism, ClientMechanism, ServerChallenge,
-               ChallengeResponse, AuthenticationError,
-               AuthenticationCredentials, UnexpectedChallenge)
+from .. import (ServerMechanism, ClientMechanism, ServerChallenge,
+                ChallengeResponse, AuthenticationError, UnexpectedChallenge)
+from ..creds import AuthenticationCredentials
 
 __all__ = ['PlainMechanism']
 

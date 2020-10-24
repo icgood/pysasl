@@ -1,9 +1,9 @@
 
 from typing import Tuple, Sequence
 
-from . import (ServerMechanism, ClientMechanism, ServerChallenge,
-               ChallengeResponse, AuthenticationCredentials,
-               UnexpectedChallenge)
+from .. import (ServerMechanism, ClientMechanism, ServerChallenge,
+                ChallengeResponse, UnexpectedChallenge)
+from ..creds import AuthenticationCredentials
 
 __all__ = ['LoginMechanism']
 

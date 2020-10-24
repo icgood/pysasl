@@ -3,13 +3,13 @@ from abc import abstractmethod, ABCMeta
 from collections import OrderedDict
 from typing import ClassVar, Optional, Iterable, Tuple, Mapping, Sequence
 
-from .hashing import HashInterface, Cleartext
-
 from pkg_resources import iter_entry_points
 
+from .creds import AuthenticationCredentials
+
 __all__ = ['AuthenticationError', 'UnexpectedChallenge', 'ServerChallenge',
-           'ChallengeResponse', 'AuthenticationCredentials', 'BaseMechanism',
-           'ServerMechanism', 'ClientMechanism', 'SASLAuth']
+           'ChallengeResponse', 'BaseMechanism', 'ServerMechanism',
+           'ClientMechanism', 'SASLAuth']
 
 
 class AuthenticationError(Exception):
@@ -85,96 +85,6 @@ class ChallengeResponse:
 
     def __repr__(self) -> str:
         return f'ChallengeResponse({self.challenge!r}, {self.response!r})'
-
-
-class AuthenticationCredentials:
-    """Object returned by :meth:`~ServerMechanism.server_attempt` and passed in
-    to :meth:`~ClientMechanism.client_attempt` containing information about the
-    authentication credentials in use.
-
-    Args:
-        authcid: Authentication ID string (the username).
-        secret: Secret string (the password).
-        authzid: Authorization ID string, if applicable.
-
-    """
-
-    __slots__ = ['_authcid', '_secret', '_authzid']
-
-    def __init__(self, authcid: str, secret: str,
-                 authzid: Optional[str] = None) -> None:
-        super(AuthenticationCredentials, self).__init__()
-        self._authcid = authcid
-        self._secret = secret
-        self._authzid = authzid or None
-
-    @property
-    def has_secret(self) -> bool:
-        """True if the :attr:`.secret` attribute is valid for this credentials
-        type.
-
-        If this returns False, the :attr:`.secret` attribute should raise
-        :exc:`AttributeError`.
-
-        """
-        return True
-
-    @property
-    def authcid(self) -> str:
-        """The authentication identity string used in the attempt."""
-        return self._authcid
-
-    @property
-    def secret(self) -> str:
-        """Contains the secret string used in the authentication attempt,
-        if available. Use :meth:`.check_secret` instead, when possible.
-
-        """
-        return self._secret
-
-    @property
-    def authzid(self) -> Optional[str]:
-        """The authorization identity string used in the attempt, or ``None``
-        if this field is empty or unused.
-
-        """
-        return self._authzid
-
-    @property
-    def identity(self) -> str:
-        """The canonical identity being assumed by the authentication attempt.
-        This is :attr:`.authzid` if available, :attr:`.authcid` otherwise.
-
-        Consider a UNIX system where ``root`` is the superuser and only it may
-        assume the identity of other users. With an :attr:`.authcid` of
-        ``root`` and an :attr:`.authzid` of ``terry``, the authorization would
-        succeed and :attr:`.identity` would be ``terry``. With an
-        :attr:`.authcid` of ``greg``, authorization would fail because ``greg``
-        is not the superuser and cannot assume the :attr:`.identity` of
-        ``terry``.
-
-        """
-        if self.authzid is not None:
-            return self.authzid
-        else:
-            return self.authcid
-
-    def check_secret(self, secret: str, *,
-                     hash: HashInterface = Cleartext()) -> bool:
-        """Checks if the secret string used in the authentication attempt
-        matches the "known" secret string. Some mechanisms will override this
-        method to control how this comparison is made.
-
-        Args:
-            secret: The secret string to compare against what was used in the
-                authentication attempt.
-            hash: The hash implementation to use to verify the secret.
-
-        Returns:
-            True if the given secret matches the authentication attempt.
-
-        """
-        return hash.verify(self.secret, secret)
 
 
 class BaseMechanism(metaclass=ABCMeta):

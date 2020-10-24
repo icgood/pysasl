@@ -4,8 +4,9 @@ from __future__ import absolute_import
 import unittest
 
 from pysasl import (SASLAuth, ServerChallenge, ChallengeResponse,
-                    UnexpectedChallenge, AuthenticationCredentials)
-from pysasl.external import ExternalMechanism
+                    UnexpectedChallenge)
+from pysasl.creds import StoredSecret, AuthenticationCredentials
+from pysasl.mechanisms.external import ExternalMechanism
 
 
 class TestExternalMechanism(unittest.TestCase):
@@ -40,8 +41,9 @@ class TestExternalMechanism(unittest.TestCase):
         self.assertEqual('abcdefghi', result.authcid)
         self.assertEqual('abcdefghi', result.identity)
         self.assertRaises(AttributeError, getattr, result, 'secret')
-        self.assertTrue(result.check_secret(u'secret'))
-        self.assertTrue(result.check_secret(u'invalid'))
+        self.assertTrue(result.check_secret(StoredSecret('secret')))
+        self.assertTrue(result.check_secret(StoredSecret('invalid')))
+        self.assertTrue(result.check_secret(None))
 
     def test_server_attempt_successful_empty(self) -> None:
         result, _ = self.mech.server_attempt([
@@ -50,7 +52,7 @@ class TestExternalMechanism(unittest.TestCase):
         self.assertEqual('', result.authcid)
 
     def test_client_attempt(self) -> None:
-        creds = AuthenticationCredentials(u'', u'', u'testzid')
+        creds = AuthenticationCredentials('', '', 'testzid')
         resp1 = self.mech.client_attempt(creds, [])
         self.assertEqual(b'testzid', resp1.response)
         resp2 = self.mech.client_attempt(creds, [ServerChallenge(b'')])
