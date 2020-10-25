@@ -36,6 +36,7 @@ class TestExternalMechanism(unittest.TestCase):
         result, final = self.mech.server_attempt([
             ChallengeResponse(b'', b'abcdefghi')])
         self.assertIsNone(final)
+        self.assertIsNone(result.authcid_type)
         self.assertFalse(result.has_secret)
         self.assertEqual('abcdefghi', result.authzid)
         self.assertEqual('abcdefghi', result.authcid)

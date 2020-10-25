@@ -51,6 +51,7 @@ class TestCramMD5Mechanism(unittest.TestCase):
         result, final = self.mech.server_attempt([
             ChallengeResponse(b'<abc123.1234@testhost>', response)])
         self.assertIsNone(final)
+        self.assertIsNone(result.authcid_type)
         self.assertFalse(result.has_secret)
         self.assertIsNone(result.authzid)
         self.assertEqual('testuser', result.authcid)

@@ -41,6 +41,7 @@ class TestOAuth2Mechanism(unittest.TestCase):
         result, final = self.mech.server_attempt([ChallengeResponse(
             b'', b'user=testuser\x01auth=Bearer testtoken\x01\x01')])
         self.assertIsNone(final)
+        self.assertIsNone(result.authcid_type)
         self.assertFalse(result.has_secret)
         self.assertEqual('testuser', result.authcid)
         self.assertIsNone(result.authzid)

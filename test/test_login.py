@@ -44,6 +44,7 @@ class TestLoginMechanism(unittest.TestCase):
             ChallengeResponse(b'Username:', b'testuser'),
             ChallengeResponse(b'Password:', b'testpass')])
         self.assertIsNone(final)
+        self.assertIsNone(result.authcid_type)
         self.assertTrue(result.has_secret)
         self.assertIsNone(result.authzid)
         self.assertEqual('testuser', result.authcid)

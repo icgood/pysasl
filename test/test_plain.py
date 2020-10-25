@@ -41,6 +41,7 @@ class TestPlainMechanism(unittest.TestCase):
         result, final = self.mech.server_attempt([
             ChallengeResponse(b'', b'abc\x00def\x00ghi')])
         self.assertIsNone(final)
+        self.assertIsNone(result.authcid_type)
         self.assertTrue(result.has_secret)
         self.assertEqual('abc', result.authzid)
         self.assertEqual('def', result.authcid)
