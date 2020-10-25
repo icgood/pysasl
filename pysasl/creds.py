@@ -60,6 +60,19 @@ class AuthenticationCredentials:
         self._authzid = authzid or None
 
     @property
+    def authcid_type(self) -> Optional[str]:
+        """Indicates what kind of identifier is contained in :attr:`.authcid`.
+
+        Use of this value is application-specific, as is the interpretation of
+        ``None`` (the default value unless overridden).
+
+        See Also:
+            `RFC 4422 2. <https://tools.ietf.org/html/rfc4422#section-2>`_
+
+        """
+        return None
+
+    @property
     def has_secret(self) -> bool:
         """True if the :attr:`.secret` attribute is valid for this credentials
         type.
