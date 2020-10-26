@@ -105,19 +105,25 @@ a [`AuthenticationCredentials`][2] object, we can access information from the
 attempt:
 
 ```python
+from pysasl.creds import StoredSecret
+
 print('Authenticated as:', result.authcid)
 print('Authorization ID:', result.authzid)
 print('Assumed identity:', result.identity)
 
 # To compare to a known password...
-assert result.check_secret('s3kr3t')
-# Or to compare hashes...
-assert password_hash == hash(result.secret)
-```
+assert result.check_secret(StoredSecret('s3kr3t'))
 
-Some mechanisms (e.g. `CRAM-MD5`, `EXTERNAL`) will not support direct access to
-the secret.  In this case, `result.has_secret` will be `False` and you should
-use `result.check_secret()` instead.
+# Or to compare hashes...
+from pysasl.hashing import BuiltinHash
+secret = StoredSecret('1baa33d03d0...', hash=BuiltinHash())
+assert result.check_secret(secret)
+
+# Or use passlib hashing...
+from passlib.apps import custom_app_context
+secret = StoredSecret('$6$rounds=656000$...', hash=custom_app_context)
+assert result.check_secret(secret)
+```
 
 ## Client-side
 
@@ -144,7 +150,7 @@ Once a mechanism is chosen, we enter of a loop of responding to server
 challenges:
 
 ```python
-from pysasl import AuthenticationCredentials
+from pysasl.creds import AuthenticationCredentials
 
 def client_side_authentication(sock, mech, username, password):
     creds = AuthenticationCredentials(username, password)
@@ -188,7 +194,7 @@ to get the initial response before starting the transmission. All
 mechanisms should either return an initial response or an empty string
 when given an empty list for the second argument.
 
-[1]: https://icgood.github.io/pysasl/#pysasl.SASLAuth
-[2]: https://icgood.github.io/pysasl/#pysasl.AuthenticationCredentials
+[1]: https://icgood.github.io/pysasl/pysasl.html#pysasl.SASLAuth
+[2]: https://icgood.github.io/pysasl/pysasl.html#pysasl.creds.AuthenticationCredentials
 [3]: https://tools.ietf.org/html/rfc4954
 [4]: https://tools.ietf.org/html/rfc3501#section-6.2.2
