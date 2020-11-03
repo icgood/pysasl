@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>pysasl Package &#8212; pysasl 0.7.1 documentation</title>
+    <title>pysasl Package &#8212; pysasl 0.8.0 documentation</title>
     <link rel="stylesheet" href="_static/cloud.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Noticia+Text:400,i,b,bi|Open+Sans:400,i,b,bi|Roboto+Mono:400,i,b,bi&display=swap" />
@@ -58,7 +58,7 @@
         <li class="right" >
           <a href="index.html" title="pysasl Documentation"
              accesskey="P">previous</a> &nbsp; &nbsp;</li>
-    <li><a href="index.html">pysasl 0.7.1 documentation</a> &#187;</li>
+    <li><a href="index.html">pysasl 0.8.0 documentation</a> &#187;</li>
  
       </ul>
     </div>
@@ -362,7 +362,7 @@ True if the hashes match.</p>
 
 <dl class="class">
 <dt id="pysasl.creds.AuthenticationCredentials">
-<em class="property">class </em><code class="descclassname">pysasl.creds.</code><code class="descname">AuthenticationCredentials</code><span class="sig-paren">(</span><em>authcid: str</em>, <em>secret: str</em>, <em>authzid: Optional[str] = None</em><span class="sig-paren">)</span><a class="headerlink" href="#pysasl.creds.AuthenticationCredentials" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">pysasl.creds.</code><code class="descname">AuthenticationCredentials</code><span class="sig-paren">(</span><em>authcid: str</em>, <em>secret: str</em>, <em>authzid: Optional[str] = None</em>, <em>*</em>, <em>authcid_type: Optional[str] = None</em><span class="sig-paren">)</span><a class="headerlink" href="#pysasl.creds.AuthenticationCredentials" title="Permalink to this definition">¶</a></dt>
 <dd><p>Object returned by <code class="xref py py-meth docutils literal notranslate"><span class="pre">server_attempt()</span></code> and passed in
 to <code class="xref py py-meth docutils literal notranslate"><span class="pre">client_attempt()</span></code> containing information about the
 authentication credentials in use.</p>
@@ -374,6 +374,8 @@ authentication credentials in use.</p>
 <li><strong>authcid</strong> – Authentication ID string (the username).</li>
 <li><strong>secret</strong> – Secret string (the password).</li>
 <li><strong>authzid</strong> – Authorization ID string, if applicable.</li>
+<li><strong>authcid_type</strong> – The type of identifier contained in <em>authcid</em>, see
+<a class="reference internal" href="#pysasl.creds.AuthenticationCredentials.authcid_type" title="pysasl.creds.AuthenticationCredentials.authcid_type"><code class="xref py py-attr docutils literal notranslate"><span class="pre">authcid_type</span></code></a>.</li>
 </ul>
 </td>
 </tr>
@@ -383,8 +385,8 @@ authentication credentials in use.</p>
 <dt id="pysasl.creds.AuthenticationCredentials.authcid_type">
 <code class="descname">authcid_type</code><a class="headerlink" href="#pysasl.creds.AuthenticationCredentials.authcid_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Indicates what kind of identifier is contained in <a class="reference internal" href="#pysasl.creds.AuthenticationCredentials.authcid" title="pysasl.creds.AuthenticationCredentials.authcid"><code class="xref py py-attr docutils literal notranslate"><span class="pre">authcid</span></code></a>.</p>
-<p>Use of this value is application-specific, as is the interpretation of
-<code class="docutils literal notranslate"><span class="pre">None</span></code> (the default value unless overridden).</p>
+<p>None of the builtin mechanisms assign this value, but it may be useful
+for applications with advanced authentication needs.</p>
 <div class="admonition seealso">
 <p class="first admonition-title">See also</p>
 <p class="last"><a class="reference external" href="https://tools.ietf.org/html/rfc4422#section-2">RFC 4422 2.</a></p>
@@ -447,11 +449,17 @@ method to control how this comparison is made.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>secret</strong> – The secret to compare against what was used in the
 authentication attempt.</li>
-<li><strong>other</strong> – Allows subclasses to accept additional keywords as needed.</li>
+<li><strong>other</strong> – Additional keyword arguments to allow subclasses to accept
+additional data as needed.</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">True if the given secret matches the authentication attempt.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">True if the given secret matches the authentication attempt.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal notranslate"><span class="pre">ExternalVerificationRequired</span></code> – The credentials cannot
+be verified using the given <em>secret</em> and require external
+verification.</p>
 </td>
 </tr>
 </tbody>
@@ -689,7 +697,7 @@ loaded from the <em>passlib_config</em> parameter. If <em>passlib_config</em> is
         <li class="right" >
           <a href="index.html" title="pysasl Documentation"
              >previous</a> &nbsp; &nbsp;</li>
-    <li><a href="index.html">pysasl 0.7.1 documentation</a> &#187;</li>
+    <li><a href="index.html">pysasl 0.8.0 documentation</a> &#187;</li>
  
       </ul>
     </div>

@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>pysasl.mechanisms Package &#8212; pysasl 0.7.1 documentation</title>
+    <title>pysasl.mechanisms Package &#8212; pysasl 0.8.0 documentation</title>
     <link rel="stylesheet" href="_static/cloud.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Noticia+Text:400,i,b,bi|Open+Sans:400,i,b,bi|Roboto+Mono:400,i,b,bi&display=swap" />
@@ -54,7 +54,7 @@
         <li class="right" >
           <a href="pysasl.html" title="pysasl Package"
              accesskey="P">previous</a> &nbsp; &nbsp;</li>
-    <li><a href="index.html">pysasl 0.7.1 documentation</a> &#187;</li>
+    <li><a href="index.html">pysasl 0.8.0 documentation</a> &#187;</li>
  
       </ul>
     </div>
@@ -238,11 +238,17 @@ method to control how this comparison is made.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>secret</strong> – The secret to compare against what was used in the
 authentication attempt.</li>
-<li><strong>other</strong> – Allows subclasses to accept additional keywords as needed.</li>
+<li><strong>other</strong> – Additional keyword arguments to allow subclasses to accept
+additional data as needed.</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">True if the given secret matches the authentication attempt.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">True if the given secret matches the authentication attempt.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal notranslate"><span class="pre">ExternalVerificationRequired</span></code> – The credentials cannot
+be verified using the given <em>secret</em> and require external
+verification.</p>
 </td>
 </tr>
 </tbody>
@@ -376,10 +382,9 @@ mechanism does not recognize.</p>
 
 <span class="target" id="module-pysasl.mechanisms.external"></span><dl class="class">
 <dt id="pysasl.mechanisms.external.ExternalResult">
-<em class="property">class </em><code class="descclassname">pysasl.mechanisms.external.</code><code class="descname">ExternalResult</code><span class="sig-paren">(</span><em>authzid: Optional[str] = None</em><span class="sig-paren">)</span><a class="headerlink" href="#pysasl.mechanisms.external.ExternalResult" title="Permalink to this definition">¶</a></dt>
-<dd><p>Because this mechanism does not use authentication identity or secret
-strings, the <a class="reference internal" href="#pysasl.mechanisms.external.ExternalMechanism.server_attempt" title="pysasl.mechanisms.external.ExternalMechanism.server_attempt"><code class="xref py py-meth docutils literal notranslate"><span class="pre">server_attempt()</span></code></a> method returns this
-sub-class which only allows the <a class="reference internal" href="pysasl.html#pysasl.creds.AuthenticationCredentials.authzid" title="pysasl.creds.AuthenticationCredentials.authzid"><code class="xref py py-attr docutils literal notranslate"><span class="pre">authzid</span></code></a> attribute.</p>
+<em class="property">class </em><code class="descclassname">pysasl.mechanisms.external.</code><code class="descname">ExternalResult</code><span class="sig-paren">(</span><em>authzid: Optional[str] = None</em>, <em>*</em>, <em>authcid_type: Optional[str] = None</em><span class="sig-paren">)</span><a class="headerlink" href="#pysasl.mechanisms.external.ExternalResult" title="Permalink to this definition">¶</a></dt>
+<dd><p>External credentials do not contain authentication credentials, only an
+<a class="reference internal" href="pysasl.html#pysasl.creds.AuthenticationCredentials.identity" title="pysasl.creds.AuthenticationCredentials.identity"><code class="xref py py-attr docutils literal notranslate"><span class="pre">identity</span></code></a> to authorize as.</p>
 <dl class="attribute">
 <dt id="pysasl.mechanisms.external.ExternalResult.has_secret">
 <code class="descname">has_secret</code><a class="headerlink" href="#pysasl.mechanisms.external.ExternalResult.has_secret" title="Permalink to this definition">¶</a></dt>
@@ -390,32 +395,25 @@ type.</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="pysasl.mechanisms.external.ExternalResult.authcid">
-<code class="descname">authcid</code><a class="headerlink" href="#pysasl.mechanisms.external.ExternalResult.authcid" title="Permalink to this definition">¶</a></dt>
-<dd><p>The authentication identity string is an alias of the
-<a class="reference internal" href="pysasl.html#pysasl.creds.AuthenticationCredentials.authzid" title="pysasl.creds.AuthenticationCredentials.authzid"><code class="xref py py-attr docutils literal notranslate"><span class="pre">authzid</span></code></a> string for this mechanism, except it will return an
-empty string instead of <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
-</dd></dl>
-
-<dl class="attribute">
 <dt id="pysasl.mechanisms.external.ExternalResult.secret">
 <code class="descname">secret</code><a class="headerlink" href="#pysasl.mechanisms.external.ExternalResult.secret" title="Permalink to this definition">¶</a></dt>
-<dd><p>The secret string is not available for this mechanism.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#AttributeError" title="(in Python v3.9)"><code class="xref py py-exc docutils literal notranslate"><span class="pre">AttributeError</span></code></a></td>
-</tr>
-</tbody>
-</table>
+<dd><p>Contains the secret string used in the authentication attempt,
+if available. Use <a class="reference internal" href="#pysasl.mechanisms.external.ExternalResult.check_secret" title="pysasl.mechanisms.external.ExternalResult.check_secret"><code class="xref py py-meth docutils literal notranslate"><span class="pre">check_secret()</span></code></a> instead, when possible.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pysasl.mechanisms.external.ExternalResult.check_secret">
-<code class="descname">check_secret</code><span class="sig-paren">(</span><em>secret: Optional[pysasl.creds.StoredSecret], **other</em><span class="sig-paren">)</span> &#x2192; bool<a class="headerlink" href="#pysasl.mechanisms.external.ExternalResult.check_secret" title="Permalink to this definition">¶</a></dt>
-<dd><p>This method always returns True for this mechanism, unless
-overridden by a subclass to provide external enforcement rules.</p>
+<code class="descname">check_secret</code><span class="sig-paren">(</span><em>secret: Optional[pysasl.creds.StoredSecret], **other</em><span class="sig-paren">)</span> &#x2192; NoReturn<a class="headerlink" href="#pysasl.mechanisms.external.ExternalResult.check_secret" title="Permalink to this definition">¶</a></dt>
+<dd><p>This implementation does not use <em>secret</em> and instead raises
+<code class="xref py py-exc docutils literal notranslate"><span class="pre">ExternalVerificationRequired</span></code> immediately.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal notranslate"><span class="pre">ExternalVerificationRequired</span></code></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>
@@ -549,7 +547,7 @@ mechanism does not recognize.</p>
         <li class="right" >
           <a href="pysasl.html" title="pysasl Package"
              >previous</a> &nbsp; &nbsp;</li>
-    <li><a href="index.html">pysasl 0.7.1 documentation</a> &#187;</li>
+    <li><a href="index.html">pysasl 0.8.0 documentation</a> &#187;</li>
  
       </ul>
     </div>
