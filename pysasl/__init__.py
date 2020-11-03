@@ -2,6 +2,7 @@
 from abc import abstractmethod, ABCMeta
 from collections import OrderedDict
 from typing import ClassVar, Optional, Iterable, Tuple, Mapping, Sequence
+from typing_extensions import Final
 
 from pkg_resources import iter_entry_points
 
@@ -31,6 +32,25 @@ class UnexpectedChallenge(AuthenticationError):
 
     def __init__(self) -> None:
         super().__init__('Unexpected auth challenge')
+
+
+class ExternalVerificationRequired(AuthenticationError):
+    """The credentials are structurally valid but require external
+    verification.
+
+    If *token* is ``None``, the credentials provided no additional information
+    for verification. Otherwise, *token* should be verified and authorized for
+    the :attr:`~pysasl.creds.AuthenticationCredentials.identity` from the
+    credentials.
+
+    Args:
+        token: A bearer token, if required for verification.
+
+    """
+
+    def __init__(self, token: Optional[str] = None) -> None:
+        super().__init__()
+        self.token: Final = token
 
 
 class ServerChallenge(Exception):
