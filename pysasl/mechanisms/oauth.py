@@ -1,9 +1,10 @@
 
 import re
-from typing import Optional, Tuple, Sequence
+from typing import Any, Optional, Tuple, Sequence, NoReturn
 
 from .. import (ServerMechanism, ClientMechanism, UnexpectedChallenge,
-                ServerChallenge, AuthenticationError, ChallengeResponse)
+                ServerChallenge, AuthenticationError, ChallengeResponse,
+                ExternalVerificationRequired)
 from ..creds import StoredSecret, AuthenticationCredentials
 
 __all__ = ['OAuth2Mechanism']
@@ -13,23 +14,37 @@ class OAuth2Credentials(AuthenticationCredentials):
     """Simple container for the user and token received from the client by the
     ``XOAUTH2`` mechanism.
 
-    Note:
-        The token string will be contained in :attr:`.secret` so that it can be
-        externally verified. However to avoid being confused with an actual
-        password string, :attr:`.has_secret` will be False and
-        :meth:`.check_secret` will always return False.
+    Args:
+        user: The user identity string.
+        token: The OAuth 2.0 bearer token string.
 
     """
 
-    def __init__(self, user: str, token: str) -> None:
-        super().__init__(user, token)
+    def __init__(self, user: str, token: str, *,
+                 authcid: Optional[str] = None,
+                 authcid_type: Optional[str] = None) -> None:
+        super().__init__(user, '', authcid_type=authcid_type)
+        self._token = token
 
     @property
     def has_secret(self) -> bool:
         return False
 
-    def check_secret(self, secret: Optional[StoredSecret], **other) -> bool:
-        return False
+    @property
+    def secret(self) -> NoReturn:
+        raise AttributeError('secret')
+
+    def check_secret(self, secret: Optional[StoredSecret],
+                     **other: Any) -> NoReturn:
+        """This implementation does not use *secret* and instead raises
+        :exc:`~pysasl.ExternalVerificationRequired` immediately, containing the
+        OAuth 2.0 token.
+
+        Raises:
+            :exc:`~pysasl.ExternalVerificationRequired`
+
+        """
+        raise ExternalVerificationRequired(self._token)
 
 
 class OAuth2Mechanism(ServerMechanism, ClientMechanism):

@@ -1,52 +1,43 @@
 
-from typing import Optional, Tuple, Sequence
+from typing import Any, Optional, Tuple, Sequence, NoReturn
 
 from .. import (ServerMechanism, ClientMechanism, ServerChallenge,
-                ChallengeResponse, UnexpectedChallenge)
+                ChallengeResponse, UnexpectedChallenge,
+                ExternalVerificationRequired)
 from ..creds import StoredSecret, AuthenticationCredentials
 
 __all__ = ['ExternalResult', 'ExternalMechanism']
 
 
 class ExternalResult(AuthenticationCredentials):
-    """Because this mechanism does not use authentication identity or secret
-    strings, the :meth:`~ExternalMechanism.server_attempt` method returns this
-    sub-class which only allows the :attr:`.authzid` attribute.
+    """External credentials do not contain authentication credentials, only an
+    :attr:`.identity` to authorize as.
 
     """
 
-    def __init__(self, authzid: Optional[str] = None) -> None:
-        super(ExternalResult, self).__init__('', '', authzid)
+    def __init__(self, authzid: Optional[str] = None, *,
+                 authcid_type: Optional[str] = None) -> None:
+        authcid = authzid or ''
+        super().__init__(authcid, '', authzid, authcid_type=authcid_type)
 
     @property
     def has_secret(self) -> bool:
         return False
 
     @property
-    def authcid(self) -> str:
-        """The authentication identity string is an alias of the
-        :attr:`.authzid` string for this mechanism, except it will return an
-        empty string instead of ``None``.
-
-        """
-        return self.authzid or ''
-
-    @property
     def secret(self) -> str:
-        """The secret string is not available for this mechanism.
-
-        Raises:
-            AttributeError
-
-        """
         raise AttributeError('secret')
 
-    def check_secret(self, secret: Optional[StoredSecret], **other) -> bool:
-        """This method always returns True for this mechanism, unless
-        overridden by a subclass to provide external enforcement rules.
+    def check_secret(self, secret: Optional[StoredSecret],
+                     **other: Any) -> NoReturn:
+        """This implementation does not use *secret* and instead raises
+        :exc:`~pysasl.ExternalVerificationRequired` immediately.
+
+        Raises:
+            :exc:`~pysasl.ExternalVerificationRequired`
 
         """
-        return True
+        raise ExternalVerificationRequired()
 
 
 class ExternalMechanism(ServerMechanism, ClientMechanism):

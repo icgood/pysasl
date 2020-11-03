@@ -4,7 +4,7 @@ from __future__ import absolute_import
 import unittest
 
 from pysasl import (SASLAuth, ServerChallenge, ChallengeResponse,
-                    UnexpectedChallenge)
+                    UnexpectedChallenge, ExternalVerificationRequired)
 from pysasl.creds import StoredSecret, AuthenticationCredentials
 from pysasl.mechanisms.external import ExternalMechanism
 
@@ -42,9 +42,12 @@ class TestExternalMechanism(unittest.TestCase):
         self.assertEqual('abcdefghi', result.authcid)
         self.assertEqual('abcdefghi', result.identity)
         self.assertRaises(AttributeError, getattr, result, 'secret')
-        self.assertTrue(result.check_secret(StoredSecret('secret')))
-        self.assertTrue(result.check_secret(StoredSecret('invalid')))
-        self.assertTrue(result.check_secret(None))
+        with self.assertRaises(ExternalVerificationRequired) as exc:
+            result.check_secret(StoredSecret('secret'))
+        self.assertIsNone(exc.exception.token)
+        with self.assertRaises(ExternalVerificationRequired) as exc:
+            result.check_secret(None)
+        self.assertIsNone(exc.exception.token)
 
     def test_server_attempt_successful_empty(self) -> None:
         result, _ = self.mech.server_attempt([

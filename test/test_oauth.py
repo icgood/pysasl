@@ -4,7 +4,7 @@ from __future__ import absolute_import
 import unittest
 
 from pysasl import SASLAuth, UnexpectedChallenge, ServerChallenge, \
-    ChallengeResponse, AuthenticationError
+    ChallengeResponse, AuthenticationError, ExternalVerificationRequired
 from pysasl.creds import StoredSecret, AuthenticationCredentials
 from pysasl.mechanisms.oauth import OAuth2Mechanism
 
@@ -46,9 +46,13 @@ class TestOAuth2Mechanism(unittest.TestCase):
         self.assertEqual('testuser', result.authcid)
         self.assertIsNone(result.authzid)
         self.assertEqual('testuser', result.identity)
-        self.assertEqual('testtoken', result.secret)
-        self.assertFalse(result.check_secret(None))
-        self.assertFalse(result.check_secret(StoredSecret('invalid')))
+        self.assertRaises(AttributeError, getattr, result, 'secret')
+        with self.assertRaises(ExternalVerificationRequired) as exc:
+            result.check_secret(StoredSecret('secret'))
+        self.assertEqual('testtoken', exc.exception.token)
+        with self.assertRaises(ExternalVerificationRequired) as exc:
+            result.check_secret(None)
+        self.assertEqual('testtoken', exc.exception.token)
 
     def test_client_attempt(self) -> None:
         creds = AuthenticationCredentials('testuser', 'testtoken')

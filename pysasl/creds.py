@@ -1,5 +1,5 @@
 
-from typing import Optional
+from typing import Any, Optional
 from typing_extensions import Final
 
 from .hashing import HashInterface, Cleartext
@@ -47,30 +47,34 @@ class AuthenticationCredentials:
         authcid: Authentication ID string (the username).
         secret: Secret string (the password).
         authzid: Authorization ID string, if applicable.
+        authcid_type: The type of identifier contained in *authcid*, see
+            :attr:`.authcid_type`.
 
     """
 
-    __slots__ = ['_authcid', '_secret', '_authzid']
+    __slots__ = ['_authcid', '_secret', '_authzid', '_authcid_type']
 
     def __init__(self, authcid: str, secret: str,
-                 authzid: Optional[str] = None) -> None:
-        super(AuthenticationCredentials, self).__init__()
+                 authzid: Optional[str] = None, *,
+                 authcid_type: Optional[str] = None) -> None:
+        super().__init__()
         self._authcid = authcid
         self._secret = secret
         self._authzid = authzid or None
+        self._authcid_type = authcid_type
 
     @property
     def authcid_type(self) -> Optional[str]:
         """Indicates what kind of identifier is contained in :attr:`.authcid`.
 
-        Use of this value is application-specific, as is the interpretation of
-        ``None`` (the default value unless overridden).
+        None of the builtin mechanisms assign this value, but it may be useful
+        for applications with advanced authentication needs.
 
         See Also:
             `RFC 4422 2. <https://tools.ietf.org/html/rfc4422#section-2>`_
 
         """
-        return None
+        return self._authcid_type
 
     @property
     def has_secret(self) -> bool:
@@ -123,7 +127,8 @@ class AuthenticationCredentials:
         else:
             return self.authcid
 
-    def check_secret(self, secret: Optional[StoredSecret], **other) -> bool:
+    def check_secret(self, secret: Optional[StoredSecret],
+                     **other: Any) -> bool:
         """Checks if the secret string used in the authentication attempt
         matches the "known" secret string. Some mechanisms will override this
         method to control how this comparison is made.
@@ -131,10 +136,16 @@ class AuthenticationCredentials:
         Args:
             secret: The secret to compare against what was used in the
                 authentication attempt.
-            other: Allows subclasses to accept additional keywords as needed.
+            other: Additional keyword arguments to allow subclasses to accept
+                additional data as needed.
 
         Returns:
             True if the given secret matches the authentication attempt.
+
+        Raises:
+            :exc:`~pysasl.ExternalVerificationRequired`: The credentials cannot
+                be verified using the given *secret* and require external
+                verification.
 
         """
         if secret is not None:
