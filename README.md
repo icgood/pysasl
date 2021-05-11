@@ -10,7 +10,7 @@ circumstances.
 
 There are currently no plans to implement security layer negotiation support.
 
-[![Build Status](https://travis-ci.com/icgood/pysasl.svg)](https://travis-ci.com/icgood/pysasl)
+[![build](https://github.com/icgood/pysasl/actions/workflows/python-package.yml/badge.svg)](https://github.com/icgood/pysasl/actions/workflows/python-package.yml)
 [![Coverage Status](https://coveralls.io/repos/icgood/pysasl/badge.svg?branch=master)](https://coveralls.io/r/icgood/pysasl?branch=master)
 [![PyPI](https://img.shields.io/pypi/v/pysasl.svg)](https://pypi.python.org/pypi/pysasl)
 [![PyPI](https://img.shields.io/pypi/pyversions/pysasl.svg)](https://pypi.python.org/pypi/pysasl)

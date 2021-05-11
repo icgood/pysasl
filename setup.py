@@ -1,4 +1,4 @@
-# Copyright (c) 2020 Ian C. Good
+# Copyright (c) 2021 Ian C. Good
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -28,7 +28,7 @@ with open('LICENSE.md') as fh:
     license = fh.read()
 
 setup(name='pysasl',
-      version='0.8.0',
+      version='0.8.1',
       author='Ian Good',
       author_email='ian@icgood.net',
       description='Pure Python SASL client and server library.',
