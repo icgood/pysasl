@@ -8,6 +8,7 @@ import hashlib
 import secrets
 import warnings
 from abc import abstractmethod
+from typing import TypeVar, Any, Optional, Dict
 from typing_extensions import Protocol
 
 try:
@@ -22,12 +23,25 @@ else:
 
 __all__ = ['HashInterface', 'BuiltinHash', 'Cleartext', 'get_hash']
 
+_Hash = TypeVar('_Hash', bound='HashInterface')
+
 
 class HashInterface(Protocol):
     """Defines a basic interface for hash implementations. This is specifically
     designed to be compatible with :mod:`passlib` hashes.
 
     """
+
+    @abstractmethod
+    def copy(self: _Hash, **kwargs: Any) -> _Hash:
+        """Return a copy of the hash implementation. The *kwargs* may be used
+        by some hashes to modify settings on the hash.
+
+        Args:
+            kwargs: Updated settings for the returned hash.
+
+        """
+        ...
 
     @abstractmethod
     def hash(self, value: str) -> str:
@@ -69,6 +83,28 @@ class BuiltinHash(HashInterface):
         self.salt_len = salt_len
         self.rounds = rounds
 
+    def _set_unless_none(self, kwargs: Dict[str, Any],
+                         key: str, val: Any) -> None:
+        if val is not None:
+            kwargs[key] = val
+
+    def copy(self, *, hash_name: Optional[str] = None,
+             salt_len: Optional[int] = None,
+             rounds: Optional[int] = None,
+             **kwargs: Any) -> 'BuiltinHash':
+        copy_kwargs: Dict[str, Any] = {'hash_name': self.hash_name,
+                                       'salt_len': self.salt_len,
+                                       'rounds': self.rounds}
+        new_kwargs: Dict[str, Any] = {}
+        self._set_unless_none(new_kwargs, 'hash_name', hash_name)
+        self._set_unless_none(new_kwargs, 'salt_len', salt_len)
+        self._set_unless_none(new_kwargs, 'rounds', rounds)
+        if new_kwargs:
+            copy_kwargs.update(new_kwargs)
+            return BuiltinHash(**copy_kwargs)
+        else:
+            return self
+
     def _hash(self, value: str, salt: bytes) -> bytes:
         value_b = value.encode('utf-8')
         hashed = hashlib.pbkdf2_hmac(
@@ -85,9 +121,16 @@ class BuiltinHash(HashInterface):
         value_hashed = self._hash(value, salt)
         return secrets.compare_digest(value_hashed, digest_b)
 
+    def __repr__(self) -> str:
+        return 'BuiltinHash(hash_name=%r, salt_len=%r, rounds=%r)' % \
+            (self.hash_name, self.salt_len, self.rounds)
+
 
 class Cleartext(HashInterface):
     """Implements :class:`HashInterface` with no hashing performed."""
+
+    def copy(self, **kwargs: Any) -> 'Cleartext':
+        return self
 
     def hash(self, value: str) -> str:
         return value
