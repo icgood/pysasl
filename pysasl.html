@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>pysasl Package &#8212; pysasl 0.8.1 documentation</title>
+    <title>pysasl Package &#8212; pysasl 0.9.0 documentation</title>
     <link rel="stylesheet" href="_static/cloud.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Noticia+Text:400,i,b,bi|Open+Sans:400,i,b,bi|Roboto+Mono:400,i,b,bi&display=swap" />
@@ -58,7 +58,7 @@
         <li class="right" >
           <a href="index.html" title="pysasl Documentation"
              accesskey="P">previous</a> &nbsp; &nbsp;</li>
-    <li><a href="index.html">pysasl 0.8.1 documentation</a> &#187;</li>
+    <li><a href="index.html">pysasl 0.9.0 documentation</a> &#187;</li>
  
       </ul>
     </div>
@@ -255,7 +255,7 @@ name.</p>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A new <a class="reference internal" href="#pysasl.SASLAuth" title="pysasl.SASLAuth"><code class="xref py py-class docutils literal notranslate"><span class="pre">SASLAuth</span></code></a> object.</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#KeyError" title="(in Python v3.9)"><code class="xref py py-exc docutils literal notranslate"><span class="pre">KeyError</span></code></a> – A mechanism name was not recognized.</td>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#KeyError" title="(in Python v3.10)"><code class="xref py py-exc docutils literal notranslate"><span class="pre">KeyError</span></code></a> – A mechanism name was not recognized.</td>
 </tr>
 </tbody>
 </table>
@@ -399,7 +399,7 @@ for applications with advanced authentication needs.</p>
 <dd><p>True if the <a class="reference internal" href="#pysasl.creds.AuthenticationCredentials.secret" title="pysasl.creds.AuthenticationCredentials.secret"><code class="xref py py-attr docutils literal notranslate"><span class="pre">secret</span></code></a> attribute is valid for this credentials
 type.</p>
 <p>If this returns False, the <a class="reference internal" href="#pysasl.creds.AuthenticationCredentials.secret" title="pysasl.creds.AuthenticationCredentials.secret"><code class="xref py py-attr docutils literal notranslate"><span class="pre">secret</span></code></a> attribute should raise
-<a class="reference external" href="https://docs.python.org/3/library/exceptions.html#AttributeError" title="(in Python v3.9)"><code class="xref py py-exc docutils literal notranslate"><span class="pre">AttributeError</span></code></a>.</p>
+<a class="reference external" href="https://docs.python.org/3/library/exceptions.html#AttributeError" title="(in Python v3.10)"><code class="xref py py-exc docutils literal notranslate"><span class="pre">AttributeError</span></code></a>.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -476,6 +476,21 @@ and verify secrets.</p>
 <dd><p>Defines a basic interface for hash implementations. This is specifically
 designed to be compatible with <code class="xref py py-mod docutils literal notranslate"><span class="pre">passlib</span></code> hashes.</p>
 <dl class="method">
+<dt id="pysasl.hashing.HashInterface.copy">
+<code class="descname">copy</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span> &#x2192; _Hash<a class="headerlink" href="#pysasl.hashing.HashInterface.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a copy of the hash implementation. The <em>kwargs</em> may be used
+by some hashes to modify settings on the hash.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>kwargs</strong> – Updated settings for the returned hash.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="pysasl.hashing.HashInterface.hash">
 <code class="descname">hash</code><span class="sig-paren">(</span><em>value: str</em><span class="sig-paren">)</span> &#x2192; str<a class="headerlink" href="#pysasl.hashing.HashInterface.hash" title="Permalink to this definition">¶</a></dt>
 <dd><p>Hash the <em>value</em> and return the digest.</p>
@@ -512,7 +527,7 @@ designed to be compatible with <code class="xref py py-mod docutils literal notr
 <dl class="class">
 <dt id="pysasl.hashing.BuiltinHash">
 <em class="property">class </em><code class="descclassname">pysasl.hashing.</code><code class="descname">BuiltinHash</code><span class="sig-paren">(</span><em>*</em>, <em>hash_name: str = 'sha256'</em>, <em>salt_len: int = 16</em>, <em>rounds: int = 1000000</em><span class="sig-paren">)</span><a class="headerlink" href="#pysasl.hashing.BuiltinHash" title="Permalink to this definition">¶</a></dt>
-<dd><p>Implements <a class="reference internal" href="#pysasl.hashing.HashInterface" title="pysasl.hashing.HashInterface"><code class="xref py py-class docutils literal notranslate"><span class="pre">HashInterface</span></code></a> using the <a class="reference external" href="https://docs.python.org/3/library/hashlib.html#hashlib.pbkdf2_hmac" title="(in Python v3.9)"><code class="xref py py-func docutils literal notranslate"><span class="pre">hashlib.pbkdf2_hmac()</span></code></a>
+<dd><p>Implements <a class="reference internal" href="#pysasl.hashing.HashInterface" title="pysasl.hashing.HashInterface"><code class="xref py py-class docutils literal notranslate"><span class="pre">HashInterface</span></code></a> using the <a class="reference external" href="https://docs.python.org/3/library/hashlib.html#hashlib.pbkdf2_hmac" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">hashlib.pbkdf2_hmac()</span></code></a>
 function and random salt..</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -527,6 +542,21 @@ function and random salt..</p>
 </tr>
 </tbody>
 </table>
+<dl class="method">
+<dt id="pysasl.hashing.BuiltinHash.copy">
+<code class="descname">copy</code><span class="sig-paren">(</span><em>*</em>, <em>hash_name: Optional[str] = None</em>, <em>salt_len: Optional[int] = None</em>, <em>rounds: Optional[int] = None</em>, <em>**kwargs</em><span class="sig-paren">)</span> &#x2192; pysasl.hashing.BuiltinHash<a class="headerlink" href="#pysasl.hashing.BuiltinHash.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a copy of the hash implementation. The <em>kwargs</em> may be used
+by some hashes to modify settings on the hash.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>kwargs</strong> – Updated settings for the returned hash.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 <dl class="method">
 <dt id="pysasl.hashing.BuiltinHash.hash">
 <code class="descname">hash</code><span class="sig-paren">(</span><em>value: str</em><span class="sig-paren">)</span> &#x2192; str<a class="headerlink" href="#pysasl.hashing.BuiltinHash.hash" title="Permalink to this definition">¶</a></dt>
@@ -563,8 +593,23 @@ function and random salt..</p>
 
 <dl class="class">
 <dt id="pysasl.hashing.Cleartext">
-<em class="property">class </em><code class="descclassname">pysasl.hashing.</code><code class="descname">Cleartext</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pysasl.hashing.Cleartext" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">pysasl.hashing.</code><code class="descname">Cleartext</code><a class="headerlink" href="#pysasl.hashing.Cleartext" title="Permalink to this definition">¶</a></dt>
 <dd><p>Implements <a class="reference internal" href="#pysasl.hashing.HashInterface" title="pysasl.hashing.HashInterface"><code class="xref py py-class docutils literal notranslate"><span class="pre">HashInterface</span></code></a> with no hashing performed.</p>
+<dl class="method">
+<dt id="pysasl.hashing.Cleartext.copy">
+<code class="descname">copy</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span> &#x2192; pysasl.hashing.Cleartext<a class="headerlink" href="#pysasl.hashing.Cleartext.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a copy of the hash implementation. The <em>kwargs</em> may be used
+by some hashes to modify settings on the hash.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>kwargs</strong> – Updated settings for the returned hash.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 <dl class="method">
 <dt id="pysasl.hashing.Cleartext.hash">
 <code class="descname">hash</code><span class="sig-paren">(</span><em>value: str</em><span class="sig-paren">)</span> &#x2192; str<a class="headerlink" href="#pysasl.hashing.Cleartext.hash" title="Permalink to this definition">¶</a></dt>
@@ -604,7 +649,7 @@ function and random salt..</p>
 <code class="descclassname">pysasl.hashing.</code><code class="descname">get_hash</code><span class="sig-paren">(</span><em>*</em>, <em>no_passlib: bool = False</em>, <em>passlib_config: str = None</em><span class="sig-paren">)</span> &#x2192; pysasl.hashing.HashInterface<a class="headerlink" href="#pysasl.hashing.get_hash" title="Permalink to this definition">¶</a></dt>
 <dd><p>Provide a secure, default <a class="reference internal" href="#pysasl.hashing.HashInterface" title="pysasl.hashing.HashInterface"><code class="xref py py-class docutils literal notranslate"><span class="pre">HashInterface</span></code></a> implementation.</p>
 <p>If <code class="xref py py-mod docutils literal notranslate"><span class="pre">passlib</span></code> is not available, a custom hash is always used based on
-<a class="reference external" href="https://docs.python.org/3/library/hashlib.html#hashlib.pbkdf2_hmac" title="(in Python v3.9)"><code class="xref py py-func docutils literal notranslate"><span class="pre">hashlib.pbkdf2_hmac()</span></code></a>. The <em>passlib_config</em> parameter is ignored.</p>
+<a class="reference external" href="https://docs.python.org/3/library/hashlib.html#hashlib.pbkdf2_hmac" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">hashlib.pbkdf2_hmac()</span></code></a>. The <em>passlib_config</em> parameter is ignored.</p>
 <p>If <code class="xref py py-mod docutils literal notranslate"><span class="pre">passlib</span></code> is available, a <a class="reference external" href="https://passlib.readthedocs.io/en/stable/lib/passlib.context.html#passlib.context.CryptContext" title="(in Passlib v1.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">CryptContext</span></code></a> is
 loaded from the <em>passlib_config</em> parameter. If <em>passlib_config</em> is
 <code class="docutils literal notranslate"><span class="pre">None</span></code>, then <code class="xref py py-attr docutils literal notranslate"><span class="pre">passlib.apps.custom_app_context</span></code> is returned.</p>
@@ -697,7 +742,7 @@ loaded from the <em>passlib_config</em> parameter. If <em>passlib_config</em> is
         <li class="right" >
           <a href="index.html" title="pysasl Documentation"
              >previous</a> &nbsp; &nbsp;</li>
-    <li><a href="index.html">pysasl 0.8.1 documentation</a> &#187;</li>
+    <li><a href="index.html">pysasl 0.9.0 documentation</a> &#187;</li>
  
       </ul>
     </div>
@@ -705,7 +750,7 @@ loaded from the <em>passlib_config</em> parameter. If <em>passlib_config</em> is
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Ian Good.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.5.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.6.
     </div>
     <!-- cloud_sptheme 1.4 -->
   </body>
