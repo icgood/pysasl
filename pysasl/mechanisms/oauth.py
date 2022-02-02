@@ -85,8 +85,11 @@ class OAuth2Mechanism(ServerMechanism, ClientMechanism):
             challenge = challenges[0].data
         else:
             raise UnexpectedChallenge()
-        user = creds.authcid.encode('utf-8')
-        token = creds.secret.encode('utf-8')
-        response = b''.join((b'user=', user, b'\x01auth=Bearer ', token,
-                             b'\x01\x01'))
+        if challenge != b'':
+            response = b''
+        else:
+            user = creds.authcid.encode('utf-8')
+            token = creds.secret.encode('utf-8')
+            response = b''.join((b'user=', user, b'\x01auth=Bearer ', token,
+                                 b'\x01\x01'))
         return ChallengeResponse(challenge, response)
