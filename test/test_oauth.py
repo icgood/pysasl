@@ -65,3 +65,13 @@ class TestOAuth2Mechanism(unittest.TestCase):
         self.assertRaises(UnexpectedChallenge,
                           self.mech.client_attempt,
                           creds, [ServerChallenge(b'')]*2)
+
+    def test_client_attempt_error(self) -> None:
+        creds = AuthenticationCredentials('testuser', 'testtoken')
+        resp1 = self.mech.client_attempt(creds, [])
+        self.assertEqual(b'user=testuser\x01auth=Bearer testtoken\x01\x01',
+                         resp1.response)
+        resp2 = self.mech.client_attempt(creds, [
+            ServerChallenge(b'{"status":"401","schemes":"bearer mac",'
+                            b'"scope":"https://mail.google.com/"}\n')])
+        self.assertEqual(b'', resp2.response)
