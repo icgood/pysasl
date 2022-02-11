@@ -19,7 +19,7 @@
 # THE SOFTWARE.
 #
 
-from setuptools import setup, find_packages  # type: ignore
+from setuptools import setup, find_packages
 
 with open('README.md', 'r') as fh:
     readme = fh.read()
@@ -56,4 +56,5 @@ setup(name='pysasl',
                    'Programming Language :: Python :: 3.6',
                    'Programming Language :: Python :: 3.7',
                    'Programming Language :: Python :: 3.8',
-                   'Programming Language :: Python :: 3.9'])
+                   'Programming Language :: Python :: 3.9',
+                   'Programming Language :: Python :: 3.10'])

@@ -1,5 +1,5 @@
 
-from typing import Tuple, Sequence
+from typing import ClassVar, Tuple, Sequence
 
 from .. import (ServerMechanism, ClientMechanism, ServerChallenge,
                 ChallengeResponse, UnexpectedChallenge)
@@ -11,7 +11,7 @@ __all__ = ['LoginMechanism']
 class LoginMechanism(ServerMechanism, ClientMechanism):
     """Implements the LOGIN authentication mechanism."""
 
-    name = b'LOGIN'
+    name: ClassVar[bytes] = b'LOGIN'
 
     def server_attempt(self, responses: Sequence[ChallengeResponse]) \
             -> Tuple[AuthenticationCredentials, None]:

@@ -1,6 +1,6 @@
 
 import re
-from typing import Any, Optional, Tuple, Sequence, NoReturn
+from typing import ClassVar, Any, Optional, Tuple, Sequence, NoReturn
 
 from .. import (ServerMechanism, ClientMechanism, UnexpectedChallenge,
                 ServerChallenge, AuthenticationError, ChallengeResponse,
@@ -20,10 +20,9 @@ class OAuth2Credentials(AuthenticationCredentials):
 
     """
 
-    def __init__(self, user: str, token: str, *,
-                 authcid: Optional[str] = None,
+    def __init__(self, authcid: str, token: str, *,
                  authcid_type: Optional[str] = None) -> None:
-        super().__init__(user, '', authcid_type=authcid_type)
+        super().__init__(authcid, '', authcid_type=authcid_type)
         self._token = token
 
     @property
@@ -44,6 +43,7 @@ class OAuth2Credentials(AuthenticationCredentials):
             :exc:`~pysasl.ExternalVerificationRequired`
 
         """
+        del secret, other  # unused
         raise ExternalVerificationRequired(self._token)
 
 
@@ -58,7 +58,7 @@ class OAuth2Mechanism(ServerMechanism, ClientMechanism):
 
     _pattern = re.compile(br'^user=(.*?)\x01auth=Bearer (.*?)\x01\x01$')
 
-    name = b'XOAUTH2'
+    name: ClassVar[bytes] = b'XOAUTH2'
 
     def server_attempt(self, responses: Sequence[ChallengeResponse]) \
             -> Tuple[OAuth2Credentials, None]:

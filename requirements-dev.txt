@@ -1,8 +1,11 @@
-mypy
-flake8
-autopep8
+nox
 pytest
 pytest-cov
+flake8
+flake8-bugbear
+pyright
+bandit
+mypy
 rope
 
 types-setuptools

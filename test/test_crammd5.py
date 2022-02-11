@@ -4,7 +4,7 @@ from __future__ import absolute_import
 import unittest
 import email.utils
 
-from unittest.mock import patch
+from unittest.mock import patch, Mock
 
 from pysasl import (SASLAuth, ServerChallenge, ChallengeResponse,
                     AuthenticationError, UnexpectedChallenge)
@@ -28,7 +28,8 @@ class TestCramMD5Mechanism(unittest.TestCase):
         self.assertEqual(self.mech, sasl.get(b'CRAM-MD5'))
 
     @patch.object(email.utils, 'make_msgid')
-    def test_server_attempt_issues_challenge(self, make_msgid_mock) -> None:
+    def test_server_attempt_issues_challenge(
+            self, make_msgid_mock: Mock) -> None:
         make_msgid_mock.return_value = '<abc123.1234@testhost>'
         try:
             self.mech.server_attempt([])
@@ -38,14 +39,14 @@ class TestCramMD5Mechanism(unittest.TestCase):
             self.fail('ServerChallenge not raised')
 
     @patch.object(email.utils, 'make_msgid')
-    def test_server_attempt_bad_response(self, make_msgid_mock) -> None:
+    def test_server_attempt_bad_response(self, make_msgid_mock: Mock) -> None:
         make_msgid_mock.return_value = '<abc123.1234@testhost>'
         self.assertRaises(AuthenticationError,
                           self.mech.server_attempt,
                           [ChallengeResponse(b'', b'testing')])
 
     @patch.object(email.utils, 'make_msgid')
-    def test_server_attempt_successful(self, make_msgid_mock) -> None:
+    def test_server_attempt_successful(self, make_msgid_mock: Mock) -> None:
         make_msgid_mock.return_value = '<abc123.1234@testhost>'
         response = b'testuser 3a569c3950e95c490fd42f5d89e1ef67'
         result, final = self.mech.server_attempt([
