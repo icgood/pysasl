@@ -3,14 +3,14 @@ import re
 import hmac
 import hashlib
 import email.utils
-from typing import Optional, Tuple, Sequence
+from typing import ClassVar, Any, Optional, Tuple, Sequence
 
 from .. import (ServerMechanism, ClientMechanism, ServerChallenge,
                 ChallengeResponse, AuthenticationError, UnexpectedChallenge)
 from ..creds import StoredSecret, AuthenticationCredentials
 
 try:
-    from passlib.utils import saslprep  # type: ignore
+    from passlib.utils import saslprep
 except ImportError:  # pragma: no cover
     def saslprep(source: str) -> str:
         return source
@@ -57,7 +57,9 @@ class CramMD5Result(AuthenticationCredentials):
         """
         raise AttributeError('secret')
 
-    def check_secret(self, secret: Optional[StoredSecret], **other) -> bool:
+    def check_secret(self, secret: Optional[StoredSecret],
+                     **other: Any) -> bool:
+        del other  # unused
         if secret is not None:
             secret_b = saslprep(secret.raw).encode('utf-8')
             expected_hmac = hmac.new(secret_b, self.challenge, hashlib.md5)
@@ -78,7 +80,7 @@ class CramMD5Mechanism(ServerMechanism, ClientMechanism):
 
     _pattern = re.compile(br'^(.*) ([^ ]+)$')
 
-    name = b'CRAM-MD5'
+    name: ClassVar[bytes] = b'CRAM-MD5'
 
     def server_attempt(self, responses: Sequence[ChallengeResponse]) \
             -> Tuple[CramMD5Result, None]:

@@ -6,20 +6,17 @@ and verify secrets.
 import os
 import hashlib
 import secrets
-import warnings
 from abc import abstractmethod
 from typing import TypeVar, Any, Optional, Dict
-from typing_extensions import Protocol
+from typing_extensions import Protocol, Final
 
 try:
-    from passlib.context import CryptContext  # type: ignore
-    from passlib.apps import custom_app_context  # type: ignore
-except ImportError:  # pragma: no cover
+    from passlib.context import CryptContext
+    from passlib.apps import custom_app_context
+except ImportError as _exc:  # pragma: no cover
     CryptContext = None
     custom_app_context = None
-    _has_passlib = False
-else:
-    _has_passlib = True
+    _passlib_import_exc = _exc
 
 __all__ = ['HashInterface', 'BuiltinHash', 'Cleartext', 'get_hash']
 
@@ -44,7 +41,7 @@ class HashInterface(Protocol):
         ...
 
     @abstractmethod
-    def hash(self, value: str) -> str:
+    def hash(self, secret: str) -> str:
         """Hash the *value* and return the digest.
 
         Args:
@@ -54,7 +51,7 @@ class HashInterface(Protocol):
         ...
 
     @abstractmethod
-    def verify(self, value: str, digest: str) -> bool:
+    def verify(self, secret: str, hash: str) -> bool:
         """Check the *value* against the given *digest*.
 
         Args:
@@ -67,7 +64,7 @@ class HashInterface(Protocol):
 
 class BuiltinHash(HashInterface):
     """Implements :class:`HashInterface` using the :func:`hashlib.pbkdf2_hmac`
-    function and random salt..
+    function and random salt.
 
     Args:
         hash_name: The hash name.
@@ -79,9 +76,9 @@ class BuiltinHash(HashInterface):
     def __init__(self, *, hash_name: str = 'sha256', salt_len: int = 16,
                  rounds: int = 1000000) -> None:
         super().__init__()
-        self.hash_name = hash_name
-        self.salt_len = salt_len
-        self.rounds = rounds
+        self.hash_name: Final = hash_name
+        self.salt_len: Final = salt_len
+        self.rounds: Final = rounds
 
     def _set_unless_none(self, kwargs: Dict[str, Any],
                          key: str, val: Any) -> None:
@@ -91,7 +88,8 @@ class BuiltinHash(HashInterface):
     def copy(self, *, hash_name: Optional[str] = None,
              salt_len: Optional[int] = None,
              rounds: Optional[int] = None,
-             **kwargs: Any) -> 'BuiltinHash':
+             **other: Any) -> 'BuiltinHash':
+        del other  # unused
         copy_kwargs: Dict[str, Any] = {'hash_name': self.hash_name,
                                        'salt_len': self.salt_len,
                                        'rounds': self.rounds}
@@ -105,20 +103,20 @@ class BuiltinHash(HashInterface):
         else:
             return self
 
-    def _hash(self, value: str, salt: bytes) -> bytes:
-        value_b = value.encode('utf-8')
+    def _hash(self, secret: str, salt: bytes) -> bytes:
+        value_b = secret.encode('utf-8')
         hashed = hashlib.pbkdf2_hmac(
             self.hash_name, value_b, salt, self.rounds)
         return salt + hashed
 
-    def hash(self, value: str) -> str:
+    def hash(self, secret: str) -> str:
         salt = os.urandom(self.salt_len)
-        return self._hash(value, salt).hex()
+        return self._hash(secret, salt).hex()
 
-    def verify(self, value: str, digest: str) -> bool:
-        digest_b = bytes.fromhex(digest)
+    def verify(self, secret: str, hash: str) -> bool:
+        digest_b = bytes.fromhex(hash)
         salt = digest_b[0:self.salt_len]
-        value_hashed = self._hash(value, salt)
+        value_hashed = self._hash(secret, salt)
         return secrets.compare_digest(value_hashed, digest_b)
 
     def __repr__(self) -> str:
@@ -129,21 +127,22 @@ class BuiltinHash(HashInterface):
 class Cleartext(HashInterface):
     """Implements :class:`HashInterface` with no hashing performed."""
 
-    def copy(self, **kwargs: Any) -> 'Cleartext':
+    def copy(self, **_: Any) -> 'Cleartext':
         return self
 
-    def hash(self, value: str) -> str:
-        return value
+    def hash(self, secret: str) -> str:
+        return secret
 
-    def verify(self, value: str, digest: str) -> bool:
-        return secrets.compare_digest(value, digest)
+    def verify(self, secret: str, hash: str) -> bool:
+        return secrets.compare_digest(secret, hash)
 
     def __repr__(self) -> str:
         return 'Cleartext()'
 
 
 def get_hash(*, no_passlib: bool = False,
-             passlib_config: str = None) -> HashInterface:  # pragma: no cover
+             passlib_config: Optional[str] = None) \
+        -> HashInterface:  # pragma: no cover
     """Provide a secure, default :class:`HashInterface` implementation.
 
     If :mod:`passlib` is not available, a custom hash is always used based on
@@ -158,12 +157,16 @@ def get_hash(*, no_passlib: bool = False,
         passlib_config: A passlib config file.
 
     """
-    if no_passlib or not _has_passlib:
-        if passlib_config:
-            warnings.warn('passlib not available, '
-                          'ignoring passlib_config argument')
+    context: HashInterface
+    if no_passlib:
         return BuiltinHash()
     elif passlib_config is not None:
-        return CryptContext.from_path(passlib_config)
+        if CryptContext is not None:
+            context = CryptContext.from_path(passlib_config)
+        else:
+            raise _passlib_import_exc
+    elif custom_app_context is not None:
+        context = custom_app_context.copy()
     else:
-        return custom_app_context
+        context = BuiltinHash()
+    return context

@@ -1,5 +1,5 @@
 
-from typing import Any, Optional, Tuple, Sequence, NoReturn
+from typing import ClassVar, Any, Optional, Tuple, Sequence, NoReturn
 
 from .. import (ServerMechanism, ClientMechanism, ServerChallenge,
                 ChallengeResponse, UnexpectedChallenge,
@@ -37,6 +37,7 @@ class ExternalResult(AuthenticationCredentials):
             :exc:`~pysasl.ExternalVerificationRequired`
 
         """
+        del secret, other  # unused
         raise ExternalVerificationRequired()
 
 
@@ -48,7 +49,7 @@ class ExternalMechanism(ServerMechanism, ClientMechanism):
 
     """
 
-    name = b'EXTERNAL'
+    name: ClassVar[bytes] = b'EXTERNAL'
 
     def server_attempt(self, responses: Sequence[ChallengeResponse]) \
             -> Tuple[ExternalResult, None]:

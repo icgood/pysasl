@@ -6,6 +6,8 @@ from .hashing import HashInterface, Cleartext
 
 __all__ = ['StoredSecret', 'AuthenticationCredentials']
 
+_cleartext = Cleartext()
+
 
 class StoredSecret:
     """Represents a secret that has been hashed for storage. An unhashed secret
@@ -19,7 +21,7 @@ class StoredSecret:
     """
 
     def __init__(self, raw: str, *,
-                 hash: HashInterface = Cleartext()) -> None:
+                 hash: HashInterface = _cleartext) -> None:
         super().__init__()
         self.raw: Final = raw
         self.hash: Final = hash
@@ -148,6 +150,7 @@ class AuthenticationCredentials:
                 verification.
 
         """
+        del other  # unused
         if secret is not None:
             return secret.verify(self.secret)
         return False

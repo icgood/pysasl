@@ -1,6 +1,6 @@
 
 import re
-from typing import Tuple, Sequence
+from typing import ClassVar, Tuple, Sequence
 
 from .. import (ServerMechanism, ClientMechanism, ServerChallenge,
                 ChallengeResponse, AuthenticationError, UnexpectedChallenge)
@@ -14,7 +14,7 @@ class PlainMechanism(ServerMechanism, ClientMechanism):
 
     _pattern = re.compile(br'^([^\x00]*)\x00([^\x00]+)\x00([^\x00]*)$')
 
-    name = b'PLAIN'
+    name: ClassVar[bytes] = b'PLAIN'
 
     def server_attempt(self, responses: Sequence[ChallengeResponse]) \
             -> Tuple[AuthenticationCredentials, None]:
