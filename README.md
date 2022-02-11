@@ -35,14 +35,13 @@ Install into a virtual environment:
 python3 -m venv .venv
 source .venv/bin/activate
 
-pip install -r test/requirements.txt
-pip install -e .
+pip install -r requirements-dev.txt
 ```
 
 Run the tests and report coverage metrics:
 
 ```
-py.test --cov=pysasl
+nox -R
 ```
 
 Usage
