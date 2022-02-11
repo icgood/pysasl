@@ -4,8 +4,7 @@ import nox
 from glob import glob
 
 nox.options.default_venv_backend = 'venv'
-nox.options.reuse_existing_virtualenvs = True
-nox.options.no_install = True
+nox.options.stop_on_first_error = True
 
 ALL_PYTHONS = (
     '3.6',
