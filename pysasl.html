@@ -492,7 +492,7 @@ by some hashes to modify settings on the hash.</p>
 
 <dl class="method">
 <dt id="pysasl.hashing.HashInterface.hash">
-<code class="descname">hash</code><span class="sig-paren">(</span><em>value: str</em><span class="sig-paren">)</span> &#x2192; str<a class="headerlink" href="#pysasl.hashing.HashInterface.hash" title="Permalink to this definition">¶</a></dt>
+<code class="descname">hash</code><span class="sig-paren">(</span><em>secret: str</em><span class="sig-paren">)</span> &#x2192; str<a class="headerlink" href="#pysasl.hashing.HashInterface.hash" title="Permalink to this definition">¶</a></dt>
 <dd><p>Hash the <em>value</em> and return the digest.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -506,7 +506,7 @@ by some hashes to modify settings on the hash.</p>
 
 <dl class="method">
 <dt id="pysasl.hashing.HashInterface.verify">
-<code class="descname">verify</code><span class="sig-paren">(</span><em>value: str</em>, <em>digest: str</em><span class="sig-paren">)</span> &#x2192; bool<a class="headerlink" href="#pysasl.hashing.HashInterface.verify" title="Permalink to this definition">¶</a></dt>
+<code class="descname">verify</code><span class="sig-paren">(</span><em>secret: str</em>, <em>hash: str</em><span class="sig-paren">)</span> &#x2192; bool<a class="headerlink" href="#pysasl.hashing.HashInterface.verify" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check the <em>value</em> against the given <em>digest</em>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -528,7 +528,7 @@ by some hashes to modify settings on the hash.</p>
 <dt id="pysasl.hashing.BuiltinHash">
 <em class="property">class </em><code class="descclassname">pysasl.hashing.</code><code class="descname">BuiltinHash</code><span class="sig-paren">(</span><em>*</em>, <em>hash_name: str = 'sha256'</em>, <em>salt_len: int = 16</em>, <em>rounds: int = 1000000</em><span class="sig-paren">)</span><a class="headerlink" href="#pysasl.hashing.BuiltinHash" title="Permalink to this definition">¶</a></dt>
 <dd><p>Implements <a class="reference internal" href="#pysasl.hashing.HashInterface" title="pysasl.hashing.HashInterface"><code class="xref py py-class docutils literal notranslate"><span class="pre">HashInterface</span></code></a> using the <a class="reference external" href="https://docs.python.org/3/library/hashlib.html#hashlib.pbkdf2_hmac" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">hashlib.pbkdf2_hmac()</span></code></a>
-function and random salt..</p>
+function and random salt.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -544,7 +544,7 @@ function and random salt..</p>
 </table>
 <dl class="method">
 <dt id="pysasl.hashing.BuiltinHash.copy">
-<code class="descname">copy</code><span class="sig-paren">(</span><em>*</em>, <em>hash_name: Optional[str] = None</em>, <em>salt_len: Optional[int] = None</em>, <em>rounds: Optional[int] = None</em>, <em>**kwargs</em><span class="sig-paren">)</span> &#x2192; pysasl.hashing.BuiltinHash<a class="headerlink" href="#pysasl.hashing.BuiltinHash.copy" title="Permalink to this definition">¶</a></dt>
+<code class="descname">copy</code><span class="sig-paren">(</span><em>*</em>, <em>hash_name: Optional[str] = None</em>, <em>salt_len: Optional[int] = None</em>, <em>rounds: Optional[int] = None</em>, <em>**other</em><span class="sig-paren">)</span> &#x2192; pysasl.hashing.BuiltinHash<a class="headerlink" href="#pysasl.hashing.BuiltinHash.copy" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a copy of the hash implementation. The <em>kwargs</em> may be used
 by some hashes to modify settings on the hash.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -559,7 +559,7 @@ by some hashes to modify settings on the hash.</p>
 
 <dl class="method">
 <dt id="pysasl.hashing.BuiltinHash.hash">
-<code class="descname">hash</code><span class="sig-paren">(</span><em>value: str</em><span class="sig-paren">)</span> &#x2192; str<a class="headerlink" href="#pysasl.hashing.BuiltinHash.hash" title="Permalink to this definition">¶</a></dt>
+<code class="descname">hash</code><span class="sig-paren">(</span><em>secret: str</em><span class="sig-paren">)</span> &#x2192; str<a class="headerlink" href="#pysasl.hashing.BuiltinHash.hash" title="Permalink to this definition">¶</a></dt>
 <dd><p>Hash the <em>value</em> and return the digest.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -573,7 +573,7 @@ by some hashes to modify settings on the hash.</p>
 
 <dl class="method">
 <dt id="pysasl.hashing.BuiltinHash.verify">
-<code class="descname">verify</code><span class="sig-paren">(</span><em>value: str</em>, <em>digest: str</em><span class="sig-paren">)</span> &#x2192; bool<a class="headerlink" href="#pysasl.hashing.BuiltinHash.verify" title="Permalink to this definition">¶</a></dt>
+<code class="descname">verify</code><span class="sig-paren">(</span><em>secret: str</em>, <em>hash: str</em><span class="sig-paren">)</span> &#x2192; bool<a class="headerlink" href="#pysasl.hashing.BuiltinHash.verify" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check the <em>value</em> against the given <em>digest</em>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -597,7 +597,7 @@ by some hashes to modify settings on the hash.</p>
 <dd><p>Implements <a class="reference internal" href="#pysasl.hashing.HashInterface" title="pysasl.hashing.HashInterface"><code class="xref py py-class docutils literal notranslate"><span class="pre">HashInterface</span></code></a> with no hashing performed.</p>
 <dl class="method">
 <dt id="pysasl.hashing.Cleartext.copy">
-<code class="descname">copy</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span> &#x2192; pysasl.hashing.Cleartext<a class="headerlink" href="#pysasl.hashing.Cleartext.copy" title="Permalink to this definition">¶</a></dt>
+<code class="descname">copy</code><span class="sig-paren">(</span><em>**_</em><span class="sig-paren">)</span> &#x2192; pysasl.hashing.Cleartext<a class="headerlink" href="#pysasl.hashing.Cleartext.copy" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a copy of the hash implementation. The <em>kwargs</em> may be used
 by some hashes to modify settings on the hash.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -612,7 +612,7 @@ by some hashes to modify settings on the hash.</p>
 
 <dl class="method">
 <dt id="pysasl.hashing.Cleartext.hash">
-<code class="descname">hash</code><span class="sig-paren">(</span><em>value: str</em><span class="sig-paren">)</span> &#x2192; str<a class="headerlink" href="#pysasl.hashing.Cleartext.hash" title="Permalink to this definition">¶</a></dt>
+<code class="descname">hash</code><span class="sig-paren">(</span><em>secret: str</em><span class="sig-paren">)</span> &#x2192; str<a class="headerlink" href="#pysasl.hashing.Cleartext.hash" title="Permalink to this definition">¶</a></dt>
 <dd><p>Hash the <em>value</em> and return the digest.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -626,7 +626,7 @@ by some hashes to modify settings on the hash.</p>
 
 <dl class="method">
 <dt id="pysasl.hashing.Cleartext.verify">
-<code class="descname">verify</code><span class="sig-paren">(</span><em>value: str</em>, <em>digest: str</em><span class="sig-paren">)</span> &#x2192; bool<a class="headerlink" href="#pysasl.hashing.Cleartext.verify" title="Permalink to this definition">¶</a></dt>
+<code class="descname">verify</code><span class="sig-paren">(</span><em>secret: str</em>, <em>hash: str</em><span class="sig-paren">)</span> &#x2192; bool<a class="headerlink" href="#pysasl.hashing.Cleartext.verify" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check the <em>value</em> against the given <em>digest</em>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -646,7 +646,7 @@ by some hashes to modify settings on the hash.</p>
 
 <dl class="function">
 <dt id="pysasl.hashing.get_hash">
-<code class="descclassname">pysasl.hashing.</code><code class="descname">get_hash</code><span class="sig-paren">(</span><em>*</em>, <em>no_passlib: bool = False</em>, <em>passlib_config: str = None</em><span class="sig-paren">)</span> &#x2192; pysasl.hashing.HashInterface<a class="headerlink" href="#pysasl.hashing.get_hash" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">pysasl.hashing.</code><code class="descname">get_hash</code><span class="sig-paren">(</span><em>*</em>, <em>no_passlib: bool = False</em>, <em>passlib_config: Optional[str] = None</em><span class="sig-paren">)</span> &#x2192; pysasl.hashing.HashInterface<a class="headerlink" href="#pysasl.hashing.get_hash" title="Permalink to this definition">¶</a></dt>
 <dd><p>Provide a secure, default <a class="reference internal" href="#pysasl.hashing.HashInterface" title="pysasl.hashing.HashInterface"><code class="xref py py-class docutils literal notranslate"><span class="pre">HashInterface</span></code></a> implementation.</p>
 <p>If <code class="xref py py-mod docutils literal notranslate"><span class="pre">passlib</span></code> is not available, a custom hash is always used based on
 <a class="reference external" href="https://docs.python.org/3/library/hashlib.html#hashlib.pbkdf2_hmac" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">hashlib.pbkdf2_hmac()</span></code></a>. The <em>passlib_config</em> parameter is ignored.</p>
