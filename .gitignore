@@ -1,6 +1,5 @@
 .venv/
 .idea/
-.nox/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

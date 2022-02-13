@@ -19,6 +19,8 @@ class TestLoginMechanism(unittest.TestCase):
         self.assertIsInstance(sasl.get(b'LOGIN'), LoginMechanism)
         sasl = SASLAuth.named([b'LOGIN'])
         self.assertIsInstance(sasl.get(b'LOGIN'), LoginMechanism)
+        self.assertIsInstance(sasl.get_server(b'LOGIN'), LoginMechanism)
+        self.assertIsInstance(sasl.get_client(b'LOGIN'), LoginMechanism)
         sasl = SASLAuth([self.mech])
         self.assertEqual([self.mech], sasl.client_mechanisms)
         self.assertEqual([self.mech], sasl.server_mechanisms)

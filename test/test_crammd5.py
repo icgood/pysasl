@@ -22,6 +22,8 @@ class TestCramMD5Mechanism(unittest.TestCase):
         self.assertIsNone(sasl.get(b'CRAM-MD5'))
         sasl = SASLAuth.named([b'CRAM-MD5'])
         self.assertIsInstance(sasl.get(b'CRAM-MD5'), CramMD5Mechanism)
+        self.assertIsInstance(sasl.get_server(b'CRAM-MD5'), CramMD5Mechanism)
+        self.assertIsInstance(sasl.get_client(b'CRAM-MD5'), CramMD5Mechanism)
         sasl = SASLAuth([self.mech])
         self.assertEqual([self.mech], sasl.client_mechanisms)
         self.assertEqual([self.mech], sasl.server_mechanisms)

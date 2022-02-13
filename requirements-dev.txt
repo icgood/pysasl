@@ -1,4 +1,4 @@
-nox
+invoke
 pytest
 pytest-cov
 flake8

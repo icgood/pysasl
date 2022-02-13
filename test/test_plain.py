@@ -19,6 +19,8 @@ class TestPlainMechanism(unittest.TestCase):
         self.assertIsInstance(sasl.get(b'PLAIN'), PlainMechanism)
         sasl = SASLAuth.named([b'PLAIN'])
         self.assertIsInstance(sasl.get(b'PLAIN'), PlainMechanism)
+        self.assertIsInstance(sasl.get_server(b'PLAIN'), PlainMechanism)
+        self.assertIsInstance(sasl.get_client(b'PLAIN'), PlainMechanism)
         sasl = SASLAuth([self.mech])
         self.assertEqual([self.mech], sasl.client_mechanisms)
         self.assertEqual([self.mech], sasl.server_mechanisms)

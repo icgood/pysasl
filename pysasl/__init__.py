@@ -4,13 +4,18 @@ from collections import OrderedDict
 from typing import ClassVar, Optional, Iterable, Tuple, Mapping, Sequence
 from typing_extensions import Final
 
-from pkg_resources import iter_entry_points
+import pkg_resources
 
+from . import mechanisms
 from .creds import AuthenticationCredentials
 
-__all__ = ['AuthenticationError', 'UnexpectedChallenge', 'ServerChallenge',
-           'ChallengeResponse', 'BaseMechanism', 'ServerMechanism',
-           'ClientMechanism', 'SASLAuth']
+__all__ = ['__version__', 'AuthenticationError', 'UnexpectedChallenge',
+           'ServerChallenge', 'ChallengeResponse', 'BaseMechanism',
+           'ServerMechanism', 'ClientMechanism', 'SASLAuth']
+
+
+#: The pysasl package version.
+__version__: str = pkg_resources.require(__package__)[0].version
 
 
 class AuthenticationError(Exception):
@@ -231,7 +236,8 @@ class SASLAuth:
 
     @classmethod
     def _get_builtin_mechanisms(cls) -> Iterable[Tuple[bytes, BaseMechanism]]:
-        for entry_point in iter_entry_points('pysasl.mechanisms'):
+        group = mechanisms.__package__
+        for entry_point in pkg_resources.iter_entry_points(group):
             mech_cls = entry_point.load()
             yield (mech_cls.name, mech_cls())
 

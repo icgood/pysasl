@@ -41,7 +41,7 @@ pip install -r requirements-dev.txt
 Run the tests and report coverage metrics:
 
 ```
-nox -R
+invoke
 ```
 
 Usage

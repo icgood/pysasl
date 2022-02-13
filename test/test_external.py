@@ -19,6 +19,8 @@ class TestExternalMechanism(unittest.TestCase):
         self.assertIsNone(sasl.get(b'EXTERNAL'))
         sasl = SASLAuth.named([b'EXTERNAL'])
         self.assertIsInstance(sasl.get(b'EXTERNAL'), ExternalMechanism)
+        self.assertIsInstance(sasl.get_server(b'EXTERNAL'), ExternalMechanism)
+        self.assertIsInstance(sasl.get_client(b'EXTERNAL'), ExternalMechanism)
         sasl = SASLAuth([self.mech])
         self.assertEqual([self.mech], sasl.client_mechanisms)
         self.assertEqual([self.mech], sasl.server_mechanisms)

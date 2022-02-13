@@ -109,8 +109,9 @@ class BuiltinHash(HashInterface):
             self.hash_name, value_b, salt, self.rounds)
         return salt + hashed
 
-    def hash(self, secret: str) -> str:
-        salt = os.urandom(self.salt_len)
+    def hash(self, secret: str, salt: Optional[bytes] = None) -> str:
+        if salt is None:  # pragma: no cover
+            salt = os.urandom(self.salt_len)
         return self._hash(secret, salt).hex()
 
     def verify(self, secret: str, hash: str) -> bool:

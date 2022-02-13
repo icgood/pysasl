@@ -17,6 +17,7 @@ venv = ".venv"
 norecursedirs = "doc"
 
 [tool.coverage.report]
+fail_under = 100
 exclude_lines = [
     "pragma: no cover",
     "NotImplemented",

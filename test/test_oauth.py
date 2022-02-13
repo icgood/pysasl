@@ -19,6 +19,8 @@ class TestOAuth2Mechanism(unittest.TestCase):
         self.assertIsNone(sasl.get(b'XOAUTH2'))
         sasl = SASLAuth.named([b'XOAUTH2'])
         self.assertIsInstance(sasl.get(b'XOAUTH2'), OAuth2Mechanism)
+        self.assertIsInstance(sasl.get_server(b'XOAUTH2'), OAuth2Mechanism)
+        self.assertIsInstance(sasl.get_client(b'XOAUTH2'), OAuth2Mechanism)
         sasl = SASLAuth([self.mech])
         self.assertEqual([self.mech], sasl.client_mechanisms)
         self.assertEqual([self.mech], sasl.server_mechanisms)
