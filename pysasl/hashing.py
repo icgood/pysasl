@@ -89,7 +89,6 @@ class BuiltinHash(HashInterface):
              salt_len: Optional[int] = None,
              rounds: Optional[int] = None,
              **other: Any) -> 'BuiltinHash':
-        del other  # unused
         copy_kwargs: Dict[str, Any] = {'hash_name': self.hash_name,
                                        'salt_len': self.salt_len,
                                        'rounds': self.rounds}

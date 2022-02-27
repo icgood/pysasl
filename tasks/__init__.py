@@ -1,8 +1,16 @@
 # type: ignore
 
+import os
+import os.path
 from invoke import task, Collection
 
 from . import check, doc, lint, test, types
+
+try:
+    from shlex import join
+except ImportError:  # Python < 3.8
+    def join(args):
+        return ' '.join(args)
 
 
 @task
@@ -17,12 +25,16 @@ def clean(ctx, full=False):
             '.mypy_cache',
             '.pytest_cache',
             'dist',
-            '*.egg-info']
+            'doc/build/']
         for name in anywhere:
-            for path in ['pysasl', 'test']:
-                ctx.run('find {} -name {} | xargs rm -rf'.format(path, name))
+            for path in [ctx.package, 'test']:
+                subpaths = [os.path.join(subpath, name)
+                            for subpath, dirs, names in os.walk(path)
+                            if name in dirs or name in names]
+                for subpath in subpaths:
+                    ctx.run(join(['rm', '-rf', subpath]))
         for name in top_level:
-            ctx.run('rm -rf {}'.format(name))
+            ctx.run(join(['rm', '-rf', name]))
 
 
 @task(check.check_venv)
@@ -38,7 +50,7 @@ def install(ctx, dev=True, update=False):
 @task(test.all, types.all, lint.all)
 def validate(ctx):
     """Run all tests, type checks, and linters."""
-    del ctx
+    pass
 
 
 ns = Collection(clean, install)
@@ -50,6 +62,7 @@ ns.add_collection(lint)
 ns.add_collection(doc)
 
 ns.configure({
+    'package': 'pysasl',
     'check_import': True,
     'check_venv': True,
     'run': {

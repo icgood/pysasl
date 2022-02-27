@@ -8,13 +8,13 @@ from .check import check_import
 @task(check_import)
 def pytest(ctx):
     """Run the unit tests with py.test."""
-    ctx.run('py.test --cov=pysasl --cov-report=term-missing')
+    ctx.run('py.test --cov={} --cov-report=term-missing'.format(ctx.package))
 
 
 @task(pytest)
 def all(ctx):
     """Run all test utilities."""
-    del ctx
+    pass
 
 
 ns = Collection(pytest)

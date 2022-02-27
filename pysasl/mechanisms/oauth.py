@@ -43,7 +43,6 @@ class OAuth2Credentials(AuthenticationCredentials):
             :exc:`~pysasl.ExternalVerificationRequired`
 
         """
-        del secret, other  # unused
         raise ExternalVerificationRequired(self._token)
 
 
