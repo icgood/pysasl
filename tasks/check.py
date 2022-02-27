@@ -15,7 +15,7 @@ class CheckImportFailed(UnexpectedExit):
 def check_import(ctx):
     """Check that the library can be imported."""
     if ctx.check_import:
-        result = ctx.run('python -c "import pysasl"',
+        result = ctx.run('python -c "import {}"'.format(ctx.package),
                          hide=True, pty=False, warn=True)
         if not result.ok:
             raise CheckImportFailed(result)

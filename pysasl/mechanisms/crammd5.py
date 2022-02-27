@@ -59,7 +59,6 @@ class CramMD5Result(AuthenticationCredentials):
 
     def check_secret(self, secret: Optional[StoredSecret],
                      **other: Any) -> bool:
-        del other  # unused
         if secret is not None:
             secret_b = saslprep(secret.raw).encode('utf-8')
             expected_hmac = hmac.new(secret_b, self.challenge, hashlib.md5)

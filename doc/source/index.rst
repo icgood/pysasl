@@ -10,6 +10,8 @@
 .. toctree::
 
    pysasl
+   pysasl.creds
+   pysasl.hashing
    pysasl.mechanisms
 
 

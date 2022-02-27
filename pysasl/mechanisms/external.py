@@ -37,7 +37,6 @@ class ExternalResult(AuthenticationCredentials):
             :exc:`~pysasl.ExternalVerificationRequired`
 
         """
-        del secret, other  # unused
         raise ExternalVerificationRequired()
 
 

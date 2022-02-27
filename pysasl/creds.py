@@ -150,7 +150,6 @@ class AuthenticationCredentials:
                 verification.
 
         """
-        del other  # unused
         if secret is not None:
             return secret.verify(self.secret)
         return False
