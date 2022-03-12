@@ -6,9 +6,6 @@ on:
   pull_request:
     branches: [ main ]
 
-env:
-  INVOKE_CHECK_VENV: ''
-
 jobs:
   build:
 

@@ -4,9 +4,6 @@ on:
   release:
     types: [ published ]
 
-env:
-  INVOKE_CHECK_VENV: ''
-
 jobs:
   deploy:
 

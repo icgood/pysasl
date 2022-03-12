@@ -37,7 +37,7 @@ def clean(ctx, full=False):
             ctx.run(join(['rm', '-rf', name]))
 
 
-@task(check.check_venv)
+@task
 def install(ctx, dev=True, update=False):
     """Install the library and all development tools."""
     choice = 'dev' if dev else 'all'
@@ -63,8 +63,6 @@ ns.add_collection(doc)
 
 ns.configure({
     'package': 'pysasl',
-    'check_import': True,
-    'check_venv': True,
     'run': {
         'echo': True,
         'pty': True,
