@@ -2,10 +2,8 @@
 
 from invoke import task, Collection
 
-from .check import check_venv
 
-
-@task(check_venv)
+@task
 def install(ctx, update=False):
     """Install the tools needed to build the docs."""
     if update:
