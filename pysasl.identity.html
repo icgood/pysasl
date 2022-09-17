@@ -1,0 +1,329 @@
+
+
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>pysasl.identity Package &#8212; pysasl 1.0.0rc1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/cloud.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noticia+Text:400,i,b,bi|Open+Sans:400,i,b,bi|Roboto+Mono:400,i,b,bi&amp;display=swap" type="text/css" />
+    
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+
+    
+    
+     
+        <script src="_static/jquery.cookie.js"></script>
+    
+
+    
+     
+        <script src="_static/cloud.base.js"></script>
+    
+
+    
+     
+        <script src="_static/cloud.js"></script>
+    
+
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="pysasl.mechanisms Package" href="pysasl.mechanisms.html" />
+    <link rel="prev" title="pysasl.hashing Package" href="pysasl.hashing.html" /> 
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head><body>
+    <div class="relbar-top">
+        
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="pysasl.mechanisms.html" title="pysasl.mechanisms Package"
+             accesskey="N">next</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="pysasl.hashing.html" title="pysasl.hashing Package"
+             accesskey="P">previous</a> &nbsp; &nbsp;</li>
+    <li><a href="index.html">pysasl 1.0.0rc1 documentation</a> &#187;</li>
+
+        <li class="nav-item nav-item-this"><a href=""><code class="docutils literal notranslate"><span class="pre">pysasl.identity</span></code> Package</a></li> 
+      </ul>
+    </div>
+    </div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="module-pysasl.identity">
+<span id="pysasl-identity-package"></span><h1><code class="docutils literal notranslate"><span class="pre">pysasl.identity</span></code> Package<a class="headerlink" href="#module-pysasl.identity" title="Permalink to this heading">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="pysasl.identity.Identity">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pysasl.identity.</span></span><span class="sig-name descname"><span class="pre">Identity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysasl/identity.html#Identity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pysasl.identity.Identity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Represents an server-side identity that credentials will be
+authenticated against.</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="pysasl.identity.Identity.authcid">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">authcid</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></em><a class="headerlink" href="#pysasl.identity.Identity.authcid" title="Permalink to this definition">¶</a></dt>
+<dd><p>The authentication identity, e.g. a login username.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pysasl.identity.Identity.compare_secret">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">compare_secret</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">secret</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysasl/identity.html#Identity.compare_secret"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pysasl.identity.Identity.compare_secret" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compare the identity’s secret with the given <em>secret</em>. The
+comparison must account for things like hashing or token algorithms.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>secret</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The authentication secret string value.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pysasl.identity.Identity.get_clear_secret">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_clear_secret</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysasl/identity.html#Identity.get_clear_secret"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pysasl.identity.Identity.get_clear_secret" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the cleartext secret string if it is available. This value
+has already been prepared with a <a class="reference internal" href="pysasl.prep.html#pysasl.prep.Preparation" title="pysasl.prep.Preparation"><code class="xref py py-class docutils literal notranslate"><span class="pre">Preparation</span></code></a>
+function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><em>Optional</em></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)">str</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pysasl.identity.ClearIdentity">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pysasl.identity.</span></span><span class="sig-name descname"><span class="pre">ClearIdentity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">authcid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">secret</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysasl/identity.html#ClearIdentity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pysasl.identity.ClearIdentity" title="Permalink to this definition">¶</a></dt>
+<dd><p>An <a class="reference internal" href="#pysasl.identity.Identity" title="pysasl.identity.Identity"><code class="xref py py-class docutils literal notranslate"><span class="pre">Identity</span></code></a> that stores the secret string in cleartext.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>authcid</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The authentication identity, e.g. a login username.</p></li>
+<li><p><strong>secret</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The cleartext secret string.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="pysasl.identity.ClearIdentity.authcid">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">authcid</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></em><a class="headerlink" href="#pysasl.identity.ClearIdentity.authcid" title="Permalink to this definition">¶</a></dt>
+<dd><p>The authentication identity, e.g. a login username.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pysasl.identity.ClearIdentity.compare_secret">
+<span class="sig-name descname"><span class="pre">compare_secret</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">secret</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysasl/identity.html#ClearIdentity.compare_secret"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pysasl.identity.ClearIdentity.compare_secret" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compare the identity’s secret with the given <em>secret</em>. The
+comparison must account for things like hashing or token algorithms.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>secret</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The authentication secret string value.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pysasl.identity.ClearIdentity.get_clear_secret">
+<span class="sig-name descname"><span class="pre">get_clear_secret</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysasl/identity.html#ClearIdentity.get_clear_secret"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pysasl.identity.ClearIdentity.get_clear_secret" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the cleartext secret string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pysasl.identity.HashedIdentity">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pysasl.identity.</span></span><span class="sig-name descname"><span class="pre">HashedIdentity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">authcid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">digest</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hash</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysasl/identity.html#HashedIdentity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pysasl.identity.HashedIdentity" title="Permalink to this definition">¶</a></dt>
+<dd><p>An <a class="reference internal" href="#pysasl.identity.Identity" title="pysasl.identity.Identity"><code class="xref py py-class docutils literal notranslate"><span class="pre">Identity</span></code></a> where the secret has been hashed for storage.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>authcid</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The authentication identity, e.g. a login username.</p></li>
+<li><p><strong>digest</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The hashed secret string, using <a class="reference internal" href="#pysasl.identity.HashedIdentity.hash" title="pysasl.identity.HashedIdentity.hash"><code class="xref py py-attr docutils literal notranslate"><span class="pre">hash</span></code></a>.</p></li>
+<li><p><strong>hash</strong> (<a class="reference internal" href="pysasl.hashing.html#pysasl.hashing.HashInterface" title="pysasl.hashing.HashInterface"><em>HashInterface</em></a>) – The hash algorithm to use to verify the secret.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pysasl.identity.HashedIdentity.create">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">authcid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">secret</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hash</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysasl/identity.html#HashedIdentity.create"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pysasl.identity.HashedIdentity.create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prepare and hash the given <em>secret</em>, returning a
+<a class="reference internal" href="#pysasl.identity.HashedIdentity" title="pysasl.identity.HashedIdentity"><code class="xref py py-class docutils literal notranslate"><span class="pre">HashedIdentity</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>authcid</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The authentication identity, e.g. a login username.</p></li>
+<li><p><strong>secret</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The cleartext secret string.</p></li>
+<li><p><strong>hash</strong> (<a class="reference internal" href="pysasl.hashing.html#pysasl.hashing.HashInterface" title="pysasl.hashing.HashInterface"><em>HashInterface</em></a>) – The hash algorithm to use to verify the secret.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#pysasl.identity.HashedIdentity" title="pysasl.identity.HashedIdentity"><em>HashedIdentity</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pysasl.identity.HashedIdentity.authcid">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">authcid</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></em><a class="headerlink" href="#pysasl.identity.HashedIdentity.authcid" title="Permalink to this definition">¶</a></dt>
+<dd><p>The authentication identity, e.g. a login username.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pysasl.identity.HashedIdentity.digest">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">digest</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></em><a class="headerlink" href="#pysasl.identity.HashedIdentity.digest" title="Permalink to this definition">¶</a></dt>
+<dd><p>The hashed secret string, using <a class="reference internal" href="#pysasl.identity.HashedIdentity.hash" title="pysasl.identity.HashedIdentity.hash"><code class="xref py py-attr docutils literal notranslate"><span class="pre">hash</span></code></a>.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pysasl.identity.HashedIdentity.hash">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">hash</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="pysasl.hashing.html#pysasl.hashing.HashInterface" title="pysasl.hashing.HashInterface"><span class="pre">HashInterface</span></a></em><a class="headerlink" href="#pysasl.identity.HashedIdentity.hash" title="Permalink to this definition">¶</a></dt>
+<dd><p>The hash implementation to use to verify the secret.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pysasl.identity.HashedIdentity.compare_secret">
+<span class="sig-name descname"><span class="pre">compare_secret</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">secret</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysasl/identity.html#HashedIdentity.compare_secret"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pysasl.identity.HashedIdentity.compare_secret" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compare the identity’s secret with the given <em>secret</em>. The
+comparison must account for things like hashing or token algorithms.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>secret</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The authentication secret string value.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pysasl.identity.HashedIdentity.get_clear_secret">
+<span class="sig-name descname"><span class="pre">get_clear_secret</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysasl/identity.html#HashedIdentity.get_clear_secret"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pysasl.identity.HashedIdentity.get_clear_secret" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the cleartext secret string, only if <a class="reference internal" href="#pysasl.identity.HashedIdentity.hash" title="pysasl.identity.HashedIdentity.hash"><code class="xref py py-attr docutils literal notranslate"><span class="pre">hash</span></code></a> is
+<a class="reference internal" href="pysasl.hashing.html#pysasl.hashing.Cleartext" title="pysasl.hashing.Cleartext"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cleartext</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><em>Optional</em></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)">str</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div class="sphinxprev">
+    <h4>Previous page</h4>
+    <p class="topless"><a href="pysasl.hashing.html"
+                          title="Previous page">&larr; <code class="docutils literal notranslate"><span class="pre">pysasl.hashing</span></code> Package</a></p>
+  </div>
+  <div class="sphinxnext">
+    <h4>Next page</h4>
+    <p class="topless"><a href="pysasl.mechanisms.html"
+                          title="Next page">&rarr; <code class="docutils literal notranslate"><span class="pre">pysasl.mechanisms</span></code> Package</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/pysasl.identity.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+    
+    
+        <div class="sidebar-toggle-group no-js">
+            
+            <button class="sidebar-toggle" id="sidebar-hide" title="Hide the sidebar menu">
+                 «
+                <span class="show-for-small">hide menu</span>
+                
+            </button>
+            <button class="sidebar-toggle" id="sidebar-show" title="Show the sidebar menu">
+                
+                <span class="show-for-small">menu</span>
+                <span class="hide-for-small">sidebar</span>
+                 »
+            </button>
+        </div>
+    
+      <div class="clearer"></div>
+    </div>
+    <div class="relbar-bottom">
+        
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="pysasl.mechanisms.html" title="pysasl.mechanisms Package"
+             >next</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="pysasl.hashing.html" title="pysasl.hashing Package"
+             >previous</a> &nbsp; &nbsp;</li>
+    <li><a href="index.html">pysasl 1.0.0rc1 documentation</a> &#187;</li>
+
+        <li class="nav-item nav-item-this"><a href=""><code class="docutils literal notranslate"><span class="pre">pysasl.identity</span></code> Package</a></li> 
+      </ul>
+    </div>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Ian Good.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.1.1.
+    </div>
+    <!-- cloud_sptheme 1.4 -->
+  </body>
+</html>

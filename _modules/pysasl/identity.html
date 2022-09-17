@@ -1,0 +1,274 @@
+
+
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>pysasl.identity &#8212; pysasl 1.0.0rc1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/cloud.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noticia+Text:400,i,b,bi|Open+Sans:400,i,b,bi|Roboto+Mono:400,i,b,bi&amp;display=swap" type="text/css" />
+    
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../_static/doctools.js"></script>
+
+    
+    
+     
+        <script src="../../_static/jquery.cookie.js"></script>
+    
+
+    
+     
+        <script src="../../_static/cloud.base.js"></script>
+    
+
+    
+     
+        <script src="../../_static/cloud.js"></script>
+    
+
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head><body>
+    <div class="relbar-top">
+        
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> &nbsp; &nbsp;</li>
+    <li><a href="../../index.html">pysasl 1.0.0rc1 documentation</a> &#187;</li>
+
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../pysasl.html" accesskey="U">pysasl</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">pysasl.identity</a></li> 
+      </ul>
+    </div>
+    </div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for pysasl.identity</h1><div class="highlight"><pre>
+<span></span>
+<span class="kn">import</span> <span class="nn">secrets</span>
+<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">abstractmethod</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Sequence</span>
+<span class="kn">from</span> <span class="nn">typing_extensions</span> <span class="kn">import</span> <span class="n">Protocol</span>
+
+<span class="kn">from</span> <span class="nn">.hashing</span> <span class="kn">import</span> <span class="n">HashInterface</span><span class="p">,</span> <span class="n">Cleartext</span>
+<span class="kn">from</span> <span class="nn">.prep</span> <span class="kn">import</span> <span class="n">prepare</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Identity&#39;</span><span class="p">,</span> <span class="s1">&#39;ClearIdentity&#39;</span><span class="p">,</span> <span class="s1">&#39;HashedIdentity&#39;</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="Identity"><a class="viewcode-back" href="../../pysasl.identity.html#pysasl.identity.Identity">[docs]</a><span class="k">class</span> <span class="nc">Identity</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Represents an server-side identity that credentials will be</span>
+<span class="sd">    authenticated against.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="vm">__slots__</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="nd">@property</span>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">authcid</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;The authentication identity, e.g. a login username.&quot;&quot;&quot;</span>
+        <span class="o">...</span>
+
+<div class="viewcode-block" id="Identity.compare_secret"><a class="viewcode-back" href="../../pysasl.identity.html#pysasl.identity.Identity.compare_secret">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">compare_secret</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">secret</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Compare the identity&#39;s secret with the given *secret*. The</span>
+<span class="sd">        comparison must account for things like hashing or token algorithms.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            secret: The authentication secret string value.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="o">...</span></div>
+
+<div class="viewcode-block" id="Identity.get_clear_secret"><a class="viewcode-back" href="../../pysasl.identity.html#pysasl.identity.Identity.get_clear_secret">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">get_clear_secret</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Return the cleartext secret string if it is available. This value</span>
+<span class="sd">        has already been prepared with a :class:`~pysasl.prep.Preparation`</span>
+<span class="sd">        function.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="o">...</span></div></div>
+
+
+<div class="viewcode-block" id="ClearIdentity"><a class="viewcode-back" href="../../pysasl.identity.html#pysasl.identity.ClearIdentity">[docs]</a><span class="k">class</span> <span class="nc">ClearIdentity</span><span class="p">(</span><span class="n">Identity</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;An :class:`Identity` that stores the secret string in cleartext.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        authcid: The authentication identity, e.g. a login username.</span>
+<span class="sd">        secret: The cleartext secret string.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="vm">__slots__</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;_authcid&#39;</span><span class="p">,</span> <span class="s1">&#39;_secret&#39;</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">authcid</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">secret</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_authcid</span> <span class="o">=</span> <span class="n">authcid</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_secret</span> <span class="o">=</span> <span class="n">prepare</span><span class="p">(</span><span class="n">secret</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">authcid</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_authcid</span>
+
+<div class="viewcode-block" id="ClearIdentity.compare_secret"><a class="viewcode-back" href="../../pysasl.identity.html#pysasl.identity.ClearIdentity.compare_secret">[docs]</a>    <span class="k">def</span> <span class="nf">compare_secret</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">secret</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">secrets</span><span class="o">.</span><span class="n">compare_digest</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_secret</span><span class="p">,</span> <span class="n">prepare</span><span class="p">(</span><span class="n">secret</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="ClearIdentity.get_clear_secret"><a class="viewcode-back" href="../../pysasl.identity.html#pysasl.identity.ClearIdentity.get_clear_secret">[docs]</a>    <span class="k">def</span> <span class="nf">get_clear_secret</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Return the cleartext secret string.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_secret</span></div>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;ClearIdentity(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">authcid</span><span class="si">!r}</span><span class="s1">, ...)&#39;</span></div>
+
+
+<div class="viewcode-block" id="HashedIdentity"><a class="viewcode-back" href="../../pysasl.identity.html#pysasl.identity.HashedIdentity">[docs]</a><span class="k">class</span> <span class="nc">HashedIdentity</span><span class="p">(</span><span class="n">Identity</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;An :class:`Identity` where the secret has been hashed for storage.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        authcid: The authentication identity, e.g. a login username.</span>
+<span class="sd">        digest: The hashed secret string, using :attr:`.hash`.</span>
+<span class="sd">        hash: The hash algorithm to use to verify the secret.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="vm">__slots__</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;_authcid&#39;</span><span class="p">,</span> <span class="s1">&#39;_digest&#39;</span><span class="p">,</span> <span class="s1">&#39;_hash&#39;</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">authcid</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">digest</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span>
+                 <span class="nb">hash</span><span class="p">:</span> <span class="n">HashInterface</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_authcid</span> <span class="o">=</span> <span class="n">authcid</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_digest</span> <span class="o">=</span> <span class="n">digest</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_hash</span> <span class="o">=</span> <span class="nb">hash</span>
+
+<div class="viewcode-block" id="HashedIdentity.create"><a class="viewcode-back" href="../../pysasl.identity.html#pysasl.identity.HashedIdentity.create">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">authcid</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">secret</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span>
+               <span class="nb">hash</span><span class="p">:</span> <span class="n">HashInterface</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;HashedIdentity&#39;</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Prepare and hash the given *secret*, returning a</span>
+<span class="sd">        :class:`HashedIdentity`.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            authcid: The authentication identity, e.g. a login username.</span>
+<span class="sd">            secret: The cleartext secret string.</span>
+<span class="sd">            hash: The hash algorithm to use to verify the secret.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">digest</span> <span class="o">=</span> <span class="nb">hash</span><span class="o">.</span><span class="n">hash</span><span class="p">(</span><span class="n">prepare</span><span class="p">(</span><span class="n">secret</span><span class="p">))</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">authcid</span><span class="p">,</span> <span class="n">digest</span><span class="p">,</span> <span class="nb">hash</span><span class="o">=</span><span class="nb">hash</span><span class="p">)</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">authcid</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_authcid</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">digest</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;The hashed secret string, using :attr:`.hash`.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_digest</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">hash</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">HashInterface</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;The hash implementation to use to verify the secret.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hash</span>
+
+<div class="viewcode-block" id="HashedIdentity.compare_secret"><a class="viewcode-back" href="../../pysasl.identity.html#pysasl.identity.HashedIdentity.compare_secret">[docs]</a>    <span class="k">def</span> <span class="nf">compare_secret</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">secret</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hash</span><span class="o">.</span><span class="n">verify</span><span class="p">(</span><span class="n">prepare</span><span class="p">(</span><span class="n">secret</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_digest</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="HashedIdentity.get_clear_secret"><a class="viewcode-back" href="../../pysasl.identity.html#pysasl.identity.HashedIdentity.get_clear_secret">[docs]</a>    <span class="k">def</span> <span class="nf">get_clear_secret</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Return the cleartext secret string, only if :attr:`.hash` is</span>
+<span class="sd">        :class:`~pysasl.hashing.Cleartext`.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hash</span><span class="p">,</span> <span class="n">Cleartext</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">digest</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span></div>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;HashedIdentity(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">authcid</span><span class="si">}</span><span class="s1">, ..., hash=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_hash</span><span class="si">!r}</span><span class="s1">)&#39;</span></div>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+    
+    
+        <div class="sidebar-toggle-group no-js">
+            
+            <button class="sidebar-toggle" id="sidebar-hide" title="Hide the sidebar menu">
+                 «
+                <span class="show-for-small">hide menu</span>
+                
+            </button>
+            <button class="sidebar-toggle" id="sidebar-show" title="Show the sidebar menu">
+                
+                <span class="show-for-small">menu</span>
+                <span class="hide-for-small">sidebar</span>
+                 »
+            </button>
+        </div>
+    
+      <div class="clearer"></div>
+    </div>
+    <div class="relbar-bottom">
+        
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> &nbsp; &nbsp;</li>
+    <li><a href="../../index.html">pysasl 1.0.0rc1 documentation</a> &#187;</li>
+
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../pysasl.html" >pysasl</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">pysasl.identity</a></li> 
+      </ul>
+    </div>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Ian Good.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.1.1.
+    </div>
+    <!-- cloud_sptheme 1.4 -->
+  </body>
+</html>
