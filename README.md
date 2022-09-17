@@ -71,7 +71,7 @@ To get the names of all available mechanisms:
 
 ```python
 mechanisms = [mech.name for mech in auth1.server_mechanisms]
-mech = auth1.get(b'PLAIN')
+mech = auth1.get_server(b'PLAIN')
 ```
 
 #### Issuing Challenges
@@ -100,28 +100,28 @@ protocol, such as [RFC 4954 for SMTP][3] or [RFC 3501 for IMAP][4].
 #### Checking Credentials
 
 Once the challenge-response loop has been completed and we are left with the
-a [`AuthenticationCredentials`][2] object, we can access information from the
+a [`ServerCredentials`][2] object, we can access information from the
 attempt:
 
 ```python
-from pysasl.creds import StoredSecret
+from pysasl.identity import ClearIdentity, HashedIdentity
 
 print('Authenticated as:', result.authcid)
 print('Authorization ID:', result.authzid)
-print('Assumed identity:', result.identity)
 
-# To compare to a known password...
-assert result.check_secret(StoredSecret('s3kr3t'))
+# To compare to a known cleartext password...
+identity = ClearIdentity('myuser', 's3kr3t')
+assert result.verify(identity)
 
 # Or to compare hashes...
 from pysasl.hashing import BuiltinHash
-secret = StoredSecret('1baa33d03d0...', hash=BuiltinHash())
-assert result.check_secret(secret)
+identity = HashedIdentity('myuser, '1baa33d03d0...', hash=BuiltinHash())
+assert result.verify(identity)
 
 # Or use passlib hashing...
 from passlib.apps import custom_app_context
-secret = StoredSecret('$6$rounds=656000$...', hash=custom_app_context)
-assert result.check_secret(secret)
+identity = HashedIdentity('myuser', '$6$rounds=656000$...', hash=custom_app_context)
+assert result.verify(identity)
 ```
 
 ## Client-side
@@ -149,10 +149,10 @@ Once a mechanism is chosen, we enter of a loop of responding to server
 challenges:
 
 ```python
-from pysasl.creds import AuthenticationCredentials
+from pysasl.creds.client import ClientCredentials
 
 def client_side_authentication(sock, mech, username, password):
-    creds = AuthenticationCredentials(username, password)
+    creds = ClientCredentials(username, password)
     challenges = []
     while True:
         resp = mech.client_attempt(creds, challenges)
@@ -194,6 +194,6 @@ mechanisms should either return an initial response or an empty string
 when given an empty list for the second argument.
 
 [1]: https://icgood.github.io/pysasl/pysasl.html#pysasl.SASLAuth
-[2]: https://icgood.github.io/pysasl/pysasl.html#pysasl.creds.AuthenticationCredentials
+[2]: https://icgood.github.io/pysasl/pysasl.creds.html#pysasl.creds.server.ServerCredentials
 [3]: https://tools.ietf.org/html/rfc4954
 [4]: https://tools.ietf.org/html/rfc3501#section-6.2.2
