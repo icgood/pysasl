@@ -3,9 +3,12 @@ from __future__ import absolute_import
 
 import unittest
 
-from pysasl import SASLAuth, UnexpectedChallenge, ServerChallenge, \
-    ChallengeResponse, AuthenticationError, ExternalVerificationRequired
-from pysasl.creds import StoredSecret, AuthenticationCredentials
+from pysasl import SASLAuth, ServerChallenge, ChallengeResponse
+from pysasl.creds.client import ClientCredentials
+from pysasl.creds.external import ExternalCredentials
+from pysasl.exception import (ExternalVerificationRequired, InvalidResponse,
+                              UnexpectedChallenge)
+from pysasl.identity import ClearIdentity
 from pysasl.mechanisms.oauth import OAuth2Mechanism
 
 
@@ -16,15 +19,14 @@ class TestOAuth2Mechanism(unittest.TestCase):
 
     def test_availability(self) -> None:
         sasl = SASLAuth.defaults()
-        self.assertIsNone(sasl.get(b'XOAUTH2'))
+        self.assertIsNone(sasl.get_server(b'XOAUTH2'))
+        self.assertIsNone(sasl.get_client(b'XOAUTH2'))
         sasl = SASLAuth.named([b'XOAUTH2'])
-        self.assertIsInstance(sasl.get(b'XOAUTH2'), OAuth2Mechanism)
-        self.assertIsInstance(sasl.get_server(b'XOAUTH2'), OAuth2Mechanism)
-        self.assertIsInstance(sasl.get_client(b'XOAUTH2'), OAuth2Mechanism)
+        self.assertEqual(self.mech, sasl.get_server(b'XOAUTH2'))
+        self.assertEqual(self.mech, sasl.get_client(b'XOAUTH2'))
         sasl = SASLAuth([self.mech])
         self.assertEqual([self.mech], sasl.client_mechanisms)
         self.assertEqual([self.mech], sasl.server_mechanisms)
-        self.assertEqual(self.mech, sasl.get(b'XOAUTH2'))
 
     def test_server_attempt_issues_challenge(self) -> None:
         try:
@@ -35,7 +37,7 @@ class TestOAuth2Mechanism(unittest.TestCase):
             self.fail('ServerChallenge not raised')
 
     def test_server_attempt_bad_response(self) -> None:
-        self.assertRaises(AuthenticationError,
+        self.assertRaises(InvalidResponse,
                           self.mech.server_attempt,
                           [ChallengeResponse(b'', b'abcdefghi')])
 
@@ -43,21 +45,18 @@ class TestOAuth2Mechanism(unittest.TestCase):
         result, final = self.mech.server_attempt([ChallengeResponse(
             b'', b'user=testuser\x01auth=Bearer testtoken\x01\x01')])
         self.assertIsNone(final)
-        self.assertIsNone(result.authcid_type)
-        self.assertFalse(result.has_secret)
-        self.assertEqual('testuser', result.authcid)
-        self.assertIsNone(result.authzid)
-        self.assertEqual('testuser', result.identity)
-        self.assertRaises(AttributeError, getattr, result, 'secret')
+        self.assertIsInstance(result, ExternalCredentials)
+        self.assertEqual('', result.authcid)
+        self.assertEqual('testuser', result.authzid)
         with self.assertRaises(ExternalVerificationRequired) as exc:
-            result.check_secret(StoredSecret('secret'))
+            result.verify(ClearIdentity('testuser', 'secret'))
         self.assertEqual('testtoken', exc.exception.token)
         with self.assertRaises(ExternalVerificationRequired) as exc:
-            result.check_secret(None)
+            result.verify(None)
         self.assertEqual('testtoken', exc.exception.token)
 
     def test_client_attempt(self) -> None:
-        creds = AuthenticationCredentials('testuser', 'testtoken')
+        creds = ClientCredentials('testuser', 'testtoken')
         resp1 = self.mech.client_attempt(creds, [])
         self.assertEqual(b'user=testuser\x01auth=Bearer testtoken\x01\x01',
                          resp1.response)
@@ -69,7 +68,7 @@ class TestOAuth2Mechanism(unittest.TestCase):
                           creds, [ServerChallenge(b'')]*2)
 
     def test_client_attempt_error(self) -> None:
-        creds = AuthenticationCredentials('testuser', 'testtoken')
+        creds = ClientCredentials('testuser', 'testtoken')
         resp1 = self.mech.client_attempt(creds, [])
         self.assertEqual(b'user=testuser\x01auth=Bearer testtoken\x01\x01',
                          resp1.response)

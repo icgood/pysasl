@@ -7,7 +7,7 @@ import os
 import hashlib
 import secrets
 from abc import abstractmethod
-from typing import TypeVar, Any, Optional, Dict
+from typing import TypeVar, Any, Optional, Sequence, Dict
 from typing_extensions import Protocol, Final
 
 try:
@@ -18,9 +18,10 @@ except ImportError as _exc:  # pragma: no cover
     custom_app_context = None
     _passlib_import_exc = _exc
 
-__all__ = ['HashInterface', 'BuiltinHash', 'Cleartext', 'get_hash']
+__all__ = ['HashT', 'HashInterface', 'BuiltinHash', 'Cleartext', 'get_hash']
 
-_Hash = TypeVar('_Hash', bound='HashInterface')
+#: Type variable for a :class:`HashInterface`.
+HashT = TypeVar('HashT', bound='HashInterface')
 
 
 class HashInterface(Protocol):
@@ -29,12 +30,15 @@ class HashInterface(Protocol):
 
     """
 
+    __slots__: Sequence[str] = []
+
     @abstractmethod
-    def copy(self: _Hash, **kwargs: Any) -> _Hash:
+    def copy(self: HashT, **kwargs: Any) -> HashT:
         """Return a copy of the hash implementation. The *kwargs* may be used
         by some hashes to modify settings on the hash.
 
         Args:
+            self: The hash object being copied.
             kwargs: Updated settings for the returned hash.
 
         """
@@ -45,18 +49,18 @@ class HashInterface(Protocol):
         """Hash the *value* and return the digest.
 
         Args:
-            value: The string to hash.
+            secret: The string to hash.
 
         """
         ...
 
     @abstractmethod
     def verify(self, secret: str, hash: str) -> bool:
-        """Check the *value* against the given *digest*.
+        """Check the *secret* against the given *hash*.
 
         Args:
-            value: The string to check.
-            digest: The hashed digest string.
+            secret: The string to check.
+            hash: The hashed digest string.
 
         """
         ...
@@ -73,6 +77,8 @@ class BuiltinHash(HashInterface):
 
     """
 
+    __slots__: Sequence[str] = ['hash_name', 'salt_len', 'rounds']
+
     def __init__(self, *, hash_name: str = 'sha256', salt_len: int = 16,
                  rounds: int = 1000000) -> None:
         super().__init__()
@@ -88,7 +94,17 @@ class BuiltinHash(HashInterface):
     def copy(self, *, hash_name: Optional[str] = None,
              salt_len: Optional[int] = None,
              rounds: Optional[int] = None,
-             **other: Any) -> 'BuiltinHash':
+             **kwargs: Any) -> 'BuiltinHash':
+        """Return a copy of the hash implementation, possibly with updated
+        parameters.
+
+        Args:
+            hash_name: The updated hash name.
+            salt_len: The updated length of the random salt.
+            rounds: The updated number of hash rounds.
+            kwargs: Additional keyword arguments are ignored.
+
+        """
         copy_kwargs: Dict[str, Any] = {'hash_name': self.hash_name,
                                        'salt_len': self.salt_len,
                                        'rounds': self.rounds}
@@ -109,6 +125,13 @@ class BuiltinHash(HashInterface):
         return salt + hashed
 
     def hash(self, secret: str, salt: Optional[bytes] = None) -> str:
+        """Hash the *secret* and return the digest.
+
+        Args:
+            secret: The string to hash.
+            salt: A salt value to use instead of a random value.
+
+        """
         if salt is None:  # pragma: no cover
             salt = os.urandom(self.salt_len)
         return self._hash(secret, salt).hex()
@@ -127,7 +150,9 @@ class BuiltinHash(HashInterface):
 class Cleartext(HashInterface):
     """Implements :class:`HashInterface` with no hashing performed."""
 
-    def copy(self, **_: Any) -> 'Cleartext':
+    __slots__: Sequence[str] = []
+
+    def copy(self, **kwargs: Any) -> 'Cleartext':
         return self
 
     def hash(self, secret: str) -> str:

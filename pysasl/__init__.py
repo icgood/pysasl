@@ -1,61 +1,22 @@
 
 from abc import abstractmethod, ABCMeta
 from collections import OrderedDict
-from typing import ClassVar, Optional, Iterable, Tuple, Mapping, Sequence
-from typing_extensions import Final
+from typing import Union, Optional, Iterable, Tuple, Sequence
 
 import pkg_resources
 
 from . import mechanisms
-from .creds import AuthenticationCredentials
+from .creds.client import ClientCredentials
+from .creds.server import ServerCredentials
 
-__all__ = ['__version__', 'AuthenticationError', 'UnexpectedChallenge',
-           'ServerChallenge', 'ChallengeResponse', 'BaseMechanism',
+__all__ = ['__version__', 'ServerChallenge', 'ChallengeResponse',
            'ServerMechanism', 'ClientMechanism', 'SASLAuth']
 
 
 #: The pysasl package version.
 __version__: str = pkg_resources.require(__package__)[0].version
 
-
-class AuthenticationError(Exception):
-    """Indicates that authentication failed due to a protocol error unrelated
-    to any provided credentials.
-
-    """
-
-    __slots__: Sequence[str] = []
-
-
-class UnexpectedChallenge(AuthenticationError):
-    """During client-side authentication, the SASL mechanism received an
-    authentication challenge from the server that it did not expect.
-
-    """
-
-    __slots__: Sequence[str] = []
-
-    def __init__(self) -> None:
-        super().__init__('Unexpected auth challenge')
-
-
-class ExternalVerificationRequired(AuthenticationError):
-    """The credentials are structurally valid but require external
-    verification.
-
-    If *token* is ``None``, the credentials provided no additional information
-    for verification. Otherwise, *token* should be verified and authorized for
-    the :attr:`~pysasl.creds.AuthenticationCredentials.identity` from the
-    credentials.
-
-    Args:
-        token: A bearer token, if required for verification.
-
-    """
-
-    def __init__(self, token: Optional[str] = None) -> None:
-        super().__init__()
-        self.token: Final = token
+_Mechanism = Union['ServerMechanism', 'ClientMechanism']
 
 
 class ServerChallenge(Exception):
@@ -112,20 +73,28 @@ class ChallengeResponse:
         return f'ChallengeResponse({self.challenge!r}, {self.response!r})'
 
 
-class BaseMechanism(metaclass=ABCMeta):
-    """Base class for all server- and client-side SASL mechanisms.
+class _BaseMechanism:
 
-    Attributes:
-        name: The SASL name for this mechanism.
+    __slots__: Sequence[str] = ['_name']
 
-    """
+    def __init__(self, name: Union[str, bytes]) -> None:
+        super().__init__()
+        if isinstance(name, str):
+            name = name.encode('ascii')
+        self._name = name
 
-    __slots__: Sequence[str] = []
+    @property
+    def name(self) -> bytes:
+        """The SASL name for this mechanism."""
+        return self._name
 
-    name: ClassVar[bytes] = b''
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, _BaseMechanism):
+            return self.name == other.name
+        return NotImplemented
 
 
-class ServerMechanism(BaseMechanism, metaclass=ABCMeta):
+class ServerMechanism(_BaseMechanism, metaclass=ABCMeta):
     """Base class for implementing SASL mechanisms that support server-side
     credential verification.
 
@@ -135,7 +104,7 @@ class ServerMechanism(BaseMechanism, metaclass=ABCMeta):
 
     @abstractmethod
     def server_attempt(self, responses: Sequence[ChallengeResponse]) \
-            -> Tuple[AuthenticationCredentials, Optional[bytes]]:
+            -> Tuple[ServerCredentials, Optional[bytes]]:
         """For SASL server-side credential verification, receives responses
         from the client and issues challenges until it has everything needed to
         verify the credentials.
@@ -154,12 +123,13 @@ class ServerMechanism(BaseMechanism, metaclass=ABCMeta):
 
         Raises:
             ServerChallenge: The server challenge needing a client response.
+            InvalidResponse: The server received an invalid client response.
 
         """
         ...
 
 
-class ClientMechanism(BaseMechanism, metaclass=ABCMeta):
+class ClientMechanism(_BaseMechanism, metaclass=ABCMeta):
     """Base class for implementing SASL mechanisms that support client-side
     credential verification.
 
@@ -168,7 +138,7 @@ class ClientMechanism(BaseMechanism, metaclass=ABCMeta):
     __slots__: Sequence[str] = []
 
     @abstractmethod
-    def client_attempt(self, creds: AuthenticationCredentials,
+    def client_attempt(self, creds: ClientCredentials,
                        challenges: Sequence[ServerChallenge]) \
             -> ChallengeResponse:
         """For SASL client-side credential verification, produce responses to
@@ -198,12 +168,16 @@ class SASLAuth:
 
     """
 
-    __slots__ = ['mechanisms']
+    __slots__ = ['_server_mechanisms', '_client_mechanisms']
 
-    def __init__(self, mechanisms: Iterable[BaseMechanism]) -> None:
+    def __init__(self, mechanisms: Sequence[_Mechanism]) -> None:
         super().__init__()
-        self.mechanisms: Mapping[bytes, BaseMechanism] = \
-            OrderedDict((mech.name, mech) for mech in mechanisms)
+        self._server_mechanisms = OrderedDict(
+            (mech.name, mech)
+            for mech in mechanisms if isinstance(mech, ServerMechanism))
+        self._client_mechanisms = OrderedDict(
+            (mech.name, mech)
+            for mech in mechanisms if isinstance(mech, ClientMechanism))
 
     @classmethod
     def defaults(cls) -> 'SASLAuth':
@@ -231,39 +205,25 @@ class SASLAuth:
             KeyError: A mechanism name was not recognized.
 
         """
-        builtin = dict(cls._get_builtin_mechanisms())
-        return SASLAuth(builtin[name] for name in names)
+        builtin = {m.name: m for m in cls._get_builtin_mechanisms()}
+        return SASLAuth([builtin[name] for name in names])
 
     @classmethod
-    def _get_builtin_mechanisms(cls) -> Iterable[Tuple[bytes, BaseMechanism]]:
+    def _get_builtin_mechanisms(cls) -> Iterable[_Mechanism]:
         group = mechanisms.__package__
         for entry_point in pkg_resources.iter_entry_points(group):
             mech_cls = entry_point.load()
-            yield (mech_cls.name, mech_cls())
+            yield mech_cls(entry_point.name)
 
     @property
     def server_mechanisms(self) -> Sequence[ServerMechanism]:
         """List of available :class:`ServerMechanism` objects."""
-        return [mech for mech in self.mechanisms.values()
-                if isinstance(mech, ServerMechanism)]
+        return list(self._server_mechanisms.values())
 
     @property
     def client_mechanisms(self) -> Sequence[ClientMechanism]:
         """List of available :class:`ClientMechanism` objects."""
-        return [mech for mech in self.mechanisms.values()
-                if isinstance(mech, ClientMechanism)]
-
-    def get(self, name: bytes) -> Optional[BaseMechanism]:
-        """Get a SASL mechanism by name.
-
-        Args:
-            name: The SASL mechanism name.
-
-        Returns:
-            The mechanism object or ``None``
-
-        """
-        return self.mechanisms.get(name.upper())
+        return list(self._client_mechanisms.values())
 
     def get_server(self, name: bytes) -> Optional[ServerMechanism]:
         """Like :meth:`.get`, but only mechanisms inheriting
@@ -276,8 +236,7 @@ class SASLAuth:
             The mechanism object or ``None``
 
         """
-        mech = self.get(name)
-        return mech if isinstance(mech, ServerMechanism) else None
+        return self._server_mechanisms.get(name.upper())
 
     def get_client(self, name: bytes) -> Optional[ClientMechanism]:
         """Like :meth:`.get`, but only mechanisms inheriting
@@ -290,5 +249,4 @@ class SASLAuth:
             The mechanism object or ``None``
 
         """
-        mech = self.get(name)
-        return mech if isinstance(mech, ClientMechanism) else None
+        return self._client_mechanisms.get(name.upper())

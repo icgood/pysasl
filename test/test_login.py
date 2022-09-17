@@ -3,9 +3,11 @@ from __future__ import absolute_import
 
 import unittest
 
-from pysasl import (SASLAuth, ServerChallenge, ChallengeResponse,
-                    UnexpectedChallenge)
-from pysasl.creds import StoredSecret, AuthenticationCredentials
+from pysasl import SASLAuth, ServerChallenge, ChallengeResponse
+from pysasl.creds.client import ClientCredentials
+from pysasl.creds.plain import PlainCredentials
+from pysasl.exception import UnexpectedChallenge
+from pysasl.identity import ClearIdentity
 from pysasl.mechanisms.login import LoginMechanism
 
 
@@ -16,15 +18,14 @@ class TestLoginMechanism(unittest.TestCase):
 
     def test_availability(self) -> None:
         sasl = SASLAuth.defaults()
-        self.assertIsInstance(sasl.get(b'LOGIN'), LoginMechanism)
+        self.assertEqual(self.mech, sasl.get_server(b'LOGIN'))
+        self.assertEqual(self.mech, sasl.get_client(b'LOGIN'))
         sasl = SASLAuth.named([b'LOGIN'])
-        self.assertIsInstance(sasl.get(b'LOGIN'), LoginMechanism)
-        self.assertIsInstance(sasl.get_server(b'LOGIN'), LoginMechanism)
-        self.assertIsInstance(sasl.get_client(b'LOGIN'), LoginMechanism)
+        self.assertEqual(self.mech, sasl.get_server(b'LOGIN'))
+        self.assertEqual(self.mech, sasl.get_client(b'LOGIN'))
         sasl = SASLAuth([self.mech])
         self.assertEqual([self.mech], sasl.client_mechanisms)
         self.assertEqual([self.mech], sasl.server_mechanisms)
-        self.assertEqual(self.mech, sasl.get(b'LOGIN'))
 
     def test_server_attempt_issues_challenges(self) -> None:
         try:
@@ -46,16 +47,15 @@ class TestLoginMechanism(unittest.TestCase):
             ChallengeResponse(b'Username:', b'testuser'),
             ChallengeResponse(b'Password:', b'testpass')])
         self.assertIsNone(final)
-        self.assertIsNone(result.authcid_type)
-        self.assertTrue(result.has_secret)
-        self.assertIsNone(result.authzid)
+        self.assertIsInstance(result, PlainCredentials)
         self.assertEqual('testuser', result.authcid)
-        self.assertEqual('testuser', result.identity)
-        self.assertTrue(result.check_secret(StoredSecret('testpass')))
-        self.assertFalse(result.check_secret(StoredSecret('invalid')))
+        self.assertEqual('testuser', result.authzid)
+        self.assertTrue(result.verify(ClearIdentity('testuser', 'testpass')))
+        self.assertFalse(result.verify(ClearIdentity('testuser', 'badpass')))
+        self.assertFalse(result.verify(ClearIdentity('baduser', 'testpass')))
 
     def test_client_attempt(self) -> None:
-        creds = AuthenticationCredentials('testuser', 'testpass')
+        creds = ClientCredentials('testuser', 'testpass')
         resp1 = self.mech.client_attempt(creds, [])
         self.assertEqual(b'', resp1.response)
         resp2 = self.mech.client_attempt(creds, [

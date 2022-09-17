@@ -12,16 +12,16 @@ def mypy(ctx):
 
 
 @task(check_import)
-def pyright_verifytypes(ctx):
-    """Run the pyright --verifytypes linter."""
-    ctx.run('pyright --verifytypes {}'.format(ctx.package))
+def pyright(ctx):
+    """Run the pyright linter."""
+    ctx.run('pyright {} test'.format(ctx.package))
 
 
-@task(mypy, pyright_verifytypes)
+@task(mypy, pyright)
 def all(ctx):
     """Run all the type checker tools."""
     pass
 
 
-ns = Collection(mypy, pyright_verifytypes)
+ns = Collection(mypy, pyright)
 ns.add_task(all, default=True)
