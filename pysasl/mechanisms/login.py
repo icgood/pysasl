@@ -1,9 +1,11 @@
 
-from typing import ClassVar, Tuple, Sequence
+from typing import Union, Tuple, Sequence
 
 from .. import (ServerMechanism, ClientMechanism, ServerChallenge,
-                ChallengeResponse, UnexpectedChallenge)
-from ..creds import AuthenticationCredentials
+                ChallengeResponse)
+from ..creds.client import ClientCredentials
+from ..creds.plain import PlainCredentials
+from ..exception import UnexpectedChallenge
 
 __all__ = ['LoginMechanism']
 
@@ -11,10 +13,11 @@ __all__ = ['LoginMechanism']
 class LoginMechanism(ServerMechanism, ClientMechanism):
     """Implements the LOGIN authentication mechanism."""
 
-    name: ClassVar[bytes] = b'LOGIN'
+    def __init__(self, name: Union[str, bytes] = b'LOGIN') -> None:
+        super().__init__(name)
 
     def server_attempt(self, responses: Sequence[ChallengeResponse]) \
-            -> Tuple[AuthenticationCredentials, None]:
+            -> Tuple[PlainCredentials, None]:
         try:
             first = responses[0]
         except (IndexError, ValueError) as exc:
@@ -25,9 +28,9 @@ class LoginMechanism(ServerMechanism, ClientMechanism):
             raise ServerChallenge(b'Password:') from exc
         username = first.response.decode('utf-8')
         password = second.response.decode('utf-8')
-        return AuthenticationCredentials(username, password), None
+        return PlainCredentials(username, password, username), None
 
-    def client_attempt(self, creds: AuthenticationCredentials,
+    def client_attempt(self, creds: ClientCredentials,
                        challenges: Sequence[ServerChallenge]) \
             -> ChallengeResponse:
         if len(challenges) == 0:

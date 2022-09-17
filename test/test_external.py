@@ -3,9 +3,11 @@ from __future__ import absolute_import
 
 import unittest
 
-from pysasl import (SASLAuth, ServerChallenge, ChallengeResponse,
-                    UnexpectedChallenge, ExternalVerificationRequired)
-from pysasl.creds import StoredSecret, AuthenticationCredentials
+from pysasl import SASLAuth, ServerChallenge, ChallengeResponse
+from pysasl.creds.client import ClientCredentials
+from pysasl.creds.external import ExternalCredentials
+from pysasl.exception import ExternalVerificationRequired, UnexpectedChallenge
+from pysasl.identity import ClearIdentity
 from pysasl.mechanisms.external import ExternalMechanism
 
 
@@ -16,15 +18,14 @@ class TestExternalMechanism(unittest.TestCase):
 
     def test_availability(self) -> None:
         sasl = SASLAuth.defaults()
-        self.assertIsNone(sasl.get(b'EXTERNAL'))
+        self.assertIsNone(sasl.get_server(b'EXTERNAL'))
+        self.assertIsNone(sasl.get_client(b'EXTERNAL'))
         sasl = SASLAuth.named([b'EXTERNAL'])
-        self.assertIsInstance(sasl.get(b'EXTERNAL'), ExternalMechanism)
-        self.assertIsInstance(sasl.get_server(b'EXTERNAL'), ExternalMechanism)
-        self.assertIsInstance(sasl.get_client(b'EXTERNAL'), ExternalMechanism)
+        self.assertEqual(self.mech, sasl.get_server(b'EXTERNAL'))
+        self.assertEqual(self.mech, sasl.get_client(b'EXTERNAL'))
         sasl = SASLAuth([self.mech])
         self.assertEqual([self.mech], sasl.client_mechanisms)
         self.assertEqual([self.mech], sasl.server_mechanisms)
-        self.assertEqual(self.mech, sasl.get(b'EXTERNAL'))
 
     def test_server_attempt_issues_challenge(self) -> None:
         try:
@@ -36,29 +37,26 @@ class TestExternalMechanism(unittest.TestCase):
 
     def test_server_attempt_successful(self) -> None:
         result, final = self.mech.server_attempt([
-            ChallengeResponse(b'', b'abcdefghi')])
+            ChallengeResponse(b'', b'testuser')])
         self.assertIsNone(final)
-        self.assertIsNone(result.authcid_type)
-        self.assertFalse(result.has_secret)
-        self.assertEqual('abcdefghi', result.authzid)
-        self.assertEqual('abcdefghi', result.authcid)
-        self.assertEqual('abcdefghi', result.identity)
-        self.assertRaises(AttributeError, getattr, result, 'secret')
+        self.assertIsInstance(result, ExternalCredentials)
+        self.assertEqual('testuser', result.authzid)
+        self.assertEqual('', result.authcid)
         with self.assertRaises(ExternalVerificationRequired) as exc:
-            result.check_secret(StoredSecret('secret'))
+            result.verify(ClearIdentity('testuser', 'testpass'))
         self.assertIsNone(exc.exception.token)
         with self.assertRaises(ExternalVerificationRequired) as exc:
-            result.check_secret(None)
+            result.verify(None)
         self.assertIsNone(exc.exception.token)
 
     def test_server_attempt_successful_empty(self) -> None:
         result, _ = self.mech.server_attempt([
             ChallengeResponse(b'', b'')])
-        self.assertIsNone(result.authzid)
+        self.assertEqual('', result.authzid)
         self.assertEqual('', result.authcid)
 
     def test_client_attempt(self) -> None:
-        creds = AuthenticationCredentials('', '', 'testzid')
+        creds = ClientCredentials('', '', 'testzid')
         resp1 = self.mech.client_attempt(creds, [])
         self.assertEqual(b'testzid', resp1.response)
         resp2 = self.mech.client_attempt(creds, [ServerChallenge(b'')])

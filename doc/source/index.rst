@@ -11,8 +11,11 @@
 
    pysasl
    pysasl.creds
+   pysasl.exception
    pysasl.hashing
+   pysasl.identity
    pysasl.mechanisms
+   pysasl.prep
 
 
 Indices and tables

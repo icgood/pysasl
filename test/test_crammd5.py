@@ -6,10 +6,15 @@ import email.utils
 
 from unittest.mock import patch, Mock
 
-from pysasl import (SASLAuth, ServerChallenge, ChallengeResponse,
-                    AuthenticationError, UnexpectedChallenge)
-from pysasl.creds import StoredSecret, AuthenticationCredentials
-from pysasl.mechanisms.crammd5 import CramMD5Mechanism
+from pysasl import SASLAuth, ServerChallenge, ChallengeResponse
+from pysasl.creds.client import ClientCredentials
+from pysasl.exception import (InvalidResponse, MechanismUnusable,
+                              UnexpectedChallenge)
+from pysasl.hashing import BuiltinHash
+from pysasl.identity import ClearIdentity, HashedIdentity
+from pysasl.mechanisms.crammd5 import CramMD5Result, CramMD5Mechanism
+
+builtin_hash = BuiltinHash(rounds=1000)
 
 
 class TestCramMD5Mechanism(unittest.TestCase):
@@ -19,31 +24,34 @@ class TestCramMD5Mechanism(unittest.TestCase):
 
     def test_availability(self) -> None:
         sasl = SASLAuth.defaults()
-        self.assertIsNone(sasl.get(b'CRAM-MD5'))
+        self.assertIsNone(sasl.get_server(b'CRAM-MD5'))
+        self.assertIsNone(sasl.get_client(b'CRAM-MD5'))
         sasl = SASLAuth.named([b'CRAM-MD5'])
-        self.assertIsInstance(sasl.get(b'CRAM-MD5'), CramMD5Mechanism)
-        self.assertIsInstance(sasl.get_server(b'CRAM-MD5'), CramMD5Mechanism)
-        self.assertIsInstance(sasl.get_client(b'CRAM-MD5'), CramMD5Mechanism)
+        self.assertEqual(self.mech, sasl.get_server(b'CRAM-MD5'))
+        self.assertEqual(self.mech, sasl.get_client(b'CRAM-MD5'))
         sasl = SASLAuth([self.mech])
         self.assertEqual([self.mech], sasl.client_mechanisms)
         self.assertEqual([self.mech], sasl.server_mechanisms)
-        self.assertEqual(self.mech, sasl.get(b'CRAM-MD5'))
+
+    def test_result_verify_impossible(self) -> None:
+        result = CramMD5Result('testuser', b'', b'')
+        identity = HashedIdentity('testuser', 'digest',
+                                  hash=builtin_hash.copy())
+        with self.assertRaises(MechanismUnusable):
+            result.verify(identity)
 
     @patch.object(email.utils, 'make_msgid')
     def test_server_attempt_issues_challenge(
             self, make_msgid_mock: Mock) -> None:
         make_msgid_mock.return_value = '<abc123.1234@testhost>'
-        try:
+        with self.assertRaises(ServerChallenge) as raised:
             self.mech.server_attempt([])
-        except ServerChallenge as exc:
-            self.assertEqual(b'<abc123.1234@testhost>', exc.data)
-        else:
-            self.fail('ServerChallenge not raised')
+        self.assertEqual(b'<abc123.1234@testhost>', raised.exception.data)
 
     @patch.object(email.utils, 'make_msgid')
     def test_server_attempt_bad_response(self, make_msgid_mock: Mock) -> None:
         make_msgid_mock.return_value = '<abc123.1234@testhost>'
-        self.assertRaises(AuthenticationError,
+        self.assertRaises(InvalidResponse,
                           self.mech.server_attempt,
                           [ChallengeResponse(b'', b'testing')])
 
@@ -54,19 +62,17 @@ class TestCramMD5Mechanism(unittest.TestCase):
         result, final = self.mech.server_attempt([
             ChallengeResponse(b'<abc123.1234@testhost>', response)])
         self.assertIsNone(final)
-        self.assertIsNone(result.authcid_type)
-        self.assertFalse(result.has_secret)
-        self.assertIsNone(result.authzid)
+        self.assertIsInstance(result, CramMD5Result)
         self.assertEqual('testuser', result.authcid)
-        self.assertEqual('testuser', result.identity)
-        self.assertRaises(AttributeError, getattr, result, 'secret')
-        self.assertTrue(result.check_secret(StoredSecret('testpass')))
-        self.assertTrue(result.check_secret(StoredSecret('testpass')))
-        self.assertFalse(result.check_secret(StoredSecret('badpass')))
-        self.assertFalse(result.check_secret(None))
+        self.assertEqual('testuser', result.authzid)
+        self.assertTrue(result.verify(ClearIdentity('testuser', 'testpass')))
+        self.assertTrue(result.verify(ClearIdentity('testuser', 'testpass')))
+        self.assertFalse(result.verify(ClearIdentity('testuser', 'badpass')))
+        self.assertFalse(result.verify(ClearIdentity('baduser', 'testpass')))
+        self.assertFalse(result.verify(None))
 
     def test_client_attempt(self) -> None:
-        creds = AuthenticationCredentials('testuser', 'testpass')
+        creds = ClientCredentials('testuser', 'testpass')
         resp1 = self.mech.client_attempt(creds, [])
         self.assertEqual(b'', resp1.response)
         resp2 = self.mech.client_attempt(creds, [

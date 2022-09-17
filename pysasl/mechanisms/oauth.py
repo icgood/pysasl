@@ -1,49 +1,14 @@
 
 import re
-from typing import ClassVar, Any, Optional, Tuple, Sequence, NoReturn
+from typing import Union, Tuple, Sequence
 
-from .. import (ServerMechanism, ClientMechanism, UnexpectedChallenge,
-                ServerChallenge, AuthenticationError, ChallengeResponse,
-                ExternalVerificationRequired)
-from ..creds import StoredSecret, AuthenticationCredentials
+from .. import (ServerMechanism, ClientMechanism, ServerChallenge,
+                ChallengeResponse)
+from ..creds.client import ClientCredentials
+from ..creds.external import ExternalCredentials
+from ..exception import InvalidResponse, UnexpectedChallenge
 
 __all__ = ['OAuth2Mechanism']
-
-
-class OAuth2Credentials(AuthenticationCredentials):
-    """Simple container for the user and token received from the client by the
-    ``XOAUTH2`` mechanism.
-
-    Args:
-        user: The user identity string.
-        token: The OAuth 2.0 bearer token string.
-
-    """
-
-    def __init__(self, authcid: str, token: str, *,
-                 authcid_type: Optional[str] = None) -> None:
-        super().__init__(authcid, '', authcid_type=authcid_type)
-        self._token = token
-
-    @property
-    def has_secret(self) -> bool:
-        return False
-
-    @property
-    def secret(self) -> NoReturn:
-        raise AttributeError('secret')
-
-    def check_secret(self, secret: Optional[StoredSecret],
-                     **other: Any) -> NoReturn:
-        """This implementation does not use *secret* and instead raises
-        :exc:`~pysasl.ExternalVerificationRequired` immediately, containing the
-        OAuth 2.0 token.
-
-        Raises:
-            :exc:`~pysasl.ExternalVerificationRequired`
-
-        """
-        raise ExternalVerificationRequired(self._token)
 
 
 class OAuth2Mechanism(ServerMechanism, ClientMechanism):
@@ -55,12 +20,14 @@ class OAuth2Mechanism(ServerMechanism, ClientMechanism):
 
     """
 
-    _pattern = re.compile(br'^user=(.*?)\x01auth=Bearer (.*?)\x01\x01$')
+    _pattern = re.compile(br'^user=(.*?)\x01auth=[bB][eE][aA][rR][eE][rR] '
+                          br'(.*?)\x01\x01$')
 
-    name: ClassVar[bytes] = b'XOAUTH2'
+    def __init__(self, name: Union[str, bytes] = b'XOAUTH2') -> None:
+        super().__init__(name)
 
     def server_attempt(self, responses: Sequence[ChallengeResponse]) \
-            -> Tuple[OAuth2Credentials, None]:
+            -> Tuple[ExternalCredentials, None]:
         try:
             first = responses[0]
         except IndexError as exc:
@@ -68,14 +35,14 @@ class OAuth2Mechanism(ServerMechanism, ClientMechanism):
 
         match = re.match(self._pattern, first.response)
         if not match:
-            raise AuthenticationError('Invalid XOAUTH2 response')
+            raise InvalidResponse()
         user, token = match.groups()
 
         user_str = user.decode('utf-8')
         token_str = token.decode('utf-8')
-        return OAuth2Credentials(user_str, token_str), None
+        return ExternalCredentials(user_str, token_str), None
 
-    def client_attempt(self, creds: AuthenticationCredentials,
+    def client_attempt(self, creds: ClientCredentials,
                        challenges: Sequence[ServerChallenge]) \
             -> ChallengeResponse:
         if len(challenges) == 0:

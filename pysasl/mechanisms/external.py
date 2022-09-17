@@ -1,43 +1,13 @@
 
-from typing import ClassVar, Any, Optional, Tuple, Sequence, NoReturn
+from typing import Union, Tuple, Sequence
 
 from .. import (ServerMechanism, ClientMechanism, ServerChallenge,
-                ChallengeResponse, UnexpectedChallenge,
-                ExternalVerificationRequired)
-from ..creds import StoredSecret, AuthenticationCredentials
+                ChallengeResponse)
+from ..creds.client import ClientCredentials
+from ..creds.external import ExternalCredentials
+from ..exception import UnexpectedChallenge
 
-__all__ = ['ExternalResult', 'ExternalMechanism']
-
-
-class ExternalResult(AuthenticationCredentials):
-    """External credentials do not contain authentication credentials, only an
-    :attr:`.identity` to authorize as.
-
-    """
-
-    def __init__(self, authzid: Optional[str] = None, *,
-                 authcid_type: Optional[str] = None) -> None:
-        authcid = authzid or ''
-        super().__init__(authcid, '', authzid, authcid_type=authcid_type)
-
-    @property
-    def has_secret(self) -> bool:
-        return False
-
-    @property
-    def secret(self) -> str:
-        raise AttributeError('secret')
-
-    def check_secret(self, secret: Optional[StoredSecret],
-                     **other: Any) -> NoReturn:
-        """This implementation does not use *secret* and instead raises
-        :exc:`~pysasl.ExternalVerificationRequired` immediately.
-
-        Raises:
-            :exc:`~pysasl.ExternalVerificationRequired`
-
-        """
-        raise ExternalVerificationRequired()
+__all__ = ['ExternalMechanism']
 
 
 class ExternalMechanism(ServerMechanism, ClientMechanism):
@@ -48,18 +18,19 @@ class ExternalMechanism(ServerMechanism, ClientMechanism):
 
     """
 
-    name: ClassVar[bytes] = b'EXTERNAL'
+    def __init__(self, name: Union[str, bytes] = b'EXTERNAL') -> None:
+        super().__init__(name)
 
     def server_attempt(self, responses: Sequence[ChallengeResponse]) \
-            -> Tuple[ExternalResult, None]:
+            -> Tuple[ExternalCredentials, None]:
         try:
             first = responses[0]
         except IndexError as exc:
             raise ServerChallenge(b'') from exc
         authzid_str = first.response.decode('utf-8')
-        return ExternalResult(authzid_str), None
+        return ExternalCredentials(authzid_str), None
 
-    def client_attempt(self, creds: AuthenticationCredentials,
+    def client_attempt(self, creds: ClientCredentials,
                        challenges: Sequence[ServerChallenge]) \
             -> ChallengeResponse:
         if len(challenges) == 0:
@@ -68,5 +39,5 @@ class ExternalMechanism(ServerMechanism, ClientMechanism):
             challenge = challenges[0].data
         else:
             raise UnexpectedChallenge()
-        authzid = (creds.authzid or '').encode('utf-8')
+        authzid = creds.authzid.encode('utf-8')
         return ChallengeResponse(challenge, authzid)
