@@ -4,6 +4,7 @@ and verify secrets.
 """
 
 import os
+import base64
 import hashlib
 import secrets
 from abc import abstractmethod
@@ -120,9 +121,9 @@ class BuiltinHash(HashInterface):
 
     def _hash(self, secret: str, salt: bytes) -> bytes:
         value_b = secret.encode('utf-8')
-        hashed = hashlib.pbkdf2_hmac(
+        digest = hashlib.pbkdf2_hmac(
             self.hash_name, value_b, salt, self.rounds)
-        return salt + hashed
+        return salt + digest
 
     def hash(self, secret: str, salt: Optional[bytes] = None) -> str:
         """Hash the *secret* and return the digest.
@@ -134,13 +135,36 @@ class BuiltinHash(HashInterface):
         """
         if salt is None:  # pragma: no cover
             salt = os.urandom(self.salt_len)
-        return self._hash(secret, salt).hex()
+        digest = self._hash(secret, salt)
+        return self.encode_digest(digest)
 
     def verify(self, secret: str, hash: str) -> bool:
-        digest_b = bytes.fromhex(hash)
+        digest_b = self.decode_digest(hash)
         salt = digest_b[0:self.salt_len]
-        value_hashed = self._hash(secret, salt)
-        return secrets.compare_digest(value_hashed, digest_b)
+        value_digest = self._hash(secret, salt)
+        return secrets.compare_digest(value_digest, digest_b)
+
+    @classmethod
+    def encode_digest(cls, digest: bytes) -> str:
+        """Encode the digest into a string. This uses :func:`~base64.b64encode`
+        by default, but can be overridden by subclasses.
+
+        Args:
+            digest: The raw digest bytestring.
+
+        """
+        return base64.b64encode(digest).decode('ascii')
+
+    @classmethod
+    def decode_digest(cls, digest: str) -> bytes:
+        """Decode the digest from a string. This uses :func:`~base64.b64decode`
+        by default, but can be overridden by subclasses.
+
+        Args:
+            digest: The encoded digest string.
+
+        """
+        return base64.b64decode(digest)
 
     def __repr__(self) -> str:
         return 'BuiltinHash(hash_name=%r, salt_len=%r, rounds=%r)' % \

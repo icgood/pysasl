@@ -1,6 +1,7 @@
 
 from __future__ import absolute_import
 
+import base64
 import unittest
 
 from pysasl.creds.plain import PlainCredentials
@@ -9,12 +10,11 @@ from pysasl.identity import ClearIdentity, HashedIdentity
 
 builtin_hash = BuiltinHash(rounds=1000)
 
-salt_sha256 = '6f3b2db13d217e79d70d43d326a6e485'
-password_sha256 = salt_sha256 + '756bcbe1b4e959f3e86c0d9eb62fa40a352c178b1fc' \
-    '30896e7c484d74a78561d'
-password_sha512 = '1339152519f33e66bf15837624ce57563f680e5d2a2700a5016cb087c' \
-    '5c05b3e22ba040a32f9453dbcb13071966bdb88cf5e8b0be68c3026094ff67bf03475c2' \
-    '2a15e9e39d5fcbe07a0c62296f155999'
+salt_sha256 = 'bzstsT0hfnnXDUPTJqbkhQ=='
+password_sha256 = 'bzstsT0hfnnXDUPTJqbkhXVry+G06Vnz6GwNnrYvpAo1LBeLH8MIlufEh' \
+    'NdKeFYd'
+password_sha512 = 'EzkVJRnzPma/FYN2JM5XVj9oDl0qJwClAWywh8XAWz4iugQKMvlFPbyxM' \
+    'HGWa9uIz16LC+aMMCYJT/Z78DR1wioV6eOdX8vgegxiKW8VWZk='
 
 
 class TestCreds(unittest.TestCase):
@@ -45,7 +45,7 @@ class TestCreds(unittest.TestCase):
         self.assertTrue(creds.verify(stored))
 
     def test_builtin_hash(self) -> None:
-        salt = bytes.fromhex(salt_sha256)
+        salt = base64.b64decode(salt_sha256)
         self.assertEqual(password_sha256,
                          builtin_hash.hash('password', salt))
 
