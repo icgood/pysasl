@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>pysasl.prep &#8212; pysasl 1.0.0rc2 documentation</title>
+    <title>pysasl.prep &#8212; pysasl 1.0.0rc3 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/cloud.css" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noticia+Text:400,i,b,bi|Open+Sans:400,i,b,bi|Roboto+Mono:400,i,b,bi&amp;display=swap" type="text/css" />
@@ -49,7 +49,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> &nbsp; &nbsp;</li>
-    <li><a href="../../index.html">pysasl 1.0.0rc2 documentation</a> &#187;</li>
+    <li><a href="../../index.html">pysasl 1.0.0rc3 documentation</a> &#187;</li>
 
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../pysasl.html" accesskey="U">pysasl</a> &#187;</li>
@@ -75,12 +75,14 @@
     <span class="n">_saslprep</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">_saslprep_exc</span> <span class="o">=</span> <span class="n">exc</span>
 
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Preparation&#39;</span><span class="p">,</span> <span class="s1">&#39;prepare&#39;</span><span class="p">,</span> <span class="s1">&#39;default_prep&#39;</span><span class="p">,</span> <span class="s1">&#39;noprep&#39;</span><span class="p">,</span> <span class="s1">&#39;saslprep&#39;</span><span class="p">]</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Preparation&#39;</span><span class="p">,</span> <span class="s1">&#39;prepare&#39;</span><span class="p">,</span> <span class="s1">&#39;set_default_prep&#39;</span><span class="p">,</span> <span class="s1">&#39;noprep&#39;</span><span class="p">,</span> <span class="s1">&#39;saslprep&#39;</span><span class="p">]</span>
+
+<span class="n">_default_prep</span><span class="p">:</span> <span class="s1">&#39;Preparation&#39;</span>
 
 
 <div class="viewcode-block" id="Preparation"><a class="viewcode-back" href="../../pysasl.prep.html#pysasl.prep.Preparation">[docs]</a><span class="k">class</span> <span class="nc">Preparation</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;A callable object that prepares a string value to improve the likelihood</span>
-<span class="sd">    that comparisons behave in an expected manner.</span>
+    <span class="sd">&quot;&quot;&quot;Any callable that prepares a string value to improve the likelihood that</span>
+<span class="sd">    comparisons behave in an expected manner.</span>
 
 <span class="sd">    See Also:</span>
 <span class="sd">        `RFC 4422 5.</span>
@@ -94,24 +96,31 @@
 
 
 <div class="viewcode-block" id="prepare"><a class="viewcode-back" href="../../pysasl.prep.html#pysasl.prep.prepare">[docs]</a><span class="k">def</span> <span class="nf">prepare</span><span class="p">(</span><span class="n">source</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Prepares the *source* string using the preparation algorithm referenced</span>
-<span class="sd">    by :data:`default_prep`.</span>
+    <span class="sd">&quot;&quot;&quot;Prepares the *source* string using the default preparation algorithm.</span>
+<span class="sd">    Unless changed by :func:`set_default_prep`, this default is</span>
+<span class="sd">    :func:`saslprep` if available otherwise :func:`noprep`.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        source: The string to prepare.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">default_prep</span><span class="p">(</span><span class="n">source</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">_default_prep</span><span class="p">(</span><span class="n">source</span><span class="p">)</span></div>
 
 
-<span class="c1">#: The default preparation algorithm, used by :func:`prepare`. The</span>
-<span class="c1">#: :func:`saslprep` function is used if it is available, otherwise</span>
-<span class="c1">#: :func:`noprep` is used.</span>
-<span class="n">default_prep</span><span class="p">:</span> <span class="n">Preparation</span>
+<div class="viewcode-block" id="set_default_prep"><a class="viewcode-back" href="../../pysasl.prep.html#pysasl.prep.set_default_prep">[docs]</a><span class="k">def</span> <span class="nf">set_default_prep</span><span class="p">(</span><span class="n">prep</span><span class="p">:</span> <span class="n">Preparation</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+    <span class="sd">&quot;&quot;&quot;Modifies the global default preparation algorithm used by</span>
+<span class="sd">    :func:`prepare`.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        prep: The new preparation algorithm function.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">_default_prep</span>
+    <span class="n">_default_prep</span> <span class="o">=</span> <span class="n">prep</span></div>
 
 
 <div class="viewcode-block" id="noprep"><a class="viewcode-back" href="../../pysasl.prep.html#pysasl.prep.noprep">[docs]</a><span class="k">def</span> <span class="nf">noprep</span><span class="p">(</span><span class="n">source</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
-    <span class="sd">&quot;&quot;&quot;A :class:`Preparation` implementation that returns the source value</span>
+    <span class="sd">&quot;&quot;&quot;A :class:`Preparation` implementation that returns the *source* value</span>
 <span class="sd">    unchanged.</span>
 
 <span class="sd">    Args:</span>
@@ -141,9 +150,9 @@
 
 
 <span class="k">if</span> <span class="n">_saslprep</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="n">default_prep</span> <span class="o">=</span> <span class="n">saslprep</span>
+    <span class="n">_default_prep</span> <span class="o">=</span> <span class="n">saslprep</span>
 <span class="k">else</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
-    <span class="n">default_prep</span> <span class="o">=</span> <span class="n">noprep</span>
+    <span class="n">_default_prep</span> <span class="o">=</span> <span class="n">noprep</span>
 </pre></div>
 
             <div class="clearer"></div>
@@ -194,7 +203,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> &nbsp; &nbsp;</li>
-    <li><a href="../../index.html">pysasl 1.0.0rc2 documentation</a> &#187;</li>
+    <li><a href="../../index.html">pysasl 1.0.0rc3 documentation</a> &#187;</li>
 
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../pysasl.html" >pysasl</a> &#187;</li>
