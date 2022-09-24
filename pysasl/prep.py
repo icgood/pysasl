@@ -8,12 +8,14 @@ except ImportError as exc:  # pragma: no cover
     _saslprep = None
     _saslprep_exc = exc
 
-__all__ = ['Preparation', 'prepare', 'default_prep', 'noprep', 'saslprep']
+__all__ = ['Preparation', 'prepare', 'set_default_prep', 'noprep', 'saslprep']
+
+_default_prep: 'Preparation'
 
 
 class Preparation(Protocol):
-    """A callable object that prepares a string value to improve the likelihood
-    that comparisons behave in an expected manner.
+    """Any callable that prepares a string value to improve the likelihood that
+    comparisons behave in an expected manner.
 
     See Also:
         `RFC 4422 5.
@@ -27,24 +29,31 @@ class Preparation(Protocol):
 
 
 def prepare(source: str) -> str:
-    """Prepares the *source* string using the preparation algorithm referenced
-    by :data:`default_prep`.
+    """Prepares the *source* string using the default preparation algorithm.
+    Unless changed by :func:`set_default_prep`, this default is
+    :func:`saslprep` if available otherwise :func:`noprep`.
 
     Args:
         source: The string to prepare.
 
     """
-    return default_prep(source)
+    return _default_prep(source)
 
 
-#: The default preparation algorithm, used by :func:`prepare`. The
-#: :func:`saslprep` function is used if it is available, otherwise
-#: :func:`noprep` is used.
-default_prep: Preparation
+def set_default_prep(prep: Preparation) -> None:  # pragma: no cover
+    """Modifies the global default preparation algorithm used by
+    :func:`prepare`.
+
+    Args:
+        prep: The new preparation algorithm function.
+
+    """
+    global _default_prep
+    _default_prep = prep
 
 
 def noprep(source: str) -> str:  # pragma: no cover
-    """A :class:`Preparation` implementation that returns the source value
+    """A :class:`Preparation` implementation that returns the *source* value
     unchanged.
 
     Args:
@@ -74,6 +83,6 @@ def saslprep(source: str) -> str:
 
 
 if _saslprep is not None:
-    default_prep = saslprep
+    _default_prep = saslprep
 else:  # pragma: no cover
-    default_prep = noprep
+    _default_prep = noprep
