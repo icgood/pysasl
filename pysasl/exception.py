@@ -1,9 +1,8 @@
 
-from typing import Optional, Sequence
-from typing_extensions import Final
+from typing import Sequence
 
 __all__ = ['AuthenticationError', 'UnexpectedChallenge', 'InvalidResponse',
-           'ExternalVerificationRequired', 'MechanismUnusable']
+           'MechanismUnusable']
 
 
 class AuthenticationError(Exception):
@@ -37,27 +36,6 @@ class InvalidResponse(AuthenticationError):
 
     def __init__(self) -> None:
         super().__init__('Invalid auth response')
-
-
-class ExternalVerificationRequired(AuthenticationError):
-    """The credentials are structurally valid but require external
-    verification.
-
-    If *token* is ``None``, the credentials provided no additional information
-    for verification. Otherwise, *token* should be verified and authorized for
-    the :attr:`~pysasl.creds.AuthenticationCredentials.identity` from the
-    credentials.
-
-    Args:
-        token: A bearer token, if required for verification.
-
-    """
-
-    __slots__: Sequence[str] = ['token']
-
-    def __init__(self, token: Optional[str] = None) -> None:
-        super().__init__()
-        self.token: Final = token
 
 
 class MechanismUnusable(AuthenticationError):
