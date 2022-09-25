@@ -1,0 +1,296 @@
+
+
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>pysasl.mechanism &#8212; pysasl 1.0.0rc4 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/cloud.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noticia+Text:400,i,b,bi|Open+Sans:400,i,b,bi|Roboto+Mono:400,i,b,bi&amp;display=swap" type="text/css" />
+    
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/sphinx_highlight.js"></script>
+
+    
+    
+     
+        <script src="../../_static/jquery.cookie.js"></script>
+    
+
+    
+     
+        <script src="../../_static/cloud.base.js"></script>
+    
+
+    
+     
+        <script src="../../_static/cloud.js"></script>
+    
+
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head><body>
+    <div class="relbar-top">
+        
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> &nbsp; &nbsp;</li>
+    <li><a href="../../index.html">pysasl 1.0.0rc4 documentation</a> &#187;</li>
+
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../pysasl.html" accesskey="U">pysasl</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">pysasl.mechanism</a></li> 
+      </ul>
+    </div>
+    </div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for pysasl.mechanism</h1><div class="highlight"><pre>
+<span></span>
+
+<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">abstractmethod</span><span class="p">,</span> <span class="n">ABCMeta</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Sequence</span>
+<span class="kn">from</span> <span class="nn">typing_extensions</span> <span class="kn">import</span> <span class="n">TypeAlias</span>
+
+<span class="kn">from</span> <span class="nn">..config</span> <span class="kn">import</span> <span class="n">SASLConfig</span>
+<span class="kn">from</span> <span class="nn">..creds.client</span> <span class="kn">import</span> <span class="n">ClientCredentials</span>
+<span class="kn">from</span> <span class="nn">..creds.server</span> <span class="kn">import</span> <span class="n">ServerCredentials</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Mechanism&#39;</span><span class="p">,</span> <span class="s1">&#39;ServerChallenge&#39;</span><span class="p">,</span> <span class="s1">&#39;ChallengeResponse&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;ServerMechanism&#39;</span><span class="p">,</span> <span class="s1">&#39;ClientMechanism&#39;</span><span class="p">]</span>
+
+<span class="c1">#: A type alias for either server or client mechanisms.</span>
+<span class="n">Mechanism</span><span class="p">:</span> <span class="n">TypeAlias</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="s1">&#39;ServerMechanism&#39;</span><span class="p">,</span> <span class="s1">&#39;ClientMechanism&#39;</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="ServerChallenge"><a class="viewcode-back" href="../../pysasl.mechanism.html#pysasl.mechanism.ServerChallenge">[docs]</a><span class="k">class</span> <span class="nc">ServerChallenge</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Raised by :meth:`~ServerMechanism.server_attempt` to provide server</span>
+<span class="sd">    challenges.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data: The challenge string that should be sent to the client.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;_data&#39;</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_data</span> <span class="o">=</span> <span class="n">data</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;The server challenge that should be sent to the client.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;ServerChallenge(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="si">!r}</span><span class="s1">)&#39;</span></div>
+
+
+<div class="viewcode-block" id="ChallengeResponse"><a class="viewcode-back" href="../../pysasl.mechanism.html#pysasl.mechanism.ChallengeResponse">[docs]</a><span class="k">class</span> <span class="nc">ChallengeResponse</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;A challenge-response exchange between server and client.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        challenge: The server challenge string.</span>
+<span class="sd">        response: The client response string.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;_challenge&#39;</span><span class="p">,</span> <span class="s1">&#39;_response&#39;</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">challenge</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">response</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_challenge</span> <span class="o">=</span> <span class="n">challenge</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_response</span> <span class="o">=</span> <span class="n">response</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">challenge</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;The server challenge string.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_challenge</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">response</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;The client response string.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_response</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;ChallengeResponse(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">challenge</span><span class="si">!r}</span><span class="s1">, </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="si">!r}</span><span class="s1">)&#39;</span></div>
+
+
+<span class="k">class</span> <span class="nc">_BaseMechanism</span><span class="p">:</span>
+
+    <span class="vm">__slots__</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;_name&#39;</span><span class="p">,</span> <span class="s1">&#39;_config&#39;</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">],</span> <span class="n">config</span><span class="p">:</span> <span class="n">SASLConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;ascii&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_config</span> <span class="o">=</span> <span class="n">config</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;The SASL name for this mechanism.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">config</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SASLConfig</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;The configuration object.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span>
+
+    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">_BaseMechanism</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">name</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">config</span>
+        <span class="k">return</span> <span class="bp">NotImplemented</span>
+
+
+<div class="viewcode-block" id="ServerMechanism"><a class="viewcode-back" href="../../pysasl.mechanism.html#pysasl.mechanism.ServerMechanism">[docs]</a><span class="k">class</span> <span class="nc">ServerMechanism</span><span class="p">(</span><span class="n">_BaseMechanism</span><span class="p">,</span> <span class="n">metaclass</span><span class="o">=</span><span class="n">ABCMeta</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Base class for implementing SASL mechanisms that support server-side</span>
+<span class="sd">    credential verification.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="vm">__slots__</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+<div class="viewcode-block" id="ServerMechanism.server_attempt"><a class="viewcode-back" href="../../pysasl.mechanism.html#pysasl.mechanism.ServerMechanism.server_attempt">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">server_attempt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">responses</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">ChallengeResponse</span><span class="p">])</span> \
+            <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">ServerCredentials</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]]:</span>
+        <span class="sd">&quot;&quot;&quot;For SASL server-side credential verification, receives responses</span>
+<span class="sd">        from the client and issues challenges until it has everything needed to</span>
+<span class="sd">        verify the credentials.</span>
+
+<span class="sd">        If a challenge is necessary, a :class:`ServerChallenge` exception will</span>
+<span class="sd">        be raised. The response to this challenge must then be added to</span>
+<span class="sd">        *responses* in the next call to :meth:`.server_attempt`.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            responses: The challenge-response exchanges thus far.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A tuple of the authentication credentials received from the client</span>
+<span class="sd">            once no more challenges are necessary, and an optional final</span>
+<span class="sd">            response string from the server used by some mechanisms.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ServerChallenge: The server challenge needing a client response.</span>
+<span class="sd">            InvalidResponse: The server received an invalid client response.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="o">...</span></div></div>
+
+
+<div class="viewcode-block" id="ClientMechanism"><a class="viewcode-back" href="../../pysasl.mechanism.html#pysasl.mechanism.ClientMechanism">[docs]</a><span class="k">class</span> <span class="nc">ClientMechanism</span><span class="p">(</span><span class="n">_BaseMechanism</span><span class="p">,</span> <span class="n">metaclass</span><span class="o">=</span><span class="n">ABCMeta</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Base class for implementing SASL mechanisms that support client-side</span>
+<span class="sd">    credential verification.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="vm">__slots__</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+<div class="viewcode-block" id="ClientMechanism.client_attempt"><a class="viewcode-back" href="../../pysasl.mechanism.html#pysasl.mechanism.ClientMechanism.client_attempt">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">client_attempt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">creds</span><span class="p">:</span> <span class="n">ClientCredentials</span><span class="p">,</span>
+                       <span class="n">challenges</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">ServerChallenge</span><span class="p">])</span> \
+            <span class="o">-&gt;</span> <span class="n">ChallengeResponse</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;For SASL client-side credential verification, produce responses to</span>
+<span class="sd">        send to the server and react to its challenges until the server returns</span>
+<span class="sd">        a final success or failure.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            creds: The credentials to attempt authentication with.</span>
+<span class="sd">            challenges: The server challenges received.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The response to the most recent server challenge.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            UnexpectedChallenge: The server has issued a challenge the client</span>
+<span class="sd">                mechanism does not recognize.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="o">...</span></div></div>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+    
+    
+        <div class="sidebar-toggle-group no-js">
+            
+            <button class="sidebar-toggle" id="sidebar-hide" title="Hide the sidebar menu">
+                 «
+                <span class="show-for-small">hide menu</span>
+                
+            </button>
+            <button class="sidebar-toggle" id="sidebar-show" title="Show the sidebar menu">
+                
+                <span class="show-for-small">menu</span>
+                <span class="hide-for-small">sidebar</span>
+                 »
+            </button>
+        </div>
+    
+      <div class="clearer"></div>
+    </div>
+    <div class="relbar-bottom">
+        
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> &nbsp; &nbsp;</li>
+    <li><a href="../../index.html">pysasl 1.0.0rc4 documentation</a> &#187;</li>
+
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../pysasl.html" >pysasl</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">pysasl.mechanism</a></li> 
+      </ul>
+    </div>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Ian Good.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.2.1.
+    </div>
+    <!-- cloud_sptheme 1.4 -->
+  </body>
+</html>

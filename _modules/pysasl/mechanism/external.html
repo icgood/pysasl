@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>pysasl.mechanisms.external &#8212; pysasl 1.0.0rc3 documentation</title>
+    <title>pysasl.mechanism.external &#8212; pysasl 1.0.0rc4 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/cloud.css" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noticia+Text:400,i,b,bi|Open+Sans:400,i,b,bi|Roboto+Mono:400,i,b,bi&amp;display=swap" type="text/css" />
@@ -17,6 +17,7 @@
     <script src="../../../_static/underscore.js"></script>
     <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/sphinx_highlight.js"></script>
 
     
     
@@ -49,11 +50,12 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> &nbsp; &nbsp;</li>
-    <li><a href="../../../index.html">pysasl 1.0.0rc3 documentation</a> &#187;</li>
+    <li><a href="../../../index.html">pysasl 1.0.0rc4 documentation</a> &#187;</li>
 
           <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
-          <li class="nav-item nav-item-2"><a href="../../pysasl.html" accesskey="U">pysasl</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">pysasl.mechanisms.external</a></li> 
+          <li class="nav-item nav-item-2"><a href="../../pysasl.html" >pysasl</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="../mechanism.html" accesskey="U">pysasl.mechanism</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">pysasl.mechanism.external</a></li> 
       </ul>
     </div>
     </div>
@@ -64,12 +66,13 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <h1>Source code for pysasl.mechanisms.external</h1><div class="highlight"><pre>
+  <h1>Source code for pysasl.mechanism.external</h1><div class="highlight"><pre>
 <span></span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Sequence</span>
 
-<span class="kn">from</span> <span class="nn">..</span> <span class="kn">import</span> <span class="p">(</span><span class="n">ServerMechanism</span><span class="p">,</span> <span class="n">ClientMechanism</span><span class="p">,</span> <span class="n">ServerChallenge</span><span class="p">,</span>
-                <span class="n">ChallengeResponse</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="p">(</span><span class="n">ServerMechanism</span><span class="p">,</span> <span class="n">ClientMechanism</span><span class="p">,</span> <span class="n">ServerChallenge</span><span class="p">,</span>
+               <span class="n">ChallengeResponse</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">..config</span> <span class="kn">import</span> <span class="n">default_config</span><span class="p">,</span> <span class="n">SASLConfig</span>
 <span class="kn">from</span> <span class="nn">..creds.client</span> <span class="kn">import</span> <span class="n">ClientCredentials</span>
 <span class="kn">from</span> <span class="nn">..creds.external</span> <span class="kn">import</span> <span class="n">ExternalCredentials</span>
 <span class="kn">from</span> <span class="nn">..exception</span> <span class="kn">import</span> <span class="n">UnexpectedChallenge</span>
@@ -77,7 +80,7 @@
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;ExternalMechanism&#39;</span><span class="p">]</span>
 
 
-<div class="viewcode-block" id="ExternalMechanism"><a class="viewcode-back" href="../../../pysasl.mechanisms.html#pysasl.mechanisms.external.ExternalMechanism">[docs]</a><span class="k">class</span> <span class="nc">ExternalMechanism</span><span class="p">(</span><span class="n">ServerMechanism</span><span class="p">,</span> <span class="n">ClientMechanism</span><span class="p">):</span>
+<div class="viewcode-block" id="ExternalMechanism"><a class="viewcode-back" href="../../../pysasl.mechanism.html#pysasl.mechanism.external.ExternalMechanism">[docs]</a><span class="k">class</span> <span class="nc">ExternalMechanism</span><span class="p">(</span><span class="n">ServerMechanism</span><span class="p">,</span> <span class="n">ClientMechanism</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Implements the EXTERNAL authentication mechanism.</span>
 
 <span class="sd">    See Also:</span>
@@ -85,10 +88,11 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">]</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">&#39;EXTERNAL&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">]</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">&#39;EXTERNAL&#39;</span><span class="p">,</span>
+                 <span class="n">config</span><span class="p">:</span> <span class="n">SASLConfig</span> <span class="o">=</span> <span class="n">default_config</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
 
-<div class="viewcode-block" id="ExternalMechanism.server_attempt"><a class="viewcode-back" href="../../../pysasl.mechanisms.html#pysasl.mechanisms.external.ExternalMechanism.server_attempt">[docs]</a>    <span class="k">def</span> <span class="nf">server_attempt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">responses</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">ChallengeResponse</span><span class="p">])</span> \
+<div class="viewcode-block" id="ExternalMechanism.server_attempt"><a class="viewcode-back" href="../../../pysasl.mechanism.html#pysasl.mechanism.external.ExternalMechanism.server_attempt">[docs]</a>    <span class="k">def</span> <span class="nf">server_attempt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">responses</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">ChallengeResponse</span><span class="p">])</span> \
             <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">ExternalCredentials</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">first</span> <span class="o">=</span> <span class="n">responses</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -97,7 +101,7 @@
         <span class="n">authzid_str</span> <span class="o">=</span> <span class="n">first</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">ExternalCredentials</span><span class="p">(</span><span class="n">authzid_str</span><span class="p">),</span> <span class="kc">None</span></div>
 
-<div class="viewcode-block" id="ExternalMechanism.client_attempt"><a class="viewcode-back" href="../../../pysasl.mechanisms.html#pysasl.mechanisms.external.ExternalMechanism.client_attempt">[docs]</a>    <span class="k">def</span> <span class="nf">client_attempt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">creds</span><span class="p">:</span> <span class="n">ClientCredentials</span><span class="p">,</span>
+<div class="viewcode-block" id="ExternalMechanism.client_attempt"><a class="viewcode-back" href="../../../pysasl.mechanism.html#pysasl.mechanism.external.ExternalMechanism.client_attempt">[docs]</a>    <span class="k">def</span> <span class="nf">client_attempt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">creds</span><span class="p">:</span> <span class="n">ClientCredentials</span><span class="p">,</span>
                        <span class="n">challenges</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">ServerChallenge</span><span class="p">])</span> \
             <span class="o">-&gt;</span> <span class="n">ChallengeResponse</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">challenges</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
@@ -158,18 +162,19 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> &nbsp; &nbsp;</li>
-    <li><a href="../../../index.html">pysasl 1.0.0rc3 documentation</a> &#187;</li>
+    <li><a href="../../../index.html">pysasl 1.0.0rc4 documentation</a> &#187;</li>
 
           <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../pysasl.html" >pysasl</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">pysasl.mechanisms.external</a></li> 
+          <li class="nav-item nav-item-3"><a href="../mechanism.html" >pysasl.mechanism</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">pysasl.mechanism.external</a></li> 
       </ul>
     </div>
     </div>
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2022, Ian Good.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.1.1.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.2.1.
     </div>
     <!-- cloud_sptheme 1.4 -->
   </body>

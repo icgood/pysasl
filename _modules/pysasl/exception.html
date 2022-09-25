@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>pysasl.exception &#8212; pysasl 1.0.0rc3 documentation</title>
+    <title>pysasl.exception &#8212; pysasl 1.0.0rc4 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/cloud.css" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noticia+Text:400,i,b,bi|Open+Sans:400,i,b,bi|Roboto+Mono:400,i,b,bi&amp;display=swap" type="text/css" />
@@ -17,6 +17,7 @@
     <script src="../../_static/underscore.js"></script>
     <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/sphinx_highlight.js"></script>
 
     
     
@@ -49,7 +50,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> &nbsp; &nbsp;</li>
-    <li><a href="../../index.html">pysasl 1.0.0rc3 documentation</a> &#187;</li>
+    <li><a href="../../index.html">pysasl 1.0.0rc4 documentation</a> &#187;</li>
 
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../pysasl.html" accesskey="U">pysasl</a> &#187;</li>
@@ -66,11 +67,10 @@
             
   <h1>Source code for pysasl.exception</h1><div class="highlight"><pre>
 <span></span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Sequence</span>
-<span class="kn">from</span> <span class="nn">typing_extensions</span> <span class="kn">import</span> <span class="n">Final</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Sequence</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;AuthenticationError&#39;</span><span class="p">,</span> <span class="s1">&#39;UnexpectedChallenge&#39;</span><span class="p">,</span> <span class="s1">&#39;InvalidResponse&#39;</span><span class="p">,</span>
-           <span class="s1">&#39;ExternalVerificationRequired&#39;</span><span class="p">,</span> <span class="s1">&#39;MechanismUnusable&#39;</span><span class="p">]</span>
+           <span class="s1">&#39;MechanismUnusable&#39;</span><span class="p">]</span>
 
 
 <div class="viewcode-block" id="AuthenticationError"><a class="viewcode-back" href="../../pysasl.exception.html#pysasl.exception.AuthenticationError">[docs]</a><span class="k">class</span> <span class="nc">AuthenticationError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
@@ -104,27 +104,6 @@
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s1">&#39;Invalid auth response&#39;</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="ExternalVerificationRequired"><a class="viewcode-back" href="../../pysasl.exception.html#pysasl.exception.ExternalVerificationRequired">[docs]</a><span class="k">class</span> <span class="nc">ExternalVerificationRequired</span><span class="p">(</span><span class="n">AuthenticationError</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;The credentials are structurally valid but require external</span>
-<span class="sd">    verification.</span>
-
-<span class="sd">    If *token* is ``None``, the credentials provided no additional information</span>
-<span class="sd">    for verification. Otherwise, *token* should be verified and authorized for</span>
-<span class="sd">    the :attr:`~pysasl.creds.AuthenticationCredentials.identity` from the</span>
-<span class="sd">    credentials.</span>
-
-<span class="sd">    Args:</span>
-<span class="sd">        token: A bearer token, if required for verification.</span>
-
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="vm">__slots__</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;token&#39;</span><span class="p">]</span>
-
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">token</span><span class="p">:</span> <span class="n">Final</span> <span class="o">=</span> <span class="n">token</span></div>
 
 
 <div class="viewcode-block" id="MechanismUnusable"><a class="viewcode-back" href="../../pysasl.exception.html#pysasl.exception.MechanismUnusable">[docs]</a><span class="k">class</span> <span class="nc">MechanismUnusable</span><span class="p">(</span><span class="n">AuthenticationError</span><span class="p">):</span>
@@ -191,7 +170,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> &nbsp; &nbsp;</li>
-    <li><a href="../../index.html">pysasl 1.0.0rc3 documentation</a> &#187;</li>
+    <li><a href="../../index.html">pysasl 1.0.0rc4 documentation</a> &#187;</li>
 
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../pysasl.html" >pysasl</a> &#187;</li>
@@ -202,7 +181,7 @@
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2022, Ian Good.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.1.1.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.2.1.
     </div>
     <!-- cloud_sptheme 1.4 -->
   </body>

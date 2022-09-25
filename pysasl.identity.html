@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>pysasl.identity Package &#8212; pysasl 1.0.0rc3 documentation</title>
+    <title>pysasl.identity Package &#8212; pysasl 1.0.0rc4 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/cloud.css" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noticia+Text:400,i,b,bi|Open+Sans:400,i,b,bi|Roboto+Mono:400,i,b,bi&amp;display=swap" type="text/css" />
@@ -18,6 +18,7 @@
     <script src="_static/underscore.js"></script>
     <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
 
     
     
@@ -37,7 +38,7 @@
 
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="pysasl.mechanisms Package" href="pysasl.mechanisms.html" />
+    <link rel="next" title="pysasl.mechanism Package" href="pysasl.mechanism.html" />
     <link rel="prev" title="pysasl.hashing Package" href="pysasl.hashing.html" /> 
         <meta name="viewport" content="width=device-width, initial-scale=1">
   </head><body>
@@ -53,12 +54,12 @@
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> &nbsp; &nbsp;</li>
         <li class="right" >
-          <a href="pysasl.mechanisms.html" title="pysasl.mechanisms Package"
+          <a href="pysasl.mechanism.html" title="pysasl.mechanism Package"
              accesskey="N">next</a> &nbsp; &nbsp;</li>
         <li class="right" >
           <a href="pysasl.hashing.html" title="pysasl.hashing Package"
              accesskey="P">previous</a> &nbsp; &nbsp;</li>
-    <li><a href="index.html">pysasl 1.0.0rc3 documentation</a> &#187;</li>
+    <li><a href="index.html">pysasl 1.0.0rc4 documentation</a> &#187;</li>
 
         <li class="nav-item nav-item-this"><a href=""><code class="docutils literal notranslate"><span class="pre">pysasl.identity</span></code> Package</a></li> 
       </ul>
@@ -116,13 +117,14 @@ function.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="pysasl.identity.ClearIdentity">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pysasl.identity.</span></span><span class="sig-name descname"><span class="pre">ClearIdentity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">authcid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">secret</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysasl/identity.html#ClearIdentity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pysasl.identity.ClearIdentity" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pysasl.identity.</span></span><span class="sig-name descname"><span class="pre">ClearIdentity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">authcid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">secret</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prepare=&lt;function</span> <span class="pre">saslprep&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysasl/identity.html#ClearIdentity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pysasl.identity.ClearIdentity" title="Permalink to this definition">¶</a></dt>
 <dd><p>An <a class="reference internal" href="#pysasl.identity.Identity" title="pysasl.identity.Identity"><code class="xref py py-class docutils literal notranslate"><span class="pre">Identity</span></code></a> that stores the secret string in cleartext.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>authcid</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The authentication identity, e.g. a login username.</p></li>
 <li><p><strong>secret</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The cleartext secret string.</p></li>
+<li><p><strong>prepare</strong> (<a class="reference internal" href="pysasl.prep.html#pysasl.prep.Preparation" title="pysasl.prep.Preparation"><em>Preparation</em></a>) – The preparation algorithm function.</p></li>
 </ul>
 </dd>
 </dl>
@@ -162,7 +164,7 @@ comparison must account for things like hashing or token algorithms.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="pysasl.identity.HashedIdentity">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pysasl.identity.</span></span><span class="sig-name descname"><span class="pre">HashedIdentity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">authcid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">digest</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hash</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysasl/identity.html#HashedIdentity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pysasl.identity.HashedIdentity" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pysasl.identity.</span></span><span class="sig-name descname"><span class="pre">HashedIdentity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">authcid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">digest</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hash</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prepare=&lt;function</span> <span class="pre">saslprep&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysasl/identity.html#HashedIdentity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pysasl.identity.HashedIdentity" title="Permalink to this definition">¶</a></dt>
 <dd><p>An <a class="reference internal" href="#pysasl.identity.Identity" title="pysasl.identity.Identity"><code class="xref py py-class docutils literal notranslate"><span class="pre">Identity</span></code></a> where the secret has been hashed for storage.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -170,12 +172,13 @@ comparison must account for things like hashing or token algorithms.</p>
 <li><p><strong>authcid</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The authentication identity, e.g. a login username.</p></li>
 <li><p><strong>digest</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The hashed secret string, using <a class="reference internal" href="#pysasl.identity.HashedIdentity.hash" title="pysasl.identity.HashedIdentity.hash"><code class="xref py py-attr docutils literal notranslate"><span class="pre">hash</span></code></a>.</p></li>
 <li><p><strong>hash</strong> (<a class="reference internal" href="pysasl.hashing.html#pysasl.hashing.HashInterface" title="pysasl.hashing.HashInterface"><em>HashInterface</em></a>) – The hash algorithm to use to verify the secret.</p></li>
+<li><p><strong>prepare</strong> (<a class="reference internal" href="pysasl.prep.html#pysasl.prep.Preparation" title="pysasl.prep.Preparation"><em>Preparation</em></a>) – The preparation algorithm function.</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="pysasl.identity.HashedIdentity.create">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">authcid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">secret</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hash</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysasl/identity.html#HashedIdentity.create"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pysasl.identity.HashedIdentity.create" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">authcid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">secret</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hash</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prepare=&lt;function</span> <span class="pre">saslprep&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysasl/identity.html#HashedIdentity.create"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pysasl.identity.HashedIdentity.create" title="Permalink to this definition">¶</a></dt>
 <dd><p>Prepare and hash the given <em>secret</em>, returning a
 <a class="reference internal" href="#pysasl.identity.HashedIdentity" title="pysasl.identity.HashedIdentity"><code class="xref py py-class docutils literal notranslate"><span class="pre">HashedIdentity</span></code></a>.</p>
 <dl class="field-list simple">
@@ -184,6 +187,7 @@ comparison must account for things like hashing or token algorithms.</p>
 <li><p><strong>authcid</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The authentication identity, e.g. a login username.</p></li>
 <li><p><strong>secret</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The cleartext secret string.</p></li>
 <li><p><strong>hash</strong> (<a class="reference internal" href="pysasl.hashing.html#pysasl.hashing.HashInterface" title="pysasl.hashing.HashInterface"><em>HashInterface</em></a>) – The hash algorithm to use to verify the secret.</p></li>
+<li><p><strong>prepare</strong> (<a class="reference internal" href="pysasl.prep.html#pysasl.prep.Preparation" title="pysasl.prep.Preparation"><em>Preparation</em></a>) – The preparation algorithm function.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -247,7 +251,36 @@ comparison must account for things like hashing or token algorithms.</p>
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
+        <div class="sphinxsidebarwrapper"><div class="sphinx-toc sphinxlocaltoc">
+    <h3><a href="index.html">Page contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">pysasl.identity</span></code> Package</a><ul>
+<li><a class="reference internal" href="#pysasl.identity.Identity"><code class="docutils literal notranslate"><span class="pre">Identity</span></code></a><ul>
+<li><a class="reference internal" href="#pysasl.identity.Identity.authcid"><code class="docutils literal notranslate"><span class="pre">Identity.authcid</span></code></a></li>
+<li><a class="reference internal" href="#pysasl.identity.Identity.compare_secret"><code class="docutils literal notranslate"><span class="pre">Identity.compare_secret()</span></code></a></li>
+<li><a class="reference internal" href="#pysasl.identity.Identity.get_clear_secret"><code class="docutils literal notranslate"><span class="pre">Identity.get_clear_secret()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#pysasl.identity.ClearIdentity"><code class="docutils literal notranslate"><span class="pre">ClearIdentity</span></code></a><ul>
+<li><a class="reference internal" href="#pysasl.identity.ClearIdentity.authcid"><code class="docutils literal notranslate"><span class="pre">ClearIdentity.authcid</span></code></a></li>
+<li><a class="reference internal" href="#pysasl.identity.ClearIdentity.compare_secret"><code class="docutils literal notranslate"><span class="pre">ClearIdentity.compare_secret()</span></code></a></li>
+<li><a class="reference internal" href="#pysasl.identity.ClearIdentity.get_clear_secret"><code class="docutils literal notranslate"><span class="pre">ClearIdentity.get_clear_secret()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#pysasl.identity.HashedIdentity"><code class="docutils literal notranslate"><span class="pre">HashedIdentity</span></code></a><ul>
+<li><a class="reference internal" href="#pysasl.identity.HashedIdentity.create"><code class="docutils literal notranslate"><span class="pre">HashedIdentity.create()</span></code></a></li>
+<li><a class="reference internal" href="#pysasl.identity.HashedIdentity.authcid"><code class="docutils literal notranslate"><span class="pre">HashedIdentity.authcid</span></code></a></li>
+<li><a class="reference internal" href="#pysasl.identity.HashedIdentity.digest"><code class="docutils literal notranslate"><span class="pre">HashedIdentity.digest</span></code></a></li>
+<li><a class="reference internal" href="#pysasl.identity.HashedIdentity.hash"><code class="docutils literal notranslate"><span class="pre">HashedIdentity.hash</span></code></a></li>
+<li><a class="reference internal" href="#pysasl.identity.HashedIdentity.compare_secret"><code class="docutils literal notranslate"><span class="pre">HashedIdentity.compare_secret()</span></code></a></li>
+<li><a class="reference internal" href="#pysasl.identity.HashedIdentity.get_clear_secret"><code class="docutils literal notranslate"><span class="pre">HashedIdentity.get_clear_secret()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  </div>
   <div class="sphinxprev">
     <h4>Previous page</h4>
     <p class="topless"><a href="pysasl.hashing.html"
@@ -255,8 +288,8 @@ comparison must account for things like hashing or token algorithms.</p>
   </div>
   <div class="sphinxnext">
     <h4>Next page</h4>
-    <p class="topless"><a href="pysasl.mechanisms.html"
-                          title="Next page">&rarr; <code class="docutils literal notranslate"><span class="pre">pysasl.mechanisms</span></code> Package</a></p>
+    <p class="topless"><a href="pysasl.mechanism.html"
+                          title="Next page">&rarr; <code class="docutils literal notranslate"><span class="pre">pysasl.mechanism</span></code> Package</a></p>
   </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
@@ -308,12 +341,12 @@ comparison must account for things like hashing or token algorithms.</p>
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> &nbsp; &nbsp;</li>
         <li class="right" >
-          <a href="pysasl.mechanisms.html" title="pysasl.mechanisms Package"
+          <a href="pysasl.mechanism.html" title="pysasl.mechanism Package"
              >next</a> &nbsp; &nbsp;</li>
         <li class="right" >
           <a href="pysasl.hashing.html" title="pysasl.hashing Package"
              >previous</a> &nbsp; &nbsp;</li>
-    <li><a href="index.html">pysasl 1.0.0rc3 documentation</a> &#187;</li>
+    <li><a href="index.html">pysasl 1.0.0rc4 documentation</a> &#187;</li>
 
         <li class="nav-item nav-item-this"><a href=""><code class="docutils literal notranslate"><span class="pre">pysasl.identity</span></code> Package</a></li> 
       </ul>
@@ -322,7 +355,7 @@ comparison must account for things like hashing or token algorithms.</p>
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2022, Ian Good.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.1.1.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.2.1.
     </div>
     <!-- cloud_sptheme 1.4 -->
   </body>

@@ -10,11 +10,12 @@
 .. toctree::
 
    pysasl
+   pysasl.config
    pysasl.creds
    pysasl.exception
    pysasl.hashing
    pysasl.identity
-   pysasl.mechanisms
+   pysasl.mechanism
    pysasl.prep
 
 

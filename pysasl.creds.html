@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>pysasl.creds Package &#8212; pysasl 1.0.0rc3 documentation</title>
+    <title>pysasl.creds Package &#8212; pysasl 1.0.0rc4 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/cloud.css" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noticia+Text:400,i,b,bi|Open+Sans:400,i,b,bi|Roboto+Mono:400,i,b,bi&amp;display=swap" type="text/css" />
@@ -18,6 +18,7 @@
     <script src="_static/underscore.js"></script>
     <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
 
     
     
@@ -38,7 +39,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="pysasl.exception Package" href="pysasl.exception.html" />
-    <link rel="prev" title="pysasl Package" href="pysasl.html" /> 
+    <link rel="prev" title="pysasl.config Package" href="pysasl.config.html" /> 
         <meta name="viewport" content="width=device-width, initial-scale=1">
   </head><body>
     <div class="relbar-top">
@@ -56,9 +57,9 @@
           <a href="pysasl.exception.html" title="pysasl.exception Package"
              accesskey="N">next</a> &nbsp; &nbsp;</li>
         <li class="right" >
-          <a href="pysasl.html" title="pysasl Package"
+          <a href="pysasl.config.html" title="pysasl.config Package"
              accesskey="P">previous</a> &nbsp; &nbsp;</li>
-    <li><a href="index.html">pysasl 1.0.0rc3 documentation</a> &#187;</li>
+    <li><a href="index.html">pysasl 1.0.0rc4 documentation</a> &#187;</li>
 
         <li class="nav-item nav-item-this"><a href=""><code class="docutils literal notranslate"><span class="pre">pysasl.creds</span></code> Package</a></li> 
       </ul>
@@ -76,8 +77,8 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="pysasl.creds.Credentials">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pysasl.creds.</span></span><span class="sig-name descname"><span class="pre">Credentials</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysasl/creds.html#Credentials"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pysasl.creds.Credentials" title="Permalink to this definition">¶</a></dt>
-<dd><p>SASL authentication credentials consist of an authenticatin identity and
-an authorization identity, the identity to be assumed.</p>
+<dd><p>SASL authentication credentials consist of an authentication identity
+and an authorization identity, the identity to be assumed.</p>
 <p>Consider a UNIX system where <code class="docutils literal notranslate"><span class="pre">root</span></code> is the superuser and only it may
 assume the identity of other users. With an authentication identity of
 <code class="docutils literal notranslate"><span class="pre">root</span></code> and an authorization identity of <code class="docutils literal notranslate"><span class="pre">terry</span></code>, the authorization
@@ -171,17 +172,19 @@ attempt to succeed.</p>
 
 <span class="target" id="module-pysasl.creds.plain"></span><dl class="py class">
 <dt class="sig sig-object py" id="pysasl.creds.plain.PlainCredentials">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pysasl.creds.plain.</span></span><span class="sig-name descname"><span class="pre">PlainCredentials</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">authcid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">secret</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">authzid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysasl/creds/plain.html#PlainCredentials"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pysasl.creds.plain.PlainCredentials" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pysasl.creds.plain.</span></span><span class="sig-name descname"><span class="pre">PlainCredentials</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">authcid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">secret</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">authzid=''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prepare=&lt;function</span> <span class="pre">saslprep&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysasl/creds/plain.html#PlainCredentials"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pysasl.creds.plain.PlainCredentials" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#pysasl.creds.server.ServerCredentials" title="pysasl.creds.server.ServerCredentials"><code class="xref py py-class docutils literal notranslate"><span class="pre">ServerCredentials</span></code></a></p>
 <p>Implementation of <a class="reference internal" href="#pysasl.creds.server.ServerCredentials" title="pysasl.creds.server.ServerCredentials"><code class="xref py py-class docutils literal notranslate"><span class="pre">ServerCredentials</span></code></a> for
 typical SASL mechanisms like
-<a class="reference internal" href="pysasl.mechanisms.html#pysasl.mechanisms.plain.PlainMechanism" title="pysasl.mechanisms.plain.PlainMechanism"><code class="xref py py-class docutils literal notranslate"><span class="pre">PlainMechanism</span></code></a>.</p>
+<a class="reference internal" href="pysasl.mechanism.html#pysasl.mechanism.plain.PlainMechanism" title="pysasl.mechanism.plain.PlainMechanism"><code class="xref py py-class docutils literal notranslate"><span class="pre">PlainMechanism</span></code></a> where the mechanism
+operates on the <em>secret</em> string in cleartext.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>authcid</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Authentication ID string (the username).</p></li>
 <li><p><strong>secret</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Secret string (the password).</p></li>
 <li><p><strong>authzid</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Authorization ID string, if provided.</p></li>
+<li><p><strong>prepare</strong> (<a class="reference internal" href="pysasl.prep.html#pysasl.prep.Preparation" title="pysasl.prep.Preparation"><em>Preparation</em></a>) – The preparation algorithm function.</p></li>
 </ul>
 </dd>
 </dl>
@@ -219,7 +222,29 @@ attempt to succeed.</p>
 
 </dd></dl>
 
-<span class="target" id="module-pysasl.creds.external"></span><dl class="py class">
+<span class="target" id="module-pysasl.creds.external"></span><dl class="py exception">
+<dt class="sig sig-object py" id="pysasl.creds.external.ExternalVerificationRequired">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pysasl.creds.external.</span></span><span class="sig-name descname"><span class="pre">ExternalVerificationRequired</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">identity</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">token</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysasl/creds/external.html#ExternalVerificationRequired"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pysasl.creds.external.ExternalVerificationRequired" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pysasl.exception.html#pysasl.exception.AuthenticationError" title="pysasl.exception.AuthenticationError"><code class="xref py py-class docutils literal notranslate"><span class="pre">AuthenticationError</span></code></a></p>
+<p>The credentials are structurally valid but require external
+verification.</p>
+<p>If <em>token</em> is <code class="docutils literal notranslate"><span class="pre">None</span></code>, the credentials provided no additional information
+for verification. Otherwise, <em>token</em> should be verified and authorized for
+<em>identity</em>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>identity</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><em>Optional</em></a><em>[</em><a class="reference internal" href="pysasl.identity.html#pysasl.identity.Identity" title="pysasl.identity.Identity"><em>Identity</em></a><em>]</em>) – The identity resolved from the credentials.</p></li>
+<li><p><strong>token</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><em>Optional</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em>) – A bearer token, if required for verification.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="pysasl.creds.external.ExternalCredentials">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pysasl.creds.external.</span></span><span class="sig-name descname"><span class="pre">ExternalCredentials</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">authzid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">token</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysasl/creds/external.html#ExternalCredentials"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pysasl.creds.external.ExternalCredentials" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#pysasl.creds.server.ServerCredentials" title="pysasl.creds.server.ServerCredentials"><code class="xref py py-class docutils literal notranslate"><span class="pre">ServerCredentials</span></code></a></p>
@@ -228,7 +253,7 @@ traditional hashing algorithm.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>authzid</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Authorization ID string, if applicable.</p></li>
+<li><p><strong>authzid</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Authorization ID string.</p></li>
 <li><p><strong>token</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><em>Optional</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em>) – A bearer token, if required for verification.</p></li>
 </ul>
 </dd>
@@ -250,17 +275,18 @@ attempt to succeed.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="pysasl.creds.external.ExternalCredentials.verify">
 <span class="sig-name descname"><span class="pre">verify</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">identity</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysasl/creds/external.html#ExternalCredentials.verify"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pysasl.creds.external.ExternalCredentials.verify" title="Permalink to this definition">¶</a></dt>
-<dd><p>Authenticates the credentials against the given <em>identity</em>.</p>
+<dd><p>This method always throws <a class="reference internal" href="#pysasl.creds.external.ExternalVerificationRequired" title="pysasl.creds.external.ExternalVerificationRequired"><code class="xref py py-exc docutils literal notranslate"><span class="pre">ExternalVerificationRequired</span></code></a>. For
+applications to support these types of credentials, they must catch
+this exception and use it to authenticate and authorize the request.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>identity</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><em>Optional</em></a><em>[</em><a class="reference internal" href="pysasl.identity.html#pysasl.identity.Identity" title="pysasl.identity.Identity"><em>Identity</em></a><em>]</em>) – The identity being authenticated.</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference internal" href="pysasl.exception.html#pysasl.exception.MechanismUnusable" title="pysasl.exception.MechanismUnusable"><strong>MechanismUnusable</strong></a> – The mechanism is not capable of verifying
-    <em>identity</em>.</p>
+<dd class="field-even"><p><a class="reference internal" href="#pysasl.creds.external.ExternalVerificationRequired" title="pysasl.creds.external.ExternalVerificationRequired"><strong>ExternalVerificationRequired</strong></a> – Always thrown.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)">bool</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.NoReturn" title="(in Python v3.10)"><em>NoReturn</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -275,11 +301,47 @@ attempt to succeed.</p>
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
+        <div class="sphinxsidebarwrapper"><div class="sphinx-toc sphinxlocaltoc">
+    <h3><a href="index.html">Page contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">pysasl.creds</span></code> Package</a><ul>
+<li><a class="reference internal" href="#pysasl.creds.Credentials"><code class="docutils literal notranslate"><span class="pre">Credentials</span></code></a><ul>
+<li><a class="reference internal" href="#pysasl.creds.Credentials.authcid"><code class="docutils literal notranslate"><span class="pre">Credentials.authcid</span></code></a></li>
+<li><a class="reference internal" href="#pysasl.creds.Credentials.authzid"><code class="docutils literal notranslate"><span class="pre">Credentials.authzid</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#pysasl.creds.server.ServerCredentials"><code class="docutils literal notranslate"><span class="pre">ServerCredentials</span></code></a><ul>
+<li><a class="reference internal" href="#pysasl.creds.server.ServerCredentials.verify"><code class="docutils literal notranslate"><span class="pre">ServerCredentials.verify()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#pysasl.creds.client.ClientCredentials"><code class="docutils literal notranslate"><span class="pre">ClientCredentials</span></code></a><ul>
+<li><a class="reference internal" href="#pysasl.creds.client.ClientCredentials.authcid"><code class="docutils literal notranslate"><span class="pre">ClientCredentials.authcid</span></code></a></li>
+<li><a class="reference internal" href="#pysasl.creds.client.ClientCredentials.secret"><code class="docutils literal notranslate"><span class="pre">ClientCredentials.secret</span></code></a></li>
+<li><a class="reference internal" href="#pysasl.creds.client.ClientCredentials.authzid"><code class="docutils literal notranslate"><span class="pre">ClientCredentials.authzid</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#pysasl.creds.plain.PlainCredentials"><code class="docutils literal notranslate"><span class="pre">PlainCredentials</span></code></a><ul>
+<li><a class="reference internal" href="#pysasl.creds.plain.PlainCredentials.authcid"><code class="docutils literal notranslate"><span class="pre">PlainCredentials.authcid</span></code></a></li>
+<li><a class="reference internal" href="#pysasl.creds.plain.PlainCredentials.authzid"><code class="docutils literal notranslate"><span class="pre">PlainCredentials.authzid</span></code></a></li>
+<li><a class="reference internal" href="#pysasl.creds.plain.PlainCredentials.verify"><code class="docutils literal notranslate"><span class="pre">PlainCredentials.verify()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#pysasl.creds.external.ExternalVerificationRequired"><code class="docutils literal notranslate"><span class="pre">ExternalVerificationRequired</span></code></a></li>
+<li><a class="reference internal" href="#pysasl.creds.external.ExternalCredentials"><code class="docutils literal notranslate"><span class="pre">ExternalCredentials</span></code></a><ul>
+<li><a class="reference internal" href="#pysasl.creds.external.ExternalCredentials.authcid"><code class="docutils literal notranslate"><span class="pre">ExternalCredentials.authcid</span></code></a></li>
+<li><a class="reference internal" href="#pysasl.creds.external.ExternalCredentials.authzid"><code class="docutils literal notranslate"><span class="pre">ExternalCredentials.authzid</span></code></a></li>
+<li><a class="reference internal" href="#pysasl.creds.external.ExternalCredentials.verify"><code class="docutils literal notranslate"><span class="pre">ExternalCredentials.verify()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  </div>
   <div class="sphinxprev">
     <h4>Previous page</h4>
-    <p class="topless"><a href="pysasl.html"
-                          title="Previous page">&larr; <code class="docutils literal notranslate"><span class="pre">pysasl</span></code> Package</a></p>
+    <p class="topless"><a href="pysasl.config.html"
+                          title="Previous page">&larr; <code class="docutils literal notranslate"><span class="pre">pysasl.config</span></code> Package</a></p>
   </div>
   <div class="sphinxnext">
     <h4>Next page</h4>
@@ -339,9 +401,9 @@ attempt to succeed.</p>
           <a href="pysasl.exception.html" title="pysasl.exception Package"
              >next</a> &nbsp; &nbsp;</li>
         <li class="right" >
-          <a href="pysasl.html" title="pysasl Package"
+          <a href="pysasl.config.html" title="pysasl.config Package"
              >previous</a> &nbsp; &nbsp;</li>
-    <li><a href="index.html">pysasl 1.0.0rc3 documentation</a> &#187;</li>
+    <li><a href="index.html">pysasl 1.0.0rc4 documentation</a> &#187;</li>
 
         <li class="nav-item nav-item-this"><a href=""><code class="docutils literal notranslate"><span class="pre">pysasl.creds</span></code> Package</a></li> 
       </ul>
@@ -350,7 +412,7 @@ attempt to succeed.</p>
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2022, Ian Good.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.1.1.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.2.1.
     </div>
     <!-- cloud_sptheme 1.4 -->
   </body>

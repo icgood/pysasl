@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>pysasl.hashing Package &#8212; pysasl 1.0.0rc3 documentation</title>
+    <title>pysasl.hashing Package &#8212; pysasl 1.0.0rc4 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/cloud.css" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noticia+Text:400,i,b,bi|Open+Sans:400,i,b,bi|Roboto+Mono:400,i,b,bi&amp;display=swap" type="text/css" />
@@ -18,6 +18,7 @@
     <script src="_static/underscore.js"></script>
     <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
 
     
     
@@ -58,7 +59,7 @@
         <li class="right" >
           <a href="pysasl.exception.html" title="pysasl.exception Package"
              accesskey="P">previous</a> &nbsp; &nbsp;</li>
-    <li><a href="index.html">pysasl 1.0.0rc3 documentation</a> &#187;</li>
+    <li><a href="index.html">pysasl 1.0.0rc4 documentation</a> &#187;</li>
 
         <li class="nav-item nav-item-this"><a href=""><code class="docutils literal notranslate"><span class="pre">pysasl.hashing</span></code> Package</a></li> 
       </ul>
@@ -71,11 +72,11 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section id="module-pysasl.hashing">
-<span id="pysasl-hashing-package"></span><h1><code class="docutils literal notranslate"><span class="pre">pysasl.hashing</span></code> Package<a class="headerlink" href="#module-pysasl.hashing" title="Permalink to this heading">¶</a></h1>
+  <section id="pysasl-hashing-package">
+<h1><code class="docutils literal notranslate"><span class="pre">pysasl.hashing</span></code> Package<a class="headerlink" href="#pysasl-hashing-package" title="Permalink to this heading">¶</a></h1>
 <p>Provides an abstraction and several implementations for the ability to hash
 and verify secrets.</p>
-<dl class="py data">
+<span class="target" id="module-pysasl.hashing"></span><dl class="py data">
 <dt class="sig sig-object py" id="pysasl.hashing.HashT">
 <span class="sig-prename descclassname"><span class="pre">pysasl.hashing.</span></span><span class="sig-name descname"><span class="pre">HashT</span></span><a class="headerlink" href="#pysasl.hashing.HashT" title="Permalink to this definition">¶</a></dt>
 <dd><p>Type variable for a <a class="reference internal" href="#pysasl.hashing.HashInterface" title="pysasl.hashing.HashInterface"><code class="xref py py-class docutils literal notranslate"><span class="pre">HashInterface</span></code></a>.</p>
@@ -323,7 +324,37 @@ loaded from the <em>passlib_config</em> parameter. If <em>passlib_config</em> is
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
+        <div class="sphinxsidebarwrapper"><div class="sphinx-toc sphinxlocaltoc">
+    <h3><a href="index.html">Page contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">pysasl.hashing</span></code> Package</a><ul>
+<li><a class="reference internal" href="#pysasl.hashing.HashT"><code class="docutils literal notranslate"><span class="pre">HashT</span></code></a></li>
+<li><a class="reference internal" href="#pysasl.hashing.HashInterface"><code class="docutils literal notranslate"><span class="pre">HashInterface</span></code></a><ul>
+<li><a class="reference internal" href="#pysasl.hashing.HashInterface.copy"><code class="docutils literal notranslate"><span class="pre">HashInterface.copy()</span></code></a></li>
+<li><a class="reference internal" href="#pysasl.hashing.HashInterface.hash"><code class="docutils literal notranslate"><span class="pre">HashInterface.hash()</span></code></a></li>
+<li><a class="reference internal" href="#pysasl.hashing.HashInterface.verify"><code class="docutils literal notranslate"><span class="pre">HashInterface.verify()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#pysasl.hashing.BuiltinHash"><code class="docutils literal notranslate"><span class="pre">BuiltinHash</span></code></a><ul>
+<li><a class="reference internal" href="#pysasl.hashing.BuiltinHash.copy"><code class="docutils literal notranslate"><span class="pre">BuiltinHash.copy()</span></code></a></li>
+<li><a class="reference internal" href="#pysasl.hashing.BuiltinHash.hash"><code class="docutils literal notranslate"><span class="pre">BuiltinHash.hash()</span></code></a></li>
+<li><a class="reference internal" href="#pysasl.hashing.BuiltinHash.verify"><code class="docutils literal notranslate"><span class="pre">BuiltinHash.verify()</span></code></a></li>
+<li><a class="reference internal" href="#pysasl.hashing.BuiltinHash.encode_digest"><code class="docutils literal notranslate"><span class="pre">BuiltinHash.encode_digest()</span></code></a></li>
+<li><a class="reference internal" href="#pysasl.hashing.BuiltinHash.decode_digest"><code class="docutils literal notranslate"><span class="pre">BuiltinHash.decode_digest()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#pysasl.hashing.Cleartext"><code class="docutils literal notranslate"><span class="pre">Cleartext</span></code></a><ul>
+<li><a class="reference internal" href="#pysasl.hashing.Cleartext.copy"><code class="docutils literal notranslate"><span class="pre">Cleartext.copy()</span></code></a></li>
+<li><a class="reference internal" href="#pysasl.hashing.Cleartext.hash"><code class="docutils literal notranslate"><span class="pre">Cleartext.hash()</span></code></a></li>
+<li><a class="reference internal" href="#pysasl.hashing.Cleartext.verify"><code class="docutils literal notranslate"><span class="pre">Cleartext.verify()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#pysasl.hashing.get_hash"><code class="docutils literal notranslate"><span class="pre">get_hash()</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
   <div class="sphinxprev">
     <h4>Previous page</h4>
     <p class="topless"><a href="pysasl.exception.html"
@@ -389,7 +420,7 @@ loaded from the <em>passlib_config</em> parameter. If <em>passlib_config</em> is
         <li class="right" >
           <a href="pysasl.exception.html" title="pysasl.exception Package"
              >previous</a> &nbsp; &nbsp;</li>
-    <li><a href="index.html">pysasl 1.0.0rc3 documentation</a> &#187;</li>
+    <li><a href="index.html">pysasl 1.0.0rc4 documentation</a> &#187;</li>
 
         <li class="nav-item nav-item-this"><a href=""><code class="docutils literal notranslate"><span class="pre">pysasl.hashing</span></code> Package</a></li> 
       </ul>
@@ -398,7 +429,7 @@ loaded from the <em>passlib_config</em> parameter. If <em>passlib_config</em> is
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2022, Ian Good.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.1.1.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.2.1.
     </div>
     <!-- cloud_sptheme 1.4 -->
   </body>

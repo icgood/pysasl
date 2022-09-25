@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>pysasl.creds &#8212; pysasl 1.0.0rc4 documentation</title>
+    <title>pysasl.config &#8212; pysasl 1.0.0rc4 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/cloud.css" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noticia+Text:400,i,b,bi|Open+Sans:400,i,b,bi|Roboto+Mono:400,i,b,bi&amp;display=swap" type="text/css" />
@@ -54,7 +54,7 @@
 
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../pysasl.html" accesskey="U">pysasl</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">pysasl.creds</a></li> 
+        <li class="nav-item nav-item-this"><a href="">pysasl.config</a></li> 
       </ul>
     </div>
     </div>
@@ -65,50 +65,40 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <h1>Source code for pysasl.creds</h1><div class="highlight"><pre>
+  <h1>Source code for pysasl.config</h1><div class="highlight"><pre>
 <span></span>
-<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">abstractmethod</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Sequence</span>
-<span class="kn">from</span> <span class="nn">typing_extensions</span> <span class="kn">import</span> <span class="n">Protocol</span>
+<span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span> <span class="nn">typing_extensions</span> <span class="kn">import</span> <span class="n">Final</span>
 
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Credentials&#39;</span><span class="p">]</span>
+<span class="kn">from</span> <span class="nn">.prep</span> <span class="kn">import</span> <span class="n">default_prep</span><span class="p">,</span> <span class="n">Preparation</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;SASLConfig&#39;</span><span class="p">,</span> <span class="s1">&#39;default_config&#39;</span><span class="p">]</span>
 
 
-<div class="viewcode-block" id="Credentials"><a class="viewcode-back" href="../../pysasl.creds.html#pysasl.creds.Credentials">[docs]</a><span class="k">class</span> <span class="nc">Credentials</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;SASL authentication credentials consist of an authentication identity</span>
-<span class="sd">    and an authorization identity, the identity to be assumed.</span>
-
-<span class="sd">    Consider a UNIX system where ``root`` is the superuser and only it may</span>
-<span class="sd">    assume the identity of other users. With an authentication identity of</span>
-<span class="sd">    ``root`` and an authorization identity of ``terry``, the authorization</span>
-<span class="sd">    would succeed because the authentication identity has sufficient</span>
-<span class="sd">    privileges to assume the authorization identity. If the authentication</span>
-<span class="sd">    identity were ``greg``, authorization would fail because ``greg`` does not</span>
-<span class="sd">    have superuser privileges to assume the identity of ``terry``.</span>
-
-<span class="sd">    See:</span>
-<span class="sd">        :class:`~pysasl.creds.identity.Identity`,</span>
-<span class="sd">        `RFC 4422 2. &lt;https://www.rfc-editor.org/rfc/rfc4422#section-2&gt;`_</span>
+<div class="viewcode-block" id="SASLConfig"><a class="viewcode-back" href="../../pysasl.config.html#pysasl.SASLConfig">[docs]</a><span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">SASLConfig</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Provides any configuration necessary for</span>
+<span class="sd">    :class:`~pysasl.mechanism.ServerMechanism` or</span>
+<span class="sd">    :class:`~pysasl.mechanism.ClientMechanism` instances.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="vm">__slots__</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">prepare</span><span class="p">:</span> <span class="n">Preparation</span> <span class="o">=</span> <span class="n">default_prep</span>
+    <span class="sd">&quot;&quot;&quot;The preparation algorithm function.&quot;&quot;&quot;</span></div>
 
-    <span class="nd">@property</span>
-    <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="nf">authcid</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;The authentication identity, e.g. a login username.&quot;&quot;&quot;</span>
-        <span class="o">...</span>
 
-    <span class="nd">@property</span>
-    <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="nf">authzid</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;The authorization identity. The :attr:`.authcid` identity must have</span>
-<span class="sd">        sufficient privileges to assume this identity for the authentication</span>
-<span class="sd">        attempt to succeed.</span>
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="nb">repr</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">_DefaultConfig</span><span class="p">(</span><span class="n">SASLConfig</span><span class="p">):</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="o">...</span></div>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s1">&#39;SASLConfig()&#39;</span>
+
+
+<span class="c1">#: A configuration instance with all defaults.</span>
+<span class="n">default_config</span><span class="p">:</span> <span class="n">Final</span> <span class="o">=</span> <span class="n">_DefaultConfig</span><span class="p">()</span>
 </pre></div>
 
             <div class="clearer"></div>
@@ -163,7 +153,7 @@
 
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../pysasl.html" >pysasl</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">pysasl.creds</a></li> 
+        <li class="nav-item nav-item-this"><a href="">pysasl.config</a></li> 
       </ul>
     </div>
     </div>
