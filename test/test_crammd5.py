@@ -6,13 +6,15 @@ import email.utils
 
 from unittest.mock import patch, Mock
 
-from pysasl import SASLAuth, ServerChallenge, ChallengeResponse
+from pysasl import SASLAuth
+from pysasl.config import default_config
 from pysasl.creds.client import ClientCredentials
 from pysasl.exception import (InvalidResponse, MechanismUnusable,
                               UnexpectedChallenge)
 from pysasl.hashing import BuiltinHash
 from pysasl.identity import ClearIdentity, HashedIdentity
-from pysasl.mechanisms.crammd5 import CramMD5Result, CramMD5Mechanism
+from pysasl.mechanism import ServerChallenge, ChallengeResponse
+from pysasl.mechanism.crammd5 import CramMD5Result, CramMD5Mechanism
 
 builtin_hash = BuiltinHash(rounds=1000)
 
@@ -34,7 +36,7 @@ class TestCramMD5Mechanism(unittest.TestCase):
         self.assertEqual([self.mech], sasl.server_mechanisms)
 
     def test_result_verify_impossible(self) -> None:
-        result = CramMD5Result('testuser', b'', b'')
+        result = CramMD5Result('testuser', b'', b'', config=default_config)
         identity = HashedIdentity('testuser', 'digest',
                                   hash=builtin_hash.copy())
         with self.assertRaises(MechanismUnusable):

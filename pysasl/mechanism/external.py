@@ -1,8 +1,9 @@
 
 from typing import Union, Tuple, Sequence
 
-from .. import (ServerMechanism, ClientMechanism, ServerChallenge,
-                ChallengeResponse)
+from . import (ServerMechanism, ClientMechanism, ServerChallenge,
+               ChallengeResponse)
+from ..config import default_config, SASLConfig
 from ..creds.client import ClientCredentials
 from ..creds.external import ExternalCredentials
 from ..exception import UnexpectedChallenge
@@ -18,8 +19,9 @@ class ExternalMechanism(ServerMechanism, ClientMechanism):
 
     """
 
-    def __init__(self, name: Union[str, bytes] = b'EXTERNAL') -> None:
-        super().__init__(name)
+    def __init__(self, name: Union[str, bytes] = b'EXTERNAL',
+                 config: SASLConfig = default_config) -> None:
+        super().__init__(name, config)
 
     def server_attempt(self, responses: Sequence[ChallengeResponse]) \
             -> Tuple[ExternalCredentials, None]:

@@ -3,13 +3,14 @@ from __future__ import absolute_import
 
 import unittest
 
-from pysasl import SASLAuth, ServerChallenge, ChallengeResponse
+from pysasl import SASLAuth
 from pysasl.creds.client import ClientCredentials
-from pysasl.creds.external import ExternalCredentials
-from pysasl.exception import (ExternalVerificationRequired, InvalidResponse,
-                              UnexpectedChallenge)
+from pysasl.creds.external import (ExternalVerificationRequired,
+                                   ExternalCredentials)
+from pysasl.exception import InvalidResponse, UnexpectedChallenge
 from pysasl.identity import ClearIdentity
-from pysasl.mechanisms.oauth import OAuth2Mechanism
+from pysasl.mechanism import ServerChallenge, ChallengeResponse
+from pysasl.mechanism.oauth import OAuth2Mechanism
 
 
 class TestOAuth2Mechanism(unittest.TestCase):

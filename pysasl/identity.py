@@ -5,7 +5,7 @@ from typing import Optional, Sequence
 from typing_extensions import Protocol
 
 from .hashing import HashInterface, Cleartext
-from .prep import prepare
+from .prep import default_prep, Preparation
 
 __all__ = ['Identity', 'ClearIdentity', 'HashedIdentity']
 
@@ -51,22 +51,25 @@ class ClearIdentity(Identity):
     Args:
         authcid: The authentication identity, e.g. a login username.
         secret: The cleartext secret string.
+        prepare: The preparation algorithm function.
 
     """
 
-    __slots__: Sequence[str] = ['_authcid', '_secret']
+    __slots__: Sequence[str] = ['_authcid', '_secret', '_prepare']
 
-    def __init__(self, authcid: str, secret: str) -> None:
+    def __init__(self, authcid: str, secret: str, *,
+                 prepare: Preparation = default_prep) -> None:
         super().__init__()
         self._authcid = authcid
         self._secret = prepare(secret)
+        self._prepare = prepare
 
     @property
     def authcid(self) -> str:
         return self._authcid
 
     def compare_secret(self, secret: str) -> bool:
-        return secrets.compare_digest(self._secret, prepare(secret))
+        return secrets.compare_digest(self._secret, self._prepare(secret))
 
     def get_clear_secret(self) -> str:
         """Return the cleartext secret string."""
@@ -83,21 +86,25 @@ class HashedIdentity(Identity):
         authcid: The authentication identity, e.g. a login username.
         digest: The hashed secret string, using :attr:`.hash`.
         hash: The hash algorithm to use to verify the secret.
+        prepare: The preparation algorithm function.
 
     """
 
-    __slots__: Sequence[str] = ['_authcid', '_digest', '_hash']
+    __slots__: Sequence[str] = ['_authcid', '_digest', '_hash', '_prepare']
 
     def __init__(self, authcid: str, digest: str, *,
-                 hash: HashInterface) -> None:
+                 hash: HashInterface,
+                 prepare: Preparation = default_prep) -> None:
         super().__init__()
         self._authcid = authcid
         self._digest = digest
         self._hash = hash
+        self._prepare = prepare
 
     @classmethod
     def create(cls, authcid: str, secret: str, *,
-               hash: HashInterface) -> 'HashedIdentity':
+               hash: HashInterface,
+               prepare: Preparation = default_prep) -> 'HashedIdentity':
         """Prepare and hash the given *secret*, returning a
         :class:`HashedIdentity`.
 
@@ -105,10 +112,11 @@ class HashedIdentity(Identity):
             authcid: The authentication identity, e.g. a login username.
             secret: The cleartext secret string.
             hash: The hash algorithm to use to verify the secret.
+            prepare: The preparation algorithm function.
 
         """
         digest = hash.hash(prepare(secret))
-        return cls(authcid, digest, hash=hash)
+        return cls(authcid, digest, hash=hash, prepare=prepare)
 
     @property
     def authcid(self) -> str:
@@ -125,7 +133,7 @@ class HashedIdentity(Identity):
         return self._hash
 
     def compare_secret(self, secret: str) -> bool:
-        return self._hash.verify(prepare(secret), self._digest)
+        return self._hash.verify(self._prepare(secret), self._digest)
 
     def get_clear_secret(self) -> Optional[str]:
         """Return the cleartext secret string, only if :attr:`.hash` is

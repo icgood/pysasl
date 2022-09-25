@@ -3,12 +3,13 @@ from __future__ import absolute_import
 
 import unittest
 
-from pysasl import SASLAuth, ServerChallenge, ChallengeResponse
+from pysasl import SASLAuth
 from pysasl.creds.client import ClientCredentials
 from pysasl.creds.plain import PlainCredentials
 from pysasl.exception import UnexpectedChallenge
 from pysasl.identity import ClearIdentity
-from pysasl.mechanisms.login import LoginMechanism
+from pysasl.mechanism import ServerChallenge, ChallengeResponse
+from pysasl.mechanism.login import LoginMechanism
 
 
 class TestLoginMechanism(unittest.TestCase):

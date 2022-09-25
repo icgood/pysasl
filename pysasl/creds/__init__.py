@@ -7,8 +7,8 @@ __all__ = ['Credentials']
 
 
 class Credentials(Protocol):
-    """SASL authentication credentials consist of an authenticatin identity and
-    an authorization identity, the identity to be assumed.
+    """SASL authentication credentials consist of an authentication identity
+    and an authorization identity, the identity to be assumed.
 
     Consider a UNIX system where ``root`` is the superuser and only it may
     assume the identity of other users. With an authentication identity of

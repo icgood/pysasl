@@ -1,16 +1,16 @@
 
+import warnings
 from abc import abstractmethod
-from typing_extensions import Protocol
+from typing_extensions import Final, Protocol
 
 try:
     from passlib.utils import saslprep as _saslprep
 except ImportError as exc:  # pragma: no cover
     _saslprep = None
     _saslprep_exc = exc
+    warnings.warn('passlib.utils.saslprep is not available', ImportWarning)
 
-__all__ = ['Preparation', 'prepare', 'set_default_prep', 'noprep', 'saslprep']
-
-_default_prep: 'Preparation'
+__all__ = ['Preparation', 'default_prep', 'noprep', 'saslprep']
 
 
 class Preparation(Protocol):
@@ -26,30 +26,6 @@ class Preparation(Protocol):
     @abstractmethod
     def __call__(self, source: str) -> str:
         ...
-
-
-def prepare(source: str) -> str:
-    """Prepares the *source* string using the default preparation algorithm.
-    Unless changed by :func:`set_default_prep`, this default is
-    :func:`saslprep` if available otherwise :func:`noprep`.
-
-    Args:
-        source: The string to prepare.
-
-    """
-    return _default_prep(source)
-
-
-def set_default_prep(prep: Preparation) -> None:  # pragma: no cover
-    """Modifies the global default preparation algorithm used by
-    :func:`prepare`.
-
-    Args:
-        prep: The new preparation algorithm function.
-
-    """
-    global _default_prep
-    _default_prep = prep
 
 
 def noprep(source: str) -> str:  # pragma: no cover
@@ -86,3 +62,7 @@ if _saslprep is not None:
     _default_prep = saslprep
 else:  # pragma: no cover
     _default_prep = noprep
+
+#: Prepares the *source* string using the default preparation algorithm. This
+#: default is :func:`saslprep` if available otherwise :func:`noprep`.
+default_prep: Final = _default_prep

@@ -2,8 +2,9 @@
 import re
 from typing import Union, Tuple, Sequence
 
-from .. import (ServerMechanism, ClientMechanism, ServerChallenge,
-                ChallengeResponse)
+from . import (ServerMechanism, ClientMechanism, ServerChallenge,
+               ChallengeResponse)
+from ..config import default_config, SASLConfig
 from ..creds.client import ClientCredentials
 from ..creds.external import ExternalCredentials
 from ..exception import InvalidResponse, UnexpectedChallenge
@@ -23,8 +24,9 @@ class OAuth2Mechanism(ServerMechanism, ClientMechanism):
     _pattern = re.compile(br'^user=(.*?)\x01auth=[bB][eE][aA][rR][eE][rR] '
                           br'(.*?)\x01\x01$')
 
-    def __init__(self, name: Union[str, bytes] = b'XOAUTH2') -> None:
-        super().__init__(name)
+    def __init__(self, name: Union[str, bytes] = b'XOAUTH2',
+                 config: SASLConfig = default_config) -> None:
+        super().__init__(name, config)
 
     def server_attempt(self, responses: Sequence[ChallengeResponse]) \
             -> Tuple[ExternalCredentials, None]:
