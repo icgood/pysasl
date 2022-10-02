@@ -11,6 +11,7 @@ from pysasl.identity import ClearIdentity, HashedIdentity
 builtin_hash = BuiltinHash(rounds=1000)
 
 b64_salt = 'bzstsT0hfnnXDUPTJqbkhQ=='
+password_sha1 = '$pbkdf2$1000$' + b64_salt + '$ZreCYDHwQD8P81LbstmBx15gBgo='
 password_sha256 = '$pbkdf2-sha256$1000$' + b64_salt + '$dWvL4bTpWfPobA2eti+k' \
     'CjUsF4sfwwiW58SE10p4Vh0='
 password_sha512 = '$pbkdf2-sha512$1000$' + b64_salt + '$CTOIJXzOcorIOzxrRZVK' \
@@ -40,14 +41,24 @@ class TestCreds(unittest.TestCase):
         builtin_copy = builtin_hash.copy()
         stored = HashedIdentity('username', password_sha256, hash=builtin_copy)
         self.assertTrue(creds.verify(stored))
+        builtin_copy = builtin_hash.copy(hash_name='sha1')
+        stored = HashedIdentity('username', password_sha1, hash=builtin_copy)
+        self.assertTrue(creds.verify(stored))
         builtin_copy = builtin_hash.copy(hash_name='sha512')
         stored = HashedIdentity('username', password_sha512, hash=builtin_copy)
         self.assertTrue(creds.verify(stored))
 
     def test_builtin_hash(self) -> None:
         salt = base64.b64decode(b64_salt)
+        builtin_copy = builtin_hash.copy()
         self.assertEqual(password_sha256,
-                         builtin_hash.hash('password', salt))
+                         builtin_copy.hash('password', salt))
+        builtin_copy = builtin_hash.copy(hash_name='sha1')
+        self.assertEqual(password_sha1,
+                         builtin_copy.hash('password', salt))
+        builtin_copy = builtin_hash.copy(hash_name='sha512')
+        self.assertEqual(password_sha512,
+                         builtin_copy.hash('password', salt))
 
     def test_builtin_hash_invalid(self) -> None:
         with self.assertRaises(ValueError):
