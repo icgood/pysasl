@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>pysasl.hashing Package &#8212; pysasl 1.0.0rc4 documentation</title>
+    <title>pysasl.hashing Package &#8212; pysasl 1.0.0rc5 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/cloud.css" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noticia+Text:400,i,b,bi|Open+Sans:400,i,b,bi|Roboto+Mono:400,i,b,bi&amp;display=swap" type="text/css" />
@@ -59,7 +59,7 @@
         <li class="right" >
           <a href="pysasl.exception.html" title="pysasl.exception Package"
              accesskey="P">previous</a> &nbsp; &nbsp;</li>
-    <li><a href="index.html">pysasl 1.0.0rc4 documentation</a> &#187;</li>
+    <li><a href="index.html">pysasl 1.0.0rc5 documentation</a> &#187;</li>
 
         <li class="nav-item nav-item-this"><a href=""><code class="docutils literal notranslate"><span class="pre">pysasl.hashing</span></code> Package</a></li> 
       </ul>
@@ -72,11 +72,11 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section id="pysasl-hashing-package">
-<h1><code class="docutils literal notranslate"><span class="pre">pysasl.hashing</span></code> Package<a class="headerlink" href="#pysasl-hashing-package" title="Permalink to this heading">¶</a></h1>
+  <section id="module-pysasl.hashing">
+<span id="pysasl-hashing-package"></span><h1><code class="docutils literal notranslate"><span class="pre">pysasl.hashing</span></code> Package<a class="headerlink" href="#module-pysasl.hashing" title="Permalink to this heading">¶</a></h1>
 <p>Provides an abstraction and several implementations for the ability to hash
 and verify secrets.</p>
-<span class="target" id="module-pysasl.hashing"></span><dl class="py data">
+<dl class="py data">
 <dt class="sig sig-object py" id="pysasl.hashing.HashT">
 <span class="sig-prename descclassname"><span class="pre">pysasl.hashing.</span></span><span class="sig-name descname"><span class="pre">HashT</span></span><a class="headerlink" href="#pysasl.hashing.HashT" title="Permalink to this definition">¶</a></dt>
 <dd><p>Type variable for a <a class="reference internal" href="#pysasl.hashing.HashInterface" title="pysasl.hashing.HashInterface"><code class="xref py py-class docutils literal notranslate"><span class="pre">HashInterface</span></code></a>.</p>
@@ -141,9 +141,11 @@ by some hashes to modify settings on the hash.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="pysasl.hashing.BuiltinHash">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pysasl.hashing.</span></span><span class="sig-name descname"><span class="pre">BuiltinHash</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hash_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'sha256'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">salt_len</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">16</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000000</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysasl/hashing.html#BuiltinHash"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pysasl.hashing.BuiltinHash" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pysasl.hashing.</span></span><span class="sig-name descname"><span class="pre">BuiltinHash</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hash_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'sha256'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">salt_len</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">16</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">500000</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysasl/hashing.html#BuiltinHash"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pysasl.hashing.BuiltinHash" title="Permalink to this definition">¶</a></dt>
 <dd><p>Implements <a class="reference internal" href="#pysasl.hashing.HashInterface" title="pysasl.hashing.HashInterface"><code class="xref py py-class docutils literal notranslate"><span class="pre">HashInterface</span></code></a> using the <a class="reference external" href="https://docs.python.org/3/library/hashlib.html#hashlib.pbkdf2_hmac" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">hashlib.pbkdf2_hmac()</span></code></a>
 function and random salt.</p>
+<p>The constructor arguments are the values used when encoding. When decoding,
+these values are read from the <a class="reference external" href="https://passlib.readthedocs.io/en/stable/lib/passlib.hash.pbkdf2_digest.html?highlight=hmac#format-algorithm">digest format</a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -153,6 +155,10 @@ function and random salt.</p>
 </ul>
 </dd>
 </dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference external" href="https://passlib.readthedocs.io/en/stable/lib/passlib.hash.pbkdf2_digest.html#passlib.hash.pbkdf2_sha256" title="(in Passlib v1.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">passlib.hash.pbkdf2_sha256</span></code></a></p>
+</div>
 <dl class="py method">
 <dt class="sig sig-object py" id="pysasl.hashing.BuiltinHash.copy">
 <span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hash_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">salt_len</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysasl/hashing.html#BuiltinHash.copy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pysasl.hashing.BuiltinHash.copy" title="Permalink to this definition">¶</a></dt>
@@ -203,36 +209,6 @@ parameters.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)">bool</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pysasl.hashing.BuiltinHash.encode_digest">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">encode_digest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">digest</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysasl/hashing.html#BuiltinHash.encode_digest"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pysasl.hashing.BuiltinHash.encode_digest" title="Permalink to this definition">¶</a></dt>
-<dd><p>Encode the digest into a string. This uses <a class="reference external" href="https://docs.python.org/3/library/base64.html#base64.b64encode" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">b64encode()</span></code></a>
-by default, but can be overridden by subclasses.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>digest</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.10)"><em>bytes</em></a>) – The raw digest bytestring.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)">str</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pysasl.hashing.BuiltinHash.decode_digest">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">decode_digest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">digest</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysasl/hashing.html#BuiltinHash.decode_digest"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pysasl.hashing.BuiltinHash.decode_digest" title="Permalink to this definition">¶</a></dt>
-<dd><p>Decode the digest from a string. This uses <a class="reference external" href="https://docs.python.org/3/library/base64.html#base64.b64decode" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">b64decode()</span></code></a>
-by default, but can be overridden by subclasses.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>digest</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The encoded digest string.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.10)">bytes</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -339,8 +315,6 @@ loaded from the <em>passlib_config</em> parameter. If <em>passlib_config</em> is
 <li><a class="reference internal" href="#pysasl.hashing.BuiltinHash.copy"><code class="docutils literal notranslate"><span class="pre">BuiltinHash.copy()</span></code></a></li>
 <li><a class="reference internal" href="#pysasl.hashing.BuiltinHash.hash"><code class="docutils literal notranslate"><span class="pre">BuiltinHash.hash()</span></code></a></li>
 <li><a class="reference internal" href="#pysasl.hashing.BuiltinHash.verify"><code class="docutils literal notranslate"><span class="pre">BuiltinHash.verify()</span></code></a></li>
-<li><a class="reference internal" href="#pysasl.hashing.BuiltinHash.encode_digest"><code class="docutils literal notranslate"><span class="pre">BuiltinHash.encode_digest()</span></code></a></li>
-<li><a class="reference internal" href="#pysasl.hashing.BuiltinHash.decode_digest"><code class="docutils literal notranslate"><span class="pre">BuiltinHash.decode_digest()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#pysasl.hashing.Cleartext"><code class="docutils literal notranslate"><span class="pre">Cleartext</span></code></a><ul>
@@ -420,7 +394,7 @@ loaded from the <em>passlib_config</em> parameter. If <em>passlib_config</em> is
         <li class="right" >
           <a href="pysasl.exception.html" title="pysasl.exception Package"
              >previous</a> &nbsp; &nbsp;</li>
-    <li><a href="index.html">pysasl 1.0.0rc4 documentation</a> &#187;</li>
+    <li><a href="index.html">pysasl 1.0.0rc5 documentation</a> &#187;</li>
 
         <li class="nav-item nav-item-this"><a href=""><code class="docutils literal notranslate"><span class="pre">pysasl.hashing</span></code> Package</a></li> 
       </ul>
@@ -429,7 +403,7 @@ loaded from the <em>passlib_config</em> parameter. If <em>passlib_config</em> is
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2022, Ian Good.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.2.1.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.2.3.
     </div>
     <!-- cloud_sptheme 1.4 -->
   </body>

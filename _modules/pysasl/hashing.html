@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>pysasl.hashing &#8212; pysasl 1.0.0rc4 documentation</title>
+    <title>pysasl.hashing &#8212; pysasl 1.0.0rc5 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/cloud.css" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noticia+Text:400,i,b,bi|Open+Sans:400,i,b,bi|Roboto+Mono:400,i,b,bi&amp;display=swap" type="text/css" />
@@ -50,7 +50,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> &nbsp; &nbsp;</li>
-    <li><a href="../../index.html">pysasl 1.0.0rc4 documentation</a> &#187;</li>
+    <li><a href="../../index.html">pysasl 1.0.0rc5 documentation</a> &#187;</li>
 
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../pysasl.html" accesskey="U">pysasl</a> &#187;</li>
@@ -72,19 +72,17 @@
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">base64</span>
 <span class="kn">import</span> <span class="nn">hashlib</span>
 <span class="kn">import</span> <span class="nn">secrets</span>
 <span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">abstractmethod</span>
+<span class="kn">from</span> <span class="nn">base64</span> <span class="kn">import</span> <span class="n">b64encode</span><span class="p">,</span> <span class="n">b64decode</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TypeVar</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">Dict</span>
 <span class="kn">from</span> <span class="nn">typing_extensions</span> <span class="kn">import</span> <span class="n">Protocol</span><span class="p">,</span> <span class="n">Final</span>
 
 <span class="k">try</span><span class="p">:</span>
     <span class="kn">from</span> <span class="nn">passlib.context</span> <span class="kn">import</span> <span class="n">CryptContext</span>
-    <span class="kn">from</span> <span class="nn">passlib.apps</span> <span class="kn">import</span> <span class="n">custom_app_context</span>
 <span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">_exc</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
     <span class="n">CryptContext</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="n">custom_app_context</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">_passlib_import_exc</span> <span class="o">=</span> <span class="n">_exc</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;HashT&#39;</span><span class="p">,</span> <span class="s1">&#39;HashInterface&#39;</span><span class="p">,</span> <span class="s1">&#39;BuiltinHash&#39;</span><span class="p">,</span> <span class="s1">&#39;Cleartext&#39;</span><span class="p">,</span> <span class="s1">&#39;get_hash&#39;</span><span class="p">]</span>
@@ -139,17 +137,24 @@
     <span class="sd">&quot;&quot;&quot;Implements :class:`HashInterface` using the :func:`hashlib.pbkdf2_hmac`</span>
 <span class="sd">    function and random salt.</span>
 
+<span class="sd">    The constructor arguments are the values used when encoding. When decoding,</span>
+<span class="sd">    these values are read from the `digest format</span>
+<span class="sd">    &lt;https://passlib.readthedocs.io/en/stable/lib/passlib.hash.pbkdf2_digest.html?highlight=hmac#format-algorithm&gt;`_.</span>
+
 <span class="sd">    Args:</span>
 <span class="sd">        hash_name: The hash name.</span>
 <span class="sd">        salt_len: The length of the random salt.</span>
 <span class="sd">        rounds: The number of hash rounds.</span>
+
+<span class="sd">    See Also:</span>
+<span class="sd">        :class:`passlib.hash.pbkdf2_sha256`</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="vm">__slots__</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;hash_name&#39;</span><span class="p">,</span> <span class="s1">&#39;salt_len&#39;</span><span class="p">,</span> <span class="s1">&#39;rounds&#39;</span><span class="p">]</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">hash_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;sha256&#39;</span><span class="p">,</span> <span class="n">salt_len</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span>
-                 <span class="n">rounds</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000000</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+                 <span class="n">rounds</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">500000</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">hash_name</span><span class="p">:</span> <span class="n">Final</span> <span class="o">=</span> <span class="n">hash_name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">salt_len</span><span class="p">:</span> <span class="n">Final</span> <span class="o">=</span> <span class="n">salt_len</span>
@@ -187,11 +192,11 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span></div>
 
-    <span class="k">def</span> <span class="nf">_hash</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">secret</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">salt</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_hash</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">hash_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">rounds</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">secret</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">salt</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> \
+            <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
         <span class="n">value_b</span> <span class="o">=</span> <span class="n">secret</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
-        <span class="n">digest</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">pbkdf2_hmac</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">hash_name</span><span class="p">,</span> <span class="n">value_b</span><span class="p">,</span> <span class="n">salt</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rounds</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">salt</span> <span class="o">+</span> <span class="n">digest</span>
+        <span class="k">return</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">pbkdf2_hmac</span><span class="p">(</span><span class="n">hash_name</span><span class="p">,</span> <span class="n">value_b</span><span class="p">,</span> <span class="n">salt</span><span class="p">,</span> <span class="n">rounds</span><span class="p">)</span>
 
 <div class="viewcode-block" id="BuiltinHash.hash"><a class="viewcode-back" href="../../pysasl.hashing.html#pysasl.hashing.BuiltinHash.hash">[docs]</a>    <span class="k">def</span> <span class="nf">hash</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">secret</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">salt</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Hash the *secret* and return the digest.</span>
@@ -203,36 +208,26 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">salt</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
             <span class="n">salt</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">urandom</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">salt_len</span><span class="p">)</span>
-        <span class="n">digest</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hash</span><span class="p">(</span><span class="n">secret</span><span class="p">,</span> <span class="n">salt</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">encode_digest</span><span class="p">(</span><span class="n">digest</span><span class="p">)</span></div>
+        <span class="n">hash_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hash_name</span>
+        <span class="n">rounds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rounds</span>
+        <span class="n">digest</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hash</span><span class="p">(</span><span class="n">hash_name</span><span class="p">,</span> <span class="n">rounds</span><span class="p">,</span> <span class="n">secret</span><span class="p">,</span> <span class="n">salt</span><span class="p">)</span>
+        <span class="n">b64_salt</span> <span class="o">=</span> <span class="n">b64encode</span><span class="p">(</span><span class="n">salt</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;ascii&#39;</span><span class="p">)</span>
+        <span class="n">b64_digest</span> <span class="o">=</span> <span class="n">b64encode</span><span class="p">(</span><span class="n">digest</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;ascii&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;$pbkdf2-</span><span class="si">{</span><span class="n">hash_name</span><span class="si">}</span><span class="s1">$</span><span class="si">{</span><span class="n">rounds</span><span class="si">}</span><span class="s1">$</span><span class="si">{</span><span class="n">b64_salt</span><span class="si">}</span><span class="s1">$</span><span class="si">{</span><span class="n">b64_digest</span><span class="si">}</span><span class="s1">&#39;</span></div>
 
 <div class="viewcode-block" id="BuiltinHash.verify"><a class="viewcode-back" href="../../pysasl.hashing.html#pysasl.hashing.BuiltinHash.verify">[docs]</a>    <span class="k">def</span> <span class="nf">verify</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">secret</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">hash</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="n">digest_b</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">decode_digest</span><span class="p">(</span><span class="nb">hash</span><span class="p">)</span>
-        <span class="n">salt</span> <span class="o">=</span> <span class="n">digest_b</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">salt_len</span><span class="p">]</span>
-        <span class="n">value_digest</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hash</span><span class="p">(</span><span class="n">secret</span><span class="p">,</span> <span class="n">salt</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">secrets</span><span class="o">.</span><span class="n">compare_digest</span><span class="p">(</span><span class="n">value_digest</span><span class="p">,</span> <span class="n">digest_b</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="BuiltinHash.encode_digest"><a class="viewcode-back" href="../../pysasl.hashing.html#pysasl.hashing.BuiltinHash.encode_digest">[docs]</a>    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">encode_digest</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">digest</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Encode the digest into a string. This uses :func:`~base64.b64encode`</span>
-<span class="sd">        by default, but can be overridden by subclasses.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            digest: The raw digest bytestring.</span>
-
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">digest</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;ascii&#39;</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="BuiltinHash.decode_digest"><a class="viewcode-back" href="../../pysasl.hashing.html#pysasl.hashing.BuiltinHash.decode_digest">[docs]</a>    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">decode_digest</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">digest</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Decode the digest from a string. This uses :func:`~base64.b64decode`</span>
-<span class="sd">        by default, but can be overridden by subclasses.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            digest: The encoded digest string.</span>
-
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64decode</span><span class="p">(</span><span class="n">digest</span><span class="p">)</span></div>
+        <span class="n">prefix</span><span class="p">,</span> <span class="n">hash_name</span><span class="p">,</span> <span class="n">rounds_str</span><span class="p">,</span> <span class="n">b64_salt</span><span class="p">,</span> <span class="n">b64_digest</span> <span class="o">=</span> \
+            <span class="nb">hash</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;$&#39;</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">prefix</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Invalid hash prefix&#39;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="n">hash_name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;pbkdf2-&#39;</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Unrecognized hash name: </span><span class="si">{</span><span class="n">hash_name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">hash_name</span> <span class="o">=</span> <span class="n">hash_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">rounds</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">rounds_str</span><span class="p">)</span>
+        <span class="n">salt</span> <span class="o">=</span> <span class="n">b64decode</span><span class="p">(</span><span class="n">b64_salt</span><span class="p">)</span>
+        <span class="n">digest</span> <span class="o">=</span> <span class="n">b64decode</span><span class="p">(</span><span class="n">b64_digest</span><span class="p">)</span>
+        <span class="n">secret_digest</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hash</span><span class="p">(</span><span class="n">hash_name</span><span class="p">,</span> <span class="n">rounds</span><span class="p">,</span> <span class="n">secret</span><span class="p">,</span> <span class="n">salt</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">secrets</span><span class="o">.</span><span class="n">compare_digest</span><span class="p">(</span><span class="n">digest</span><span class="p">,</span> <span class="n">secret_digest</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="s1">&#39;BuiltinHash(hash_name=</span><span class="si">%r</span><span class="s1">, salt_len=</span><span class="si">%r</span><span class="s1">, rounds=</span><span class="si">%r</span><span class="s1">)&#39;</span> <span class="o">%</span> \
@@ -282,8 +277,12 @@
             <span class="n">context</span> <span class="o">=</span> <span class="n">CryptContext</span><span class="o">.</span><span class="n">from_path</span><span class="p">(</span><span class="n">passlib_config</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">_passlib_import_exc</span>
-    <span class="k">elif</span> <span class="n">custom_app_context</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">context</span> <span class="o">=</span> <span class="n">custom_app_context</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="k">elif</span> <span class="n">CryptContext</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># https://passlib.readthedocs.io/en/stable/lib/passlib.hash.html#active-hashes</span>
+        <span class="n">context</span> <span class="o">=</span> <span class="n">CryptContext</span><span class="p">(</span>
+            <span class="n">schemes</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;argon2&#39;</span><span class="p">,</span> <span class="s1">&#39;bcrypt_sha256&#39;</span><span class="p">,</span> <span class="s1">&#39;phpass&#39;</span><span class="p">,</span> <span class="s1">&#39;pbkdf2_sha1&#39;</span><span class="p">,</span>
+                     <span class="s1">&#39;pbkdf2_sha256&#39;</span><span class="p">,</span> <span class="s1">&#39;pbkdf2_sha512&#39;</span><span class="p">,</span> <span class="s1">&#39;scram&#39;</span><span class="p">,</span> <span class="s1">&#39;scrypt&#39;</span><span class="p">],</span>
+            <span class="n">default</span><span class="o">=</span><span class="s1">&#39;pbkdf2_sha256&#39;</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">context</span> <span class="o">=</span> <span class="n">BuiltinHash</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">context</span></div>
@@ -337,7 +336,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> &nbsp; &nbsp;</li>
-    <li><a href="../../index.html">pysasl 1.0.0rc4 documentation</a> &#187;</li>
+    <li><a href="../../index.html">pysasl 1.0.0rc5 documentation</a> &#187;</li>
 
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../pysasl.html" >pysasl</a> &#187;</li>
@@ -348,7 +347,7 @@
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2022, Ian Good.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.2.1.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.2.3.
     </div>
     <!-- cloud_sptheme 1.4 -->
   </body>
