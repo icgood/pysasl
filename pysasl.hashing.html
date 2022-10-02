@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>pysasl.hashing Package &#8212; pysasl 1.0.0rc6 documentation</title>
+    <title>pysasl.hashing Package &#8212; pysasl 1.0.0rc7 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/cloud.css" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noticia+Text:400,i,b,bi|Open+Sans:400,i,b,bi|Roboto+Mono:400,i,b,bi&amp;display=swap" type="text/css" />
@@ -59,7 +59,7 @@
         <li class="right" >
           <a href="pysasl.exception.html" title="pysasl.exception Package"
              accesskey="P">previous</a> &nbsp; &nbsp;</li>
-    <li><a href="index.html">pysasl 1.0.0rc6 documentation</a> &#187;</li>
+    <li><a href="index.html">pysasl 1.0.0rc7 documentation</a> &#187;</li>
 
         <li class="nav-item nav-item-this"><a href=""><code class="docutils literal notranslate"><span class="pre">pysasl.hashing</span></code> Package</a></li> 
       </ul>
@@ -272,24 +272,29 @@ by some hashes to modify settings on the hash.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pysasl.hashing.get_hash">
-<span class="sig-prename descclassname"><span class="pre">pysasl.hashing.</span></span><span class="sig-name descname"><span class="pre">get_hash</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">no_passlib</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">passlib_config</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysasl/hashing.html#get_hash"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pysasl.hashing.get_hash" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pysasl.hashing.</span></span><span class="sig-name descname"><span class="pre">get_hash</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">passlib_config</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysasl/hashing.html#get_hash"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pysasl.hashing.get_hash" title="Permalink to this definition">¶</a></dt>
 <dd><p>Provide a secure, default <a class="reference internal" href="#pysasl.hashing.HashInterface" title="pysasl.hashing.HashInterface"><code class="xref py py-class docutils literal notranslate"><span class="pre">HashInterface</span></code></a> implementation.</p>
-<p>If <code class="xref py py-mod docutils literal notranslate"><span class="pre">passlib</span></code> is not available, a custom hash is always used based on
-<a class="reference external" href="https://docs.python.org/3/library/hashlib.html#hashlib.pbkdf2_hmac" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">hashlib.pbkdf2_hmac()</span></code></a>. The <em>passlib_config</em> parameter is ignored.</p>
+<p>If <em>passlib_config</em> is given, a <a class="reference external" href="https://passlib.readthedocs.io/en/stable/lib/passlib.context.html#passlib.context.CryptContext" title="(in Passlib v1.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">CryptContext</span></code></a> is
+loaded from it. Otherwise, the returned implementation depends on whether
+<code class="xref py py-mod docutils literal notranslate"><span class="pre">passlib</span></code> is available.</p>
 <p>If <code class="xref py py-mod docutils literal notranslate"><span class="pre">passlib</span></code> is available, a <a class="reference external" href="https://passlib.readthedocs.io/en/stable/lib/passlib.context.html#passlib.context.CryptContext" title="(in Passlib v1.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">CryptContext</span></code></a> is
-loaded from the <em>passlib_config</em> parameter. If <em>passlib_config</em> is
-<code class="docutils literal notranslate"><span class="pre">None</span></code>, then <code class="xref py py-attr docutils literal notranslate"><span class="pre">passlib.apps.custom_app_context</span></code> is returned.</p>
+created with a set of <a class="reference external" href="https://passlib.readthedocs.io/en/stable/lib/passlib.hash.html#active-hashes">active hashes</a>,
+defaulting to <code class="docutils literal notranslate"><span class="pre">pbkdf2_sha256</span></code> for new digests.</p>
+<p>If <code class="xref py py-mod docutils literal notranslate"><span class="pre">passlib</span></code> is not available, a <a class="reference internal" href="#pysasl.hashing.BuiltinHash" title="pysasl.hashing.BuiltinHash"><code class="xref py py-class docutils literal notranslate"><span class="pre">BuiltinHash</span></code></a> with default
+settings is created. This is intended to be compatible with the
+<code class="xref py py-mod docutils literal notranslate"><span class="pre">passlib</span></code> default if it is installed later.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>no_passlib</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – If true, do not use <code class="xref py py-mod docutils literal notranslate"><span class="pre">passlib</span></code> even if available.</p></li>
-<li><p><strong>passlib_config</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><em>Optional</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em>) – A passlib config file.</p></li>
-</ul>
+<dd class="field-odd"><p><strong>passlib_config</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><em>Optional</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em>) – A passlib config file.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference internal" href="#pysasl.hashing.HashInterface" title="pysasl.hashing.HashInterface"><em>HashInterface</em></a></p>
 </dd>
 </dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference external" href="https://passlib.readthedocs.io/en/stable/lib/passlib.context.html#passlib.context.CryptContext.from_path" title="(in Passlib v1.7)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">passlib.context.CryptContext.from_path()</span></code></a></p>
+</div>
 </dd></dl>
 
 </section>
@@ -394,7 +399,7 @@ loaded from the <em>passlib_config</em> parameter. If <em>passlib_config</em> is
         <li class="right" >
           <a href="pysasl.exception.html" title="pysasl.exception Package"
              >previous</a> &nbsp; &nbsp;</li>
-    <li><a href="index.html">pysasl 1.0.0rc6 documentation</a> &#187;</li>
+    <li><a href="index.html">pysasl 1.0.0rc7 documentation</a> &#187;</li>
 
         <li class="nav-item nav-item-this"><a href=""><code class="docutils literal notranslate"><span class="pre">pysasl.hashing</span></code> Package</a></li> 
       </ul>
