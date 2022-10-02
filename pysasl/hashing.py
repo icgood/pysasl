@@ -201,33 +201,36 @@ class Cleartext(HashInterface):
         return 'Cleartext()'
 
 
-def get_hash(*, no_passlib: bool = False,
-             passlib_config: Optional[str] = None) \
+def get_hash(*, passlib_config: Optional[str] = None) \
         -> HashInterface:  # pragma: no cover
     """Provide a secure, default :class:`HashInterface` implementation.
 
-    If :mod:`passlib` is not available, a custom hash is always used based on
-    :func:`hashlib.pbkdf2_hmac`. The *passlib_config* parameter is ignored.
+    If *passlib_config* is given, a :class:`~passlib.context.CryptContext` is
+    loaded from it. Otherwise, the returned implementation depends on whether
+    :mod:`passlib` is available.
 
     If :mod:`passlib` is available, a :class:`~passlib.context.CryptContext` is
-    loaded from the *passlib_config* parameter. If *passlib_config* is
-    ``None``, then :attr:`passlib.apps.custom_app_context` is returned.
+    created with a set of `active hashes
+    <https://passlib.readthedocs.io/en/stable/lib/passlib.hash.html#active-hashes>`_,
+    defaulting to ``pbkdf2_sha256`` for new digests.
+
+    If :mod:`passlib` is not available, a :class:`BuiltinHash` with default
+    settings is created. This is intended to be compatible with the
+    :mod:`passlib` default if it is installed later.
 
     Args:
-        no_passlib: If true, do not use :mod:`passlib` even if available.
         passlib_config: A passlib config file.
+
+    See Also:
+        :meth:`passlib.context.CryptContext.from_path`
 
     """
     context: HashInterface
-    if no_passlib:
-        return BuiltinHash()
-    elif passlib_config is not None:
-        if CryptContext is not None:
-            context = CryptContext.from_path(passlib_config)
-        else:
+    if passlib_config is not None:
+        if CryptContext is None:
             raise _passlib_import_exc
+        context = CryptContext.from_path(passlib_config)
     elif CryptContext is not None:
-        # https://passlib.readthedocs.io/en/stable/lib/passlib.hash.html#active-hashes
         context = CryptContext(
             schemes=['argon2', 'bcrypt_sha256', 'phpass', 'pbkdf2_sha1',
                      'pbkdf2_sha256', 'pbkdf2_sha512', 'scram', 'scrypt'],
