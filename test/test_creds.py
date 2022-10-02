@@ -10,11 +10,11 @@ from pysasl.identity import ClearIdentity, HashedIdentity
 
 builtin_hash = BuiltinHash(rounds=1000)
 
-salt_sha256 = 'bzstsT0hfnnXDUPTJqbkhQ=='
-password_sha256 = 'bzstsT0hfnnXDUPTJqbkhXVry+G06Vnz6GwNnrYvpAo1LBeLH8MIlufEh' \
-    'NdKeFYd'
-password_sha512 = 'EzkVJRnzPma/FYN2JM5XVj9oDl0qJwClAWywh8XAWz4iugQKMvlFPbyxM' \
-    'HGWa9uIz16LC+aMMCYJT/Z78DR1wioV6eOdX8vgegxiKW8VWZk='
+b64_salt = 'bzstsT0hfnnXDUPTJqbkhQ=='
+password_sha256 = '$pbkdf2-sha256$1000$' + b64_salt + '$dWvL4bTpWfPobA2eti+k' \
+    'CjUsF4sfwwiW58SE10p4Vh0='
+password_sha512 = '$pbkdf2-sha512$1000$' + b64_salt + '$CTOIJXzOcorIOzxrRZVK' \
+    'xe3yMrllU7+vbPpSeT7SQWGX6S4tkOZq5s/A6LSsDOkE6ExBXXRh5Lv5I18B/cQpkQ=='
 
 
 class TestCreds(unittest.TestCase):
@@ -45,9 +45,18 @@ class TestCreds(unittest.TestCase):
         self.assertTrue(creds.verify(stored))
 
     def test_builtin_hash(self) -> None:
-        salt = base64.b64decode(salt_sha256)
+        salt = base64.b64decode(b64_salt)
         self.assertEqual(password_sha256,
                          builtin_hash.hash('password', salt))
+
+    def test_builtin_hash_invalid(self) -> None:
+        with self.assertRaises(ValueError):
+            builtin_hash.verify('password', 'invalid')
+        with self.assertRaises(ValueError):
+            builtin_hash.verify('password', 'invalid' + password_sha256)
+        with self.assertRaises(ValueError):
+            builtin_hash.verify('password',
+                                password_sha256.replace('pbkdf2-', '', 1))
 
     def test_cleartext_good(self) -> None:
         creds = PlainCredentials('username', 'password')
