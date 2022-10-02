@@ -4,11 +4,13 @@ pysasl
 Pure Python SASL client and server library. The design of the library is
 intended to be agnostic of the protocol or network library.
 
-The library currently offers `PLAIN`, `LOGIN`, and `CRAM-MD5` mechanisms by
-default. The `EXTERNAL` and `XOAUTH2` mechanisms are also available for special
+The library currently offers `PLAIN` and `LOGIN` mechanisms by default. The
+`CRAM-MD5`, `EXTERNAL`, and `XOAUTH2` mechanisms are also available for special
 circumstances.
 
-There are currently no plans to implement security layer negotiation support.
+There are currently no plans to implement
+[security layer](https://datatracker.ietf.org/doc/html/rfc4422#section-3.7)
+negotiation support.
 
 [![build](https://github.com/icgood/pysasl/actions/workflows/python-package.yml/badge.svg)](https://github.com/icgood/pysasl/actions/workflows/python-package.yml)
 [![Coverage Status](https://coveralls.io/repos/icgood/pysasl/badge.svg?branch=main)](https://coveralls.io/r/icgood/pysasl?branch=main)
@@ -115,7 +117,7 @@ assert result.verify(identity)
 
 # Or to compare hashes...
 from pysasl.hashing import BuiltinHash
-identity = HashedIdentity('myuser, '1baa33d03d0...', hash=BuiltinHash())
+identity = HashedIdentity('myuser, '$pbkdf2-sha256$500000$...', hash=BuiltinHash())
 assert result.verify(identity)
 
 # Or use passlib hashing...
