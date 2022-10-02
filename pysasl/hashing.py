@@ -4,19 +4,17 @@ and verify secrets.
 """
 
 import os
-import base64
 import hashlib
 import secrets
 from abc import abstractmethod
+from base64 import b64encode, b64decode
 from typing import TypeVar, Any, Optional, Sequence, Dict
 from typing_extensions import Protocol, Final
 
 try:
     from passlib.context import CryptContext
-    from passlib.apps import custom_app_context
 except ImportError as _exc:  # pragma: no cover
     CryptContext = None
-    custom_app_context = None
     _passlib_import_exc = _exc
 
 __all__ = ['HashT', 'HashInterface', 'BuiltinHash', 'Cleartext', 'get_hash']
@@ -71,17 +69,24 @@ class BuiltinHash(HashInterface):
     """Implements :class:`HashInterface` using the :func:`hashlib.pbkdf2_hmac`
     function and random salt.
 
+    The constructor arguments are the values used when encoding. When decoding,
+    these values are read from the `digest format
+    <https://passlib.readthedocs.io/en/stable/lib/passlib.hash.pbkdf2_digest.html?highlight=hmac#format-algorithm>`_.
+
     Args:
         hash_name: The hash name.
         salt_len: The length of the random salt.
         rounds: The number of hash rounds.
+
+    See Also:
+        :class:`passlib.hash.pbkdf2_sha256`
 
     """
 
     __slots__: Sequence[str] = ['hash_name', 'salt_len', 'rounds']
 
     def __init__(self, *, hash_name: str = 'sha256', salt_len: int = 16,
-                 rounds: int = 1000000) -> None:
+                 rounds: int = 500000) -> None:
         super().__init__()
         self.hash_name: Final = hash_name
         self.salt_len: Final = salt_len
@@ -119,11 +124,11 @@ class BuiltinHash(HashInterface):
         else:
             return self
 
-    def _hash(self, secret: str, salt: bytes) -> bytes:
+    @classmethod
+    def _hash(cls, hash_name: str, rounds: int, secret: str, salt: bytes) \
+            -> bytes:
         value_b = secret.encode('utf-8')
-        digest = hashlib.pbkdf2_hmac(
-            self.hash_name, value_b, salt, self.rounds)
-        return salt + digest
+        return hashlib.pbkdf2_hmac(hash_name, value_b, salt, rounds)
 
     def hash(self, secret: str, salt: Optional[bytes] = None) -> str:
         """Hash the *secret* and return the digest.
@@ -135,36 +140,26 @@ class BuiltinHash(HashInterface):
         """
         if salt is None:  # pragma: no cover
             salt = os.urandom(self.salt_len)
-        digest = self._hash(secret, salt)
-        return self.encode_digest(digest)
+        hash_name = self.hash_name
+        rounds = self.rounds
+        digest = self._hash(hash_name, rounds, secret, salt)
+        b64_salt = b64encode(salt).decode('ascii')
+        b64_digest = b64encode(digest).decode('ascii')
+        return f'$pbkdf2-{hash_name}${rounds}${b64_salt}${b64_digest}'
 
     def verify(self, secret: str, hash: str) -> bool:
-        digest_b = self.decode_digest(hash)
-        salt = digest_b[0:self.salt_len]
-        value_digest = self._hash(secret, salt)
-        return secrets.compare_digest(value_digest, digest_b)
-
-    @classmethod
-    def encode_digest(cls, digest: bytes) -> str:
-        """Encode the digest into a string. This uses :func:`~base64.b64encode`
-        by default, but can be overridden by subclasses.
-
-        Args:
-            digest: The raw digest bytestring.
-
-        """
-        return base64.b64encode(digest).decode('ascii')
-
-    @classmethod
-    def decode_digest(cls, digest: str) -> bytes:
-        """Decode the digest from a string. This uses :func:`~base64.b64decode`
-        by default, but can be overridden by subclasses.
-
-        Args:
-            digest: The encoded digest string.
-
-        """
-        return base64.b64decode(digest)
+        prefix, hash_name, rounds_str, b64_salt, b64_digest = \
+            hash.split('$', 4)
+        if prefix != '':
+            raise ValueError('Invalid hash prefix')
+        elif not hash_name.startswith('pbkdf2-'):
+            raise ValueError(f'Unrecognized hash name: {hash_name}')
+        _, hash_name = hash_name.split('-', 1)
+        rounds = int(rounds_str)
+        salt = b64decode(b64_salt)
+        digest = b64decode(b64_digest)
+        secret_digest = self._hash(hash_name, rounds, secret, salt)
+        return secrets.compare_digest(digest, secret_digest)
 
     def __repr__(self) -> str:
         return 'BuiltinHash(hash_name=%r, salt_len=%r, rounds=%r)' % \
@@ -214,8 +209,12 @@ def get_hash(*, no_passlib: bool = False,
             context = CryptContext.from_path(passlib_config)
         else:
             raise _passlib_import_exc
-    elif custom_app_context is not None:
-        context = custom_app_context.copy()
+    elif CryptContext is not None:
+        # https://passlib.readthedocs.io/en/stable/lib/passlib.hash.html#active-hashes
+        context = CryptContext(
+            schemes=['argon2', 'bcrypt_sha256', 'phpass', 'pbkdf2_sha1',
+                     'pbkdf2_sha256', 'pbkdf2_sha512', 'scram', 'scrypt'],
+            default='pbkdf2_sha256')
     else:
         context = BuiltinHash()
     return context
