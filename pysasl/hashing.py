@@ -9,7 +9,7 @@ import secrets
 from abc import abstractmethod
 from base64 import b64encode, b64decode
 from typing import TypeVar, Any, Optional, Sequence, Dict
-from typing_extensions import Protocol, Final
+from typing_extensions import Literal, Protocol, Final, TypeAlias
 
 try:
     from passlib.context import CryptContext
@@ -18,6 +18,8 @@ except ImportError as _exc:  # pragma: no cover
     _passlib_import_exc = _exc
 
 __all__ = ['HashT', 'HashInterface', 'BuiltinHash', 'Cleartext', 'get_hash']
+
+_Pbkdf2Hashes: TypeAlias = Literal['sha1', 'sha256', 'sha512']
 
 #: Type variable for a :class:`HashInterface`.
 HashT = TypeVar('HashT', bound='HashInterface')
@@ -83,19 +85,37 @@ class BuiltinHash(HashInterface):
 
     """
 
-    __slots__: Sequence[str] = ['hash_name', 'salt_len', 'rounds']
+    __slots__: Sequence[str] = ['hash_name', 'salt_len', 'rounds',
+                                '_pbkdf2_hash']
 
-    def __init__(self, *, hash_name: str = 'sha256', salt_len: int = 16,
-                 rounds: int = 500000) -> None:
+    def __init__(self, *, hash_name: _Pbkdf2Hashes = 'sha256',
+                 salt_len: int = 16, rounds: int = 500000) -> None:
         super().__init__()
         self.hash_name: Final = hash_name
         self.salt_len: Final = salt_len
         self.rounds: Final = rounds
+        self._pbkdf2_hash = self._to_pbkdf2_hash(hash_name)
 
     def _set_unless_none(self, kwargs: Dict[str, Any],
                          key: str, val: Any) -> None:
         if val is not None:
             kwargs[key] = val
+
+    @classmethod
+    def _to_pbkdf2_hash(cls, hash_name: _Pbkdf2Hashes) -> str:
+        if hash_name == 'sha1':
+            return 'pbkdf2'
+        else:
+            return 'pbkdf2-' + hash_name
+
+    @classmethod
+    def _from_pbkdf2_hash(cls, pbkdf2_hash: str) -> str:
+        if pbkdf2_hash == 'pbkdf2':
+            return 'sha1'
+        elif pbkdf2_hash.startswith('pbkdf2-'):
+            _, hash_name = pbkdf2_hash.split('-', 1)
+            return hash_name
+        raise ValueError(f'Invalid hash name: {pbkdf2_hash}')
 
     def copy(self, *, hash_name: Optional[str] = None,
              salt_len: Optional[int] = None,
@@ -140,21 +160,18 @@ class BuiltinHash(HashInterface):
         """
         if salt is None:  # pragma: no cover
             salt = os.urandom(self.salt_len)
-        hash_name = self.hash_name
         rounds = self.rounds
-        digest = self._hash(hash_name, rounds, secret, salt)
+        digest = self._hash(self.hash_name, rounds, secret, salt)
         b64_salt = b64encode(salt).decode('ascii')
         b64_digest = b64encode(digest).decode('ascii')
-        return f'$pbkdf2-{hash_name}${rounds}${b64_salt}${b64_digest}'
+        return f'${self._pbkdf2_hash}${rounds}${b64_salt}${b64_digest}'
 
     def verify(self, secret: str, hash: str) -> bool:
-        prefix, hash_name, rounds_str, b64_salt, b64_digest = \
+        prefix, pbkdf2_hash, rounds_str, b64_salt, b64_digest = \
             hash.split('$', 4)
         if prefix != '':
             raise ValueError('Invalid hash prefix')
-        elif not hash_name.startswith('pbkdf2-'):
-            raise ValueError(f'Unrecognized hash name: {hash_name}')
-        _, hash_name = hash_name.split('-', 1)
+        hash_name = self._from_pbkdf2_hash(pbkdf2_hash)
         rounds = int(rounds_str)
         salt = b64decode(b64_salt)
         digest = b64decode(b64_digest)
