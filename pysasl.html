@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>pysasl Package &#8212; pysasl 1.0.0rc7 documentation</title>
+    <title>pysasl Package &#8212; pysasl 1.0.0rc8 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/cloud.css" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noticia+Text:400,i,b,bi|Open+Sans:400,i,b,bi|Roboto+Mono:400,i,b,bi&amp;display=swap" type="text/css" />
@@ -59,7 +59,7 @@
         <li class="right" >
           <a href="index.html" title="pysasl Documentation"
              accesskey="P">previous</a> &nbsp; &nbsp;</li>
-    <li><a href="index.html">pysasl 1.0.0rc7 documentation</a> &#187;</li>
+    <li><a href="index.html">pysasl 1.0.0rc8 documentation</a> &#187;</li>
 
         <li class="nav-item nav-item-this"><a href=""><code class="docutils literal notranslate"><span class="pre">pysasl</span></code> Package</a></li> 
       </ul>
@@ -91,10 +91,10 @@
 <dd><p>The preparation algorithm function.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>source</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – </p>
+<dd class="field-odd"><p><strong>source</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – </p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)">str</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -108,7 +108,7 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>mechanisms</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Sequence" title="(in Python v3.10)"><em>Sequence</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.10)"><em>Union</em></a><em>[</em><a class="reference internal" href="pysasl.mechanism.html#pysasl.mechanism.ServerMechanism" title="pysasl.mechanism.ServerMechanism"><em>ServerMechanism</em></a><em>, </em><a class="reference internal" href="pysasl.mechanism.html#pysasl.mechanism.ClientMechanism" title="pysasl.mechanism.ClientMechanism"><em>ClientMechanism</em></a><em>]</em><em>]</em>) – List of available SASL mechanism objects.</p></li>
+<li><p><strong>mechanisms</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Sequence" title="(in Python v3.11)"><em>Sequence</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.11)"><em>Union</em></a><em>[</em><a class="reference internal" href="pysasl.mechanism.html#pysasl.mechanism.ServerMechanism" title="pysasl.mechanism.ServerMechanism"><em>ServerMechanism</em></a><em>, </em><a class="reference internal" href="pysasl.mechanism.html#pysasl.mechanism.ClientMechanism" title="pysasl.mechanism.ClientMechanism"><em>ClientMechanism</em></a><em>]</em><em>]</em>) – List of available SASL mechanism objects.</p></li>
 <li><p><strong>config</strong> (<a class="reference internal" href="pysasl.config.html#pysasl.config.SASLConfig" title="pysasl.config.SASLConfig"><em>SASLConfig</em></a>) – The configuration object.</p></li>
 </ul>
 </dd>
@@ -139,7 +139,7 @@ name.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>names</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.10)"><em>Iterable</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.10)"><em>bytes</em></a><em>]</em>) – The authentication mechanism names.</p></li>
+<li><p><strong>names</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.11)"><em>Iterable</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.11)"><em>bytes</em></a><em>]</em>) – The authentication mechanism names.</p></li>
 <li><p><strong>config</strong> (<a class="reference internal" href="pysasl.config.html#pysasl.config.SASLConfig" title="pysasl.config.SASLConfig"><em>SASLConfig</em></a>) – The configuration object.</p></li>
 </ul>
 </dd>
@@ -147,7 +147,7 @@ name.</p>
 <dd class="field-even"><p>A new <a class="reference internal" href="#pysasl.SASLAuth" title="pysasl.SASLAuth"><code class="xref py py-class docutils literal notranslate"><span class="pre">SASLAuth</span></code></a> object.</p>
 </dd>
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#KeyError" title="(in Python v3.10)"><strong>KeyError</strong></a> – A mechanism name was not recognized.</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#KeyError" title="(in Python v3.11)"><strong>KeyError</strong></a> – A mechanism name was not recognized.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference internal" href="#pysasl.SASLAuth" title="pysasl.SASLAuth"><em>SASLAuth</em></a></p>
@@ -157,13 +157,13 @@ name.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="pysasl.SASLAuth.server_mechanisms">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">server_mechanisms</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Sequence" title="(in Python v3.10)"><span class="pre">Sequence</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pysasl.mechanism.html#pysasl.mechanism.ServerMechanism" title="pysasl.mechanism.ServerMechanism"><span class="pre">ServerMechanism</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#pysasl.SASLAuth.server_mechanisms" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">server_mechanisms</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Sequence" title="(in Python v3.11)"><span class="pre">Sequence</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pysasl.mechanism.html#pysasl.mechanism.ServerMechanism" title="pysasl.mechanism.ServerMechanism"><span class="pre">ServerMechanism</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#pysasl.SASLAuth.server_mechanisms" title="Permalink to this definition">¶</a></dt>
 <dd><p>List of available <code class="xref py py-class docutils literal notranslate"><span class="pre">ServerMechanism</span></code> objects.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="pysasl.SASLAuth.client_mechanisms">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">client_mechanisms</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Sequence" title="(in Python v3.10)"><span class="pre">Sequence</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pysasl.mechanism.html#pysasl.mechanism.ClientMechanism" title="pysasl.mechanism.ClientMechanism"><span class="pre">ClientMechanism</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#pysasl.SASLAuth.client_mechanisms" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">client_mechanisms</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Sequence" title="(in Python v3.11)"><span class="pre">Sequence</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pysasl.mechanism.html#pysasl.mechanism.ClientMechanism" title="pysasl.mechanism.ClientMechanism"><span class="pre">ClientMechanism</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#pysasl.SASLAuth.client_mechanisms" title="Permalink to this definition">¶</a></dt>
 <dd><p>List of available <code class="xref py py-class docutils literal notranslate"><span class="pre">ClientMechanism</span></code> objects.</p>
 </dd></dl>
 
@@ -174,13 +174,13 @@ name.</p>
 <code class="xref py py-class docutils literal notranslate"><span class="pre">ServerMechanism</span></code> will be returned.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.10)"><em>bytes</em></a>) – The SASL mechanism name.</p>
+<dd class="field-odd"><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.11)"><em>bytes</em></a>) – The SASL mechanism name.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>The mechanism object or <code class="docutils literal notranslate"><span class="pre">None</span></code></p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><em>Optional</em></a>[<a class="reference internal" href="pysasl.mechanism.html#pysasl.mechanism.ServerMechanism" title="pysasl.mechanism.ServerMechanism"><em>ServerMechanism</em></a>]</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><em>Optional</em></a>[<a class="reference internal" href="pysasl.mechanism.html#pysasl.mechanism.ServerMechanism" title="pysasl.mechanism.ServerMechanism"><em>ServerMechanism</em></a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -192,13 +192,13 @@ name.</p>
 <code class="xref py py-class docutils literal notranslate"><span class="pre">ClientMechanism</span></code> will be returned.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.10)"><em>bytes</em></a>) – The SASL mechanism name.</p>
+<dd class="field-odd"><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.11)"><em>bytes</em></a>) – The SASL mechanism name.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>The mechanism object or <code class="docutils literal notranslate"><span class="pre">None</span></code></p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><em>Optional</em></a>[<a class="reference internal" href="pysasl.mechanism.html#pysasl.mechanism.ClientMechanism" title="pysasl.mechanism.ClientMechanism"><em>ClientMechanism</em></a>]</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><em>Optional</em></a>[<a class="reference internal" href="pysasl.mechanism.html#pysasl.mechanism.ClientMechanism" title="pysasl.mechanism.ClientMechanism"><em>ClientMechanism</em></a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -300,7 +300,7 @@ name.</p>
         <li class="right" >
           <a href="index.html" title="pysasl Documentation"
              >previous</a> &nbsp; &nbsp;</li>
-    <li><a href="index.html">pysasl 1.0.0rc7 documentation</a> &#187;</li>
+    <li><a href="index.html">pysasl 1.0.0rc8 documentation</a> &#187;</li>
 
         <li class="nav-item nav-item-this"><a href=""><code class="docutils literal notranslate"><span class="pre">pysasl</span></code> Package</a></li> 
       </ul>
@@ -309,7 +309,7 @@ name.</p>
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2022, Ian Good.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.2.3.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
     </div>
     <!-- cloud_sptheme 1.4 -->
   </body>

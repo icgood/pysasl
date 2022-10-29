@@ -8,6 +8,8 @@
 ========================
 
 .. toctree::
+   :titlesonly:
+   :caption: Contents:
 
    pysasl
    pysasl.config
