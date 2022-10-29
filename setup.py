@@ -28,7 +28,7 @@ with open('LICENSE.md') as fh:
     license = fh.read()
 
 setup(name='pysasl',
-      version='1.0.0.rc7',
+      version='1.0.0.rc8',
       author='Ian Good',
       author_email='ian@icgood.net',
       description='Pure Python SASL client and server library.',
@@ -56,4 +56,5 @@ setup(name='pysasl',
                    'Programming Language :: Python :: 3.7',
                    'Programming Language :: Python :: 3.8',
                    'Programming Language :: Python :: 3.9',
-                   'Programming Language :: Python :: 3.10'])
+                   'Programming Language :: Python :: 3.10',
+                   'Programming Language :: Python :: 3.11'])

@@ -1,7 +1,13 @@
 # type: ignore
 
+import inspect
 import os
 import os.path
+
+if not hasattr(inspect, 'getargspec'):
+    # https://github.com/pyinvoke/invoke/issues/833
+    inspect.getargspec = inspect.getfullargspec
+
 from invoke import task, Collection
 
 from . import check, doc, lint, test, types
