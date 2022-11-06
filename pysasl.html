@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>pysasl Package &#8212; pysasl 1.0.0rc8 documentation</title>
+    <title>pysasl Package &#8212; pysasl 1.0.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/cloud.css" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noticia+Text:400,i,b,bi|Open+Sans:400,i,b,bi|Roboto+Mono:400,i,b,bi&amp;display=swap" type="text/css" />
@@ -59,7 +59,7 @@
         <li class="right" >
           <a href="index.html" title="pysasl Documentation"
              accesskey="P">previous</a> &nbsp; &nbsp;</li>
-    <li><a href="index.html">pysasl 1.0.0rc8 documentation</a> &#187;</li>
+    <li><a href="index.html">pysasl 1.0.0 documentation</a> &#187;</li>
 
         <li class="nav-item nav-item-this"><a href=""><code class="docutils literal notranslate"><span class="pre">pysasl</span></code> Package</a></li> 
       </ul>
@@ -74,33 +74,6 @@
             
   <section id="module-pysasl">
 <span id="pysasl-package"></span><h1><code class="docutils literal notranslate"><span class="pre">pysasl</span></code> Package<a class="headerlink" href="#module-pysasl" title="Permalink to this heading">¶</a></h1>
-<dl class="py class">
-<dt class="sig sig-object py" id="pysasl.SASLConfig">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pysasl.</span></span><span class="sig-name descname"><span class="pre">SASLConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prepare=&lt;function</span> <span class="pre">saslprep&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysasl/config.html#SASLConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pysasl.SASLConfig" title="Permalink to this definition">¶</a></dt>
-<dd><p>Provides any configuration necessary for
-<a class="reference internal" href="pysasl.mechanism.html#pysasl.mechanism.ServerMechanism" title="pysasl.mechanism.ServerMechanism"><code class="xref py py-class docutils literal notranslate"><span class="pre">ServerMechanism</span></code></a> or
-<a class="reference internal" href="pysasl.mechanism.html#pysasl.mechanism.ClientMechanism" title="pysasl.mechanism.ClientMechanism"><code class="xref py py-class docutils literal notranslate"><span class="pre">ClientMechanism</span></code></a> instances.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>prepare</strong> (<a class="reference internal" href="pysasl.prep.html#pysasl.prep.Preparation" title="pysasl.prep.Preparation"><em>Preparation</em></a>) – </p>
-</dd>
-</dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="pysasl.SASLConfig.prepare">
-<span class="sig-name descname"><span class="pre">prepare</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pysasl.SASLConfig.prepare" title="Permalink to this definition">¶</a></dt>
-<dd><p>The preparation algorithm function.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>source</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – </p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)">str</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
 <dl class="py class">
 <dt class="sig sig-object py" id="pysasl.SASLAuth">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pysasl.</span></span><span class="sig-name descname"><span class="pre">SASLAuth</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mechanisms</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">SASLConfig()</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysasl.html#SASLAuth"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pysasl.SASLAuth" title="Permalink to this definition">¶</a></dt>
@@ -158,20 +131,21 @@ name.</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="pysasl.SASLAuth.server_mechanisms">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">server_mechanisms</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Sequence" title="(in Python v3.11)"><span class="pre">Sequence</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pysasl.mechanism.html#pysasl.mechanism.ServerMechanism" title="pysasl.mechanism.ServerMechanism"><span class="pre">ServerMechanism</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#pysasl.SASLAuth.server_mechanisms" title="Permalink to this definition">¶</a></dt>
-<dd><p>List of available <code class="xref py py-class docutils literal notranslate"><span class="pre">ServerMechanism</span></code> objects.</p>
+<dd><p>List of available <a class="reference internal" href="pysasl.mechanism.html#pysasl.mechanism.ServerMechanism" title="pysasl.mechanism.ServerMechanism"><code class="xref py py-class docutils literal notranslate"><span class="pre">ServerMechanism</span></code></a>
+objects.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="pysasl.SASLAuth.client_mechanisms">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">client_mechanisms</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Sequence" title="(in Python v3.11)"><span class="pre">Sequence</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pysasl.mechanism.html#pysasl.mechanism.ClientMechanism" title="pysasl.mechanism.ClientMechanism"><span class="pre">ClientMechanism</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#pysasl.SASLAuth.client_mechanisms" title="Permalink to this definition">¶</a></dt>
-<dd><p>List of available <code class="xref py py-class docutils literal notranslate"><span class="pre">ClientMechanism</span></code> objects.</p>
+<dd><p>List of available <a class="reference internal" href="pysasl.mechanism.html#pysasl.mechanism.ClientMechanism" title="pysasl.mechanism.ClientMechanism"><code class="xref py py-class docutils literal notranslate"><span class="pre">ClientMechanism</span></code></a>
+objects.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pysasl.SASLAuth.get_server">
 <span class="sig-name descname"><span class="pre">get_server</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysasl.html#SASLAuth.get_server"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pysasl.SASLAuth.get_server" title="Permalink to this definition">¶</a></dt>
-<dd><p>Like <code class="xref py py-meth docutils literal notranslate"><span class="pre">get()</span></code>, but only mechanisms inheriting
-<code class="xref py py-class docutils literal notranslate"><span class="pre">ServerMechanism</span></code> will be returned.</p>
+<dd><p>Get a <a class="reference internal" href="pysasl.mechanism.html#pysasl.mechanism.ClientMechanism" title="pysasl.mechanism.ClientMechanism"><code class="xref py py-class docutils literal notranslate"><span class="pre">ClientMechanism</span></code></a> by name.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.11)"><em>bytes</em></a>) – The SASL mechanism name.</p>
@@ -188,8 +162,7 @@ name.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="pysasl.SASLAuth.get_client">
 <span class="sig-name descname"><span class="pre">get_client</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysasl.html#SASLAuth.get_client"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pysasl.SASLAuth.get_client" title="Permalink to this definition">¶</a></dt>
-<dd><p>Like <code class="xref py py-meth docutils literal notranslate"><span class="pre">get()</span></code>, but only mechanisms inheriting
-<code class="xref py py-class docutils literal notranslate"><span class="pre">ClientMechanism</span></code> will be returned.</p>
+<dd><p>Get a <a class="reference internal" href="pysasl.mechanism.html#pysasl.mechanism.ClientMechanism" title="pysasl.mechanism.ClientMechanism"><code class="xref py py-class docutils literal notranslate"><span class="pre">ClientMechanism</span></code></a> by name.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.11)"><em>bytes</em></a>) – The SASL mechanism name.</p>
@@ -217,10 +190,6 @@ name.</p>
     <h3><a href="index.html">Page contents</a></h3>
     <ul>
 <li><a class="reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">pysasl</span></code> Package</a><ul>
-<li><a class="reference internal" href="#pysasl.SASLConfig"><code class="docutils literal notranslate"><span class="pre">SASLConfig</span></code></a><ul>
-<li><a class="reference internal" href="#pysasl.SASLConfig.prepare"><code class="docutils literal notranslate"><span class="pre">SASLConfig.prepare()</span></code></a></li>
-</ul>
-</li>
 <li><a class="reference internal" href="#pysasl.SASLAuth"><code class="docutils literal notranslate"><span class="pre">SASLAuth</span></code></a><ul>
 <li><a class="reference internal" href="#pysasl.SASLAuth.defaults"><code class="docutils literal notranslate"><span class="pre">SASLAuth.defaults()</span></code></a></li>
 <li><a class="reference internal" href="#pysasl.SASLAuth.named"><code class="docutils literal notranslate"><span class="pre">SASLAuth.named()</span></code></a></li>
@@ -300,7 +269,7 @@ name.</p>
         <li class="right" >
           <a href="index.html" title="pysasl Documentation"
              >previous</a> &nbsp; &nbsp;</li>
-    <li><a href="index.html">pysasl 1.0.0rc8 documentation</a> &#187;</li>
+    <li><a href="index.html">pysasl 1.0.0 documentation</a> &#187;</li>
 
         <li class="nav-item nav-item-this"><a href=""><code class="docutils literal notranslate"><span class="pre">pysasl</span></code> Package</a></li> 
       </ul>

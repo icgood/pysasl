@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>pysasl.mechanism Package &#8212; pysasl 1.0.0rc8 documentation</title>
+    <title>pysasl.mechanism Package &#8212; pysasl 1.0.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/cloud.css" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noticia+Text:400,i,b,bi|Open+Sans:400,i,b,bi|Roboto+Mono:400,i,b,bi&amp;display=swap" type="text/css" />
@@ -59,7 +59,7 @@
         <li class="right" >
           <a href="pysasl.identity.html" title="pysasl.identity Package"
              accesskey="P">previous</a> &nbsp; &nbsp;</li>
-    <li><a href="index.html">pysasl 1.0.0rc8 documentation</a> &#187;</li>
+    <li><a href="index.html">pysasl 1.0.0 documentation</a> &#187;</li>
 
         <li class="nav-item nav-item-this"><a href=""><code class="docutils literal notranslate"><span class="pre">pysasl.mechanism</span></code> Package</a></li> 
       </ul>
@@ -72,8 +72,10 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section id="module-pysasl.mechanism">
-<span id="pysasl-mechanism-package"></span><h1><code class="docutils literal notranslate"><span class="pre">pysasl.mechanism</span></code> Package<a class="headerlink" href="#module-pysasl.mechanism" title="Permalink to this heading">¶</a></h1>
+  <section id="pysasl-mechanism-package">
+<h1><code class="docutils literal notranslate"><span class="pre">pysasl.mechanism</span></code> Package<a class="headerlink" href="#pysasl-mechanism-package" title="Permalink to this heading">¶</a></h1>
+<section id="module-pysasl.mechanism">
+<span id="pysasl-mechanism-module"></span><h2><code class="docutils literal notranslate"><span class="pre">pysasl.mechanism</span></code> Module<a class="headerlink" href="#module-pysasl.mechanism" title="Permalink to this heading">¶</a></h2>
 <dl class="py data">
 <dt class="sig sig-object py" id="pysasl.mechanism.Mechanism">
 <span class="sig-prename descclassname"><span class="pre">pysasl.mechanism.</span></span><span class="sig-name descname"><span class="pre">Mechanism</span></span><a class="headerlink" href="#pysasl.mechanism.Mechanism" title="Permalink to this definition">¶</a></dt>
@@ -147,9 +149,10 @@ credential verification.</p>
 <dd><p>For SASL server-side credential verification, receives responses
 from the client and issues challenges until it has everything needed to
 verify the credentials.</p>
-<p>If a challenge is necessary, a <a class="reference internal" href="#pysasl.mechanism.ServerChallenge" title="pysasl.mechanism.ServerChallenge"><code class="xref py py-class docutils literal notranslate"><span class="pre">ServerChallenge</span></code></a> exception will
-be raised. The response to this challenge must then be added to
-<em>responses</em> in the next call to <a class="reference internal" href="#pysasl.mechanism.ServerMechanism.server_attempt" title="pysasl.mechanism.ServerMechanism.server_attempt"><code class="xref py py-meth docutils literal notranslate"><span class="pre">server_attempt()</span></code></a>.</p>
+<p>If a challenge is necessary, a
+<a class="reference internal" href="#pysasl.mechanism.ServerChallenge" title="pysasl.mechanism.ServerChallenge"><code class="xref py py-class docutils literal notranslate"><span class="pre">ServerChallenge</span></code></a> exception will be raised.
+The response to this challenge must then be added to <em>responses</em> in the
+next call to <a class="reference internal" href="#pysasl.mechanism.ServerMechanism.server_attempt" title="pysasl.mechanism.ServerMechanism.server_attempt"><code class="xref py py-meth docutils literal notranslate"><span class="pre">server_attempt()</span></code></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>responses</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Sequence" title="(in Python v3.11)"><em>Sequence</em></a><em>[</em><a class="reference internal" href="#pysasl.mechanism.ChallengeResponse" title="pysasl.mechanism.ChallengeResponse"><em>ChallengeResponse</em></a><em>]</em>) – The challenge-response exchanges thus far.</p>
@@ -214,7 +217,10 @@ a final success or failure.</p>
 
 </dd></dl>
 
-<span class="target" id="module-pysasl.mechanism.plain"></span><dl class="py class">
+</section>
+<section id="module-pysasl.mechanism.plain">
+<span id="pysasl-mechanism-plain-module"></span><h2><code class="docutils literal notranslate"><span class="pre">pysasl.mechanism.plain</span></code> Module<a class="headerlink" href="#module-pysasl.mechanism.plain" title="Permalink to this heading">¶</a></h2>
+<dl class="py class">
 <dt class="sig sig-object py" id="pysasl.mechanism.plain.PlainMechanism">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pysasl.mechanism.plain.</span></span><span class="sig-name descname"><span class="pre">PlainMechanism</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">b'PLAIN'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">SASLConfig()</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysasl/mechanism/plain.html#PlainMechanism"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pysasl.mechanism.plain.PlainMechanism" title="Permalink to this definition">¶</a></dt>
 <dd><p>Implements the PLAIN authentication mechanism.</p>
@@ -232,9 +238,10 @@ a final success or failure.</p>
 <dd><p>For SASL server-side credential verification, receives responses
 from the client and issues challenges until it has everything needed to
 verify the credentials.</p>
-<p>If a challenge is necessary, a <code class="xref py py-class docutils literal notranslate"><span class="pre">ServerChallenge</span></code> exception will
-be raised. The response to this challenge must then be added to
-<em>responses</em> in the next call to <a class="reference internal" href="#pysasl.mechanism.plain.PlainMechanism.server_attempt" title="pysasl.mechanism.plain.PlainMechanism.server_attempt"><code class="xref py py-meth docutils literal notranslate"><span class="pre">server_attempt()</span></code></a>.</p>
+<p>If a challenge is necessary, a
+<a class="reference internal" href="#pysasl.mechanism.ServerChallenge" title="pysasl.mechanism.ServerChallenge"><code class="xref py py-class docutils literal notranslate"><span class="pre">ServerChallenge</span></code></a> exception will be raised.
+The response to this challenge must then be added to <em>responses</em> in the
+next call to <a class="reference internal" href="#pysasl.mechanism.plain.PlainMechanism.server_attempt" title="pysasl.mechanism.plain.PlainMechanism.server_attempt"><code class="xref py py-meth docutils literal notranslate"><span class="pre">server_attempt()</span></code></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>responses</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Sequence" title="(in Python v3.11)"><em>Sequence</em></a><em>[</em><a class="reference internal" href="#pysasl.mechanism.ChallengeResponse" title="pysasl.mechanism.ChallengeResponse"><em>ChallengeResponse</em></a><em>]</em>) – The challenge-response exchanges thus far.</p>
@@ -284,7 +291,10 @@ a final success or failure.</p>
 
 </dd></dl>
 
-<span class="target" id="module-pysasl.mechanism.login"></span><dl class="py class">
+</section>
+<section id="module-pysasl.mechanism.login">
+<span id="pysasl-mechanism-login-module"></span><h2><code class="docutils literal notranslate"><span class="pre">pysasl.mechanism.login</span></code> Module<a class="headerlink" href="#module-pysasl.mechanism.login" title="Permalink to this heading">¶</a></h2>
+<dl class="py class">
 <dt class="sig sig-object py" id="pysasl.mechanism.login.LoginMechanism">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pysasl.mechanism.login.</span></span><span class="sig-name descname"><span class="pre">LoginMechanism</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">b'LOGIN'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">SASLConfig()</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysasl/mechanism/login.html#LoginMechanism"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pysasl.mechanism.login.LoginMechanism" title="Permalink to this definition">¶</a></dt>
 <dd><p>Implements the LOGIN authentication mechanism.</p>
@@ -302,9 +312,10 @@ a final success or failure.</p>
 <dd><p>For SASL server-side credential verification, receives responses
 from the client and issues challenges until it has everything needed to
 verify the credentials.</p>
-<p>If a challenge is necessary, a <code class="xref py py-class docutils literal notranslate"><span class="pre">ServerChallenge</span></code> exception will
-be raised. The response to this challenge must then be added to
-<em>responses</em> in the next call to <a class="reference internal" href="#pysasl.mechanism.login.LoginMechanism.server_attempt" title="pysasl.mechanism.login.LoginMechanism.server_attempt"><code class="xref py py-meth docutils literal notranslate"><span class="pre">server_attempt()</span></code></a>.</p>
+<p>If a challenge is necessary, a
+<a class="reference internal" href="#pysasl.mechanism.ServerChallenge" title="pysasl.mechanism.ServerChallenge"><code class="xref py py-class docutils literal notranslate"><span class="pre">ServerChallenge</span></code></a> exception will be raised.
+The response to this challenge must then be added to <em>responses</em> in the
+next call to <a class="reference internal" href="#pysasl.mechanism.login.LoginMechanism.server_attempt" title="pysasl.mechanism.login.LoginMechanism.server_attempt"><code class="xref py py-meth docutils literal notranslate"><span class="pre">server_attempt()</span></code></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>responses</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Sequence" title="(in Python v3.11)"><em>Sequence</em></a><em>[</em><a class="reference internal" href="#pysasl.mechanism.ChallengeResponse" title="pysasl.mechanism.ChallengeResponse"><em>ChallengeResponse</em></a><em>]</em>) – The challenge-response exchanges thus far.</p>
@@ -354,7 +365,10 @@ a final success or failure.</p>
 
 </dd></dl>
 
-<span class="target" id="module-pysasl.mechanism.crammd5"></span><dl class="py class">
+</section>
+<section id="module-pysasl.mechanism.crammd5">
+<span id="pysasl-mechanism-crammd5-module"></span><h2><code class="docutils literal notranslate"><span class="pre">pysasl.mechanism.crammd5</span></code> Module<a class="headerlink" href="#module-pysasl.mechanism.crammd5" title="Permalink to this heading">¶</a></h2>
+<dl class="py class">
 <dt class="sig sig-object py" id="pysasl.mechanism.crammd5.CramMD5Result">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pysasl.mechanism.crammd5.</span></span><span class="sig-name descname"><span class="pre">CramMD5Result</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">challenge</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">digest</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysasl/mechanism/crammd5.html#CramMD5Result"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pysasl.mechanism.crammd5.CramMD5Result" title="Permalink to this definition">¶</a></dt>
 <dd><p>Because this mechanism uses hash algorithms to compare secrets, the
@@ -428,9 +442,10 @@ stored server-side.</p>
 <dd><p>For SASL server-side credential verification, receives responses
 from the client and issues challenges until it has everything needed to
 verify the credentials.</p>
-<p>If a challenge is necessary, a <code class="xref py py-class docutils literal notranslate"><span class="pre">ServerChallenge</span></code> exception will
-be raised. The response to this challenge must then be added to
-<em>responses</em> in the next call to <a class="reference internal" href="#pysasl.mechanism.crammd5.CramMD5Mechanism.server_attempt" title="pysasl.mechanism.crammd5.CramMD5Mechanism.server_attempt"><code class="xref py py-meth docutils literal notranslate"><span class="pre">server_attempt()</span></code></a>.</p>
+<p>If a challenge is necessary, a
+<a class="reference internal" href="#pysasl.mechanism.ServerChallenge" title="pysasl.mechanism.ServerChallenge"><code class="xref py py-class docutils literal notranslate"><span class="pre">ServerChallenge</span></code></a> exception will be raised.
+The response to this challenge must then be added to <em>responses</em> in the
+next call to <a class="reference internal" href="#pysasl.mechanism.crammd5.CramMD5Mechanism.server_attempt" title="pysasl.mechanism.crammd5.CramMD5Mechanism.server_attempt"><code class="xref py py-meth docutils literal notranslate"><span class="pre">server_attempt()</span></code></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>responses</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Sequence" title="(in Python v3.11)"><em>Sequence</em></a><em>[</em><a class="reference internal" href="#pysasl.mechanism.ChallengeResponse" title="pysasl.mechanism.ChallengeResponse"><em>ChallengeResponse</em></a><em>]</em>) – The challenge-response exchanges thus far.</p>
@@ -480,7 +495,10 @@ a final success or failure.</p>
 
 </dd></dl>
 
-<span class="target" id="module-pysasl.mechanism.oauth"></span><dl class="py class">
+</section>
+<section id="module-pysasl.mechanism.oauth">
+<span id="pysasl-mechanism-oauth-module"></span><h2><code class="docutils literal notranslate"><span class="pre">pysasl.mechanism.oauth</span></code> Module<a class="headerlink" href="#module-pysasl.mechanism.oauth" title="Permalink to this heading">¶</a></h2>
+<dl class="py class">
 <dt class="sig sig-object py" id="pysasl.mechanism.oauth.OAuth2Mechanism">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pysasl.mechanism.oauth.</span></span><span class="sig-name descname"><span class="pre">OAuth2Mechanism</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">b'XOAUTH2'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">SASLConfig()</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysasl/mechanism/oauth.html#OAuth2Mechanism"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pysasl.mechanism.oauth.OAuth2Mechanism" title="Permalink to this definition">¶</a></dt>
 <dd><p>Implements the <a class="reference external" href="https://developers.google.com/gmail/xoauth2_protocol">XOAUTH2</a> authentication mechanism, used by <a class="reference external" href="https://tools.ietf.org/html/rfc6749">OAuth 2.0</a>
@@ -499,9 +517,10 @@ systems to authenticate using access tokens.</p>
 <dd><p>For SASL server-side credential verification, receives responses
 from the client and issues challenges until it has everything needed to
 verify the credentials.</p>
-<p>If a challenge is necessary, a <code class="xref py py-class docutils literal notranslate"><span class="pre">ServerChallenge</span></code> exception will
-be raised. The response to this challenge must then be added to
-<em>responses</em> in the next call to <a class="reference internal" href="#pysasl.mechanism.oauth.OAuth2Mechanism.server_attempt" title="pysasl.mechanism.oauth.OAuth2Mechanism.server_attempt"><code class="xref py py-meth docutils literal notranslate"><span class="pre">server_attempt()</span></code></a>.</p>
+<p>If a challenge is necessary, a
+<a class="reference internal" href="#pysasl.mechanism.ServerChallenge" title="pysasl.mechanism.ServerChallenge"><code class="xref py py-class docutils literal notranslate"><span class="pre">ServerChallenge</span></code></a> exception will be raised.
+The response to this challenge must then be added to <em>responses</em> in the
+next call to <a class="reference internal" href="#pysasl.mechanism.oauth.OAuth2Mechanism.server_attempt" title="pysasl.mechanism.oauth.OAuth2Mechanism.server_attempt"><code class="xref py py-meth docutils literal notranslate"><span class="pre">server_attempt()</span></code></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>responses</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Sequence" title="(in Python v3.11)"><em>Sequence</em></a><em>[</em><a class="reference internal" href="#pysasl.mechanism.ChallengeResponse" title="pysasl.mechanism.ChallengeResponse"><em>ChallengeResponse</em></a><em>]</em>) – The challenge-response exchanges thus far.</p>
@@ -551,7 +570,10 @@ a final success or failure.</p>
 
 </dd></dl>
 
-<span class="target" id="module-pysasl.mechanism.external"></span><dl class="py class">
+</section>
+<section id="module-pysasl.mechanism.external">
+<span id="pysasl-mechanism-external-module"></span><h2><code class="docutils literal notranslate"><span class="pre">pysasl.mechanism.external</span></code> Module<a class="headerlink" href="#module-pysasl.mechanism.external" title="Permalink to this heading">¶</a></h2>
+<dl class="py class">
 <dt class="sig sig-object py" id="pysasl.mechanism.external.ExternalMechanism">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pysasl.mechanism.external.</span></span><span class="sig-name descname"><span class="pre">ExternalMechanism</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">b'EXTERNAL'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">SASLConfig()</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysasl/mechanism/external.html#ExternalMechanism"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pysasl.mechanism.external.ExternalMechanism" title="Permalink to this definition">¶</a></dt>
 <dd><p>Implements the EXTERNAL authentication mechanism.</p>
@@ -573,9 +595,10 @@ a final success or failure.</p>
 <dd><p>For SASL server-side credential verification, receives responses
 from the client and issues challenges until it has everything needed to
 verify the credentials.</p>
-<p>If a challenge is necessary, a <code class="xref py py-class docutils literal notranslate"><span class="pre">ServerChallenge</span></code> exception will
-be raised. The response to this challenge must then be added to
-<em>responses</em> in the next call to <a class="reference internal" href="#pysasl.mechanism.external.ExternalMechanism.server_attempt" title="pysasl.mechanism.external.ExternalMechanism.server_attempt"><code class="xref py py-meth docutils literal notranslate"><span class="pre">server_attempt()</span></code></a>.</p>
+<p>If a challenge is necessary, a
+<a class="reference internal" href="#pysasl.mechanism.ServerChallenge" title="pysasl.mechanism.ServerChallenge"><code class="xref py py-class docutils literal notranslate"><span class="pre">ServerChallenge</span></code></a> exception will be raised.
+The response to this challenge must then be added to <em>responses</em> in the
+next call to <a class="reference internal" href="#pysasl.mechanism.external.ExternalMechanism.server_attempt" title="pysasl.mechanism.external.ExternalMechanism.server_attempt"><code class="xref py py-meth docutils literal notranslate"><span class="pre">server_attempt()</span></code></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>responses</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Sequence" title="(in Python v3.11)"><em>Sequence</em></a><em>[</em><a class="reference internal" href="#pysasl.mechanism.ChallengeResponse" title="pysasl.mechanism.ChallengeResponse"><em>ChallengeResponse</em></a><em>]</em>) – The challenge-response exchanges thus far.</p>
@@ -626,6 +649,7 @@ a final success or failure.</p>
 </dd></dl>
 
 </section>
+</section>
 
 
             <div class="clearer"></div>
@@ -637,6 +661,7 @@ a final success or failure.</p>
     <h3><a href="index.html">Page contents</a></h3>
     <ul>
 <li><a class="reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">pysasl.mechanism</span></code> Package</a><ul>
+<li><a class="reference internal" href="#module-pysasl.mechanism"><code class="docutils literal notranslate"><span class="pre">pysasl.mechanism</span></code> Module</a><ul>
 <li><a class="reference internal" href="#pysasl.mechanism.Mechanism"><code class="docutils literal notranslate"><span class="pre">Mechanism</span></code></a></li>
 <li><a class="reference internal" href="#pysasl.mechanism.ServerChallenge"><code class="docutils literal notranslate"><span class="pre">ServerChallenge</span></code></a><ul>
 <li><a class="reference internal" href="#pysasl.mechanism.ServerChallenge.data"><code class="docutils literal notranslate"><span class="pre">ServerChallenge.data</span></code></a></li>
@@ -655,16 +680,25 @@ a final success or failure.</p>
 <li><a class="reference internal" href="#pysasl.mechanism.ClientMechanism.client_attempt"><code class="docutils literal notranslate"><span class="pre">ClientMechanism.client_attempt()</span></code></a></li>
 </ul>
 </li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-pysasl.mechanism.plain"><code class="docutils literal notranslate"><span class="pre">pysasl.mechanism.plain</span></code> Module</a><ul>
 <li><a class="reference internal" href="#pysasl.mechanism.plain.PlainMechanism"><code class="docutils literal notranslate"><span class="pre">PlainMechanism</span></code></a><ul>
 <li><a class="reference internal" href="#pysasl.mechanism.plain.PlainMechanism.server_attempt"><code class="docutils literal notranslate"><span class="pre">PlainMechanism.server_attempt()</span></code></a></li>
 <li><a class="reference internal" href="#pysasl.mechanism.plain.PlainMechanism.client_attempt"><code class="docutils literal notranslate"><span class="pre">PlainMechanism.client_attempt()</span></code></a></li>
 </ul>
 </li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-pysasl.mechanism.login"><code class="docutils literal notranslate"><span class="pre">pysasl.mechanism.login</span></code> Module</a><ul>
 <li><a class="reference internal" href="#pysasl.mechanism.login.LoginMechanism"><code class="docutils literal notranslate"><span class="pre">LoginMechanism</span></code></a><ul>
 <li><a class="reference internal" href="#pysasl.mechanism.login.LoginMechanism.server_attempt"><code class="docutils literal notranslate"><span class="pre">LoginMechanism.server_attempt()</span></code></a></li>
 <li><a class="reference internal" href="#pysasl.mechanism.login.LoginMechanism.client_attempt"><code class="docutils literal notranslate"><span class="pre">LoginMechanism.client_attempt()</span></code></a></li>
 </ul>
 </li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-pysasl.mechanism.crammd5"><code class="docutils literal notranslate"><span class="pre">pysasl.mechanism.crammd5</span></code> Module</a><ul>
 <li><a class="reference internal" href="#pysasl.mechanism.crammd5.CramMD5Result"><code class="docutils literal notranslate"><span class="pre">CramMD5Result</span></code></a><ul>
 <li><a class="reference internal" href="#pysasl.mechanism.crammd5.CramMD5Result.authcid"><code class="docutils literal notranslate"><span class="pre">CramMD5Result.authcid</span></code></a></li>
 <li><a class="reference internal" href="#pysasl.mechanism.crammd5.CramMD5Result.authzid"><code class="docutils literal notranslate"><span class="pre">CramMD5Result.authzid</span></code></a></li>
@@ -676,14 +710,22 @@ a final success or failure.</p>
 <li><a class="reference internal" href="#pysasl.mechanism.crammd5.CramMD5Mechanism.client_attempt"><code class="docutils literal notranslate"><span class="pre">CramMD5Mechanism.client_attempt()</span></code></a></li>
 </ul>
 </li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-pysasl.mechanism.oauth"><code class="docutils literal notranslate"><span class="pre">pysasl.mechanism.oauth</span></code> Module</a><ul>
 <li><a class="reference internal" href="#pysasl.mechanism.oauth.OAuth2Mechanism"><code class="docutils literal notranslate"><span class="pre">OAuth2Mechanism</span></code></a><ul>
 <li><a class="reference internal" href="#pysasl.mechanism.oauth.OAuth2Mechanism.server_attempt"><code class="docutils literal notranslate"><span class="pre">OAuth2Mechanism.server_attempt()</span></code></a></li>
 <li><a class="reference internal" href="#pysasl.mechanism.oauth.OAuth2Mechanism.client_attempt"><code class="docutils literal notranslate"><span class="pre">OAuth2Mechanism.client_attempt()</span></code></a></li>
 </ul>
 </li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-pysasl.mechanism.external"><code class="docutils literal notranslate"><span class="pre">pysasl.mechanism.external</span></code> Module</a><ul>
 <li><a class="reference internal" href="#pysasl.mechanism.external.ExternalMechanism"><code class="docutils literal notranslate"><span class="pre">ExternalMechanism</span></code></a><ul>
 <li><a class="reference internal" href="#pysasl.mechanism.external.ExternalMechanism.server_attempt"><code class="docutils literal notranslate"><span class="pre">ExternalMechanism.server_attempt()</span></code></a></li>
 <li><a class="reference internal" href="#pysasl.mechanism.external.ExternalMechanism.client_attempt"><code class="docutils literal notranslate"><span class="pre">ExternalMechanism.client_attempt()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -756,7 +798,7 @@ a final success or failure.</p>
         <li class="right" >
           <a href="pysasl.identity.html" title="pysasl.identity Package"
              >previous</a> &nbsp; &nbsp;</li>
-    <li><a href="index.html">pysasl 1.0.0rc8 documentation</a> &#187;</li>
+    <li><a href="index.html">pysasl 1.0.0 documentation</a> &#187;</li>
 
         <li class="nav-item nav-item-this"><a href=""><code class="docutils literal notranslate"><span class="pre">pysasl.mechanism</span></code> Package</a></li> 
       </ul>

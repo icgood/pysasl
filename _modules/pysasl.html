@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>pysasl &#8212; pysasl 1.0.0rc8 documentation</title>
+    <title>pysasl &#8212; pysasl 1.0.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/cloud.css" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noticia+Text:400,i,b,bi|Open+Sans:400,i,b,bi|Roboto+Mono:400,i,b,bi&amp;display=swap" type="text/css" />
@@ -50,7 +50,7 @@
         <li class="right" >
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> &nbsp; &nbsp;</li>
-    <li><a href="../index.html">pysasl 1.0.0rc8 documentation</a> &#187;</li>
+    <li><a href="../index.html">pysasl 1.0.0 documentation</a> &#187;</li>
 
           <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">pysasl</a></li> 
@@ -76,7 +76,7 @@
 <span class="kn">from</span> <span class="nn">.config</span> <span class="kn">import</span> <span class="n">default_config</span><span class="p">,</span> <span class="n">SASLConfig</span>
 <span class="kn">from</span> <span class="nn">.mechanism</span> <span class="kn">import</span> <span class="n">Mechanism</span><span class="p">,</span> <span class="n">ServerMechanism</span><span class="p">,</span> <span class="n">ClientMechanism</span>
 
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;__version__&#39;</span><span class="p">,</span> <span class="s1">&#39;SASLConfig&#39;</span><span class="p">,</span> <span class="s1">&#39;SASLAuth&#39;</span><span class="p">]</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;__version__&#39;</span><span class="p">,</span> <span class="s1">&#39;SASLAuth&#39;</span><span class="p">]</span>
 
 <span class="c1">#: The pysasl package version.</span>
 <span class="n">__version__</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">pkg_resources</span><span class="o">.</span><span class="n">require</span><span class="p">(</span><span class="n">__package__</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">version</span>
@@ -148,17 +148,22 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">server_mechanisms</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">ServerMechanism</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;List of available :class:`ServerMechanism` objects.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;List of available :class:`~pysasl.mechanism.ServerMechanism`</span>
+<span class="sd">        objects.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_server_mechanisms</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">client_mechanisms</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">ClientMechanism</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;List of available :class:`ClientMechanism` objects.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;List of available :class:`~pysasl.mechanism.ClientMechanism`</span>
+<span class="sd">        objects.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_client_mechanisms</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
 
 <div class="viewcode-block" id="SASLAuth.get_server"><a class="viewcode-back" href="../pysasl.html#pysasl.SASLAuth.get_server">[docs]</a>    <span class="k">def</span> <span class="nf">get_server</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ServerMechanism</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Like :meth:`.get`, but only mechanisms inheriting</span>
-<span class="sd">        :class:`ServerMechanism` will be returned.</span>
+        <span class="sd">&quot;&quot;&quot;Get a :class:`~pysasl.mechanism.ClientMechanism` by name.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            name: The SASL mechanism name.</span>
@@ -170,8 +175,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_server_mechanisms</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="o">.</span><span class="n">upper</span><span class="p">())</span></div>
 
 <div class="viewcode-block" id="SASLAuth.get_client"><a class="viewcode-back" href="../pysasl.html#pysasl.SASLAuth.get_client">[docs]</a>    <span class="k">def</span> <span class="nf">get_client</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ClientMechanism</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Like :meth:`.get`, but only mechanisms inheriting</span>
-<span class="sd">        :class:`ClientMechanism` will be returned.</span>
+        <span class="sd">&quot;&quot;&quot;Get a :class:`~pysasl.mechanism.ClientMechanism` by name.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            name: The SASL mechanism name.</span>
@@ -231,7 +235,7 @@
         <li class="right" >
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> &nbsp; &nbsp;</li>
-    <li><a href="../index.html">pysasl 1.0.0rc8 documentation</a> &#187;</li>
+    <li><a href="../index.html">pysasl 1.0.0 documentation</a> &#187;</li>
 
           <li class="nav-item nav-item-1"><a href="index.html" >Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">pysasl</a></li> 
