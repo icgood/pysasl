@@ -106,10 +106,13 @@ a [`ServerCredentials`][2] object, we can access information from the
 attempt:
 
 ```python
+from pysasl.creds.server import ServerCredentials
 from pysasl.identity import ClearIdentity, HashedIdentity
 
-print('Authenticated as:', result.authcid)
-print('Authorization ID:', result.authzid)
+result: ServerCredentials = ...
+
+print('Authenticating as:', result.authcid)
+print('Authorizing as:', result.authzid)
 
 # To compare to a known cleartext password...
 identity = ClearIdentity('myuser', 's3kr3t')
