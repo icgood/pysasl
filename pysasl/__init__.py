@@ -9,7 +9,7 @@ from . import mechanism
 from .config import default_config, SASLConfig
 from .mechanism import Mechanism, ServerMechanism, ClientMechanism
 
-__all__ = ['__version__', 'SASLConfig', 'SASLAuth']
+__all__ = ['__version__', 'SASLAuth']
 
 #: The pysasl package version.
 __version__: str = pkg_resources.require(__package__)[0].version
@@ -81,17 +81,22 @@ class SASLAuth(SASLConfig):
 
     @property
     def server_mechanisms(self) -> Sequence[ServerMechanism]:
-        """List of available :class:`ServerMechanism` objects."""
+        """List of available :class:`~pysasl.mechanism.ServerMechanism`
+        objects.
+
+        """
         return list(self._server_mechanisms.values())
 
     @property
     def client_mechanisms(self) -> Sequence[ClientMechanism]:
-        """List of available :class:`ClientMechanism` objects."""
+        """List of available :class:`~pysasl.mechanism.ClientMechanism`
+        objects.
+
+        """
         return list(self._client_mechanisms.values())
 
     def get_server(self, name: bytes) -> Optional[ServerMechanism]:
-        """Like :meth:`.get`, but only mechanisms inheriting
-        :class:`ServerMechanism` will be returned.
+        """Get a :class:`~pysasl.mechanism.ClientMechanism` by name.
 
         Args:
             name: The SASL mechanism name.
@@ -103,8 +108,7 @@ class SASLAuth(SASLConfig):
         return self._server_mechanisms.get(name.upper())
 
     def get_client(self, name: bytes) -> Optional[ClientMechanism]:
-        """Like :meth:`.get`, but only mechanisms inheriting
-        :class:`ClientMechanism` will be returned.
+        """Get a :class:`~pysasl.mechanism.ClientMechanism` by name.
 
         Args:
             name: The SASL mechanism name.

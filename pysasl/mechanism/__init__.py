@@ -111,9 +111,10 @@ class ServerMechanism(_BaseMechanism, metaclass=ABCMeta):
         from the client and issues challenges until it has everything needed to
         verify the credentials.
 
-        If a challenge is necessary, a :class:`ServerChallenge` exception will
-        be raised. The response to this challenge must then be added to
-        *responses* in the next call to :meth:`.server_attempt`.
+        If a challenge is necessary, a
+        :class:`~pysasl.mechanism.ServerChallenge` exception will be raised.
+        The response to this challenge must then be added to *responses* in the
+        next call to :meth:`.server_attempt`.
 
         Args:
             responses: The challenge-response exchanges thus far.
