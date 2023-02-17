@@ -1,13 +1,15 @@
 invoke
+build
 pytest
 pytest-cov
 flake8
+flake8-annotations
 flake8-bugbear
 pyright
 bandit[toml]
 mypy
 rope
 
-types-setuptools
+types-passlib
 
 -r requirements-all.txt

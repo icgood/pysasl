@@ -14,8 +14,9 @@ from typing_extensions import Literal, Protocol, Final, TypeAlias
 try:
     from passlib.context import CryptContext
 except ImportError as _exc:  # pragma: no cover
-    CryptContext = None
-    _passlib_import_exc = _exc
+    _passlib_import_exc: Optional[ImportError] = _exc
+else:
+    _passlib_import_exc = None
 
 __all__ = ['HashT', 'HashInterface', 'BuiltinHash', 'Cleartext', 'get_hash']
 
@@ -30,8 +31,6 @@ class HashInterface(Protocol):
     designed to be compatible with :mod:`passlib` hashes.
 
     """
-
-    __slots__: Sequence[str] = []
 
     @abstractmethod
     def copy(self: HashT, **kwargs: Any) -> HashT:
@@ -227,7 +226,7 @@ def get_hash(*, passlib_config: Optional[str] = None) \
     """
     context: HashInterface
     if passlib_config is not None:
-        if CryptContext is None:
+        if _passlib_import_exc is not None:
             raise _passlib_import_exc
         context = CryptContext.from_path(passlib_config)
     elif CryptContext is not None:
