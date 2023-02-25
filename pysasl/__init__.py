@@ -1,9 +1,13 @@
 
+import sys
 from collections import OrderedDict
-from typing import Optional, Iterable, Sequence
-from typing_extensions import Final
+from typing import Iterable, Optional, Sequence
+from typing_extensions import Final, Self
 
-import pkg_resources
+if sys.version_info >= (3, 10):  # pragma: no cover
+    from importlib.metadata import distribution, entry_points
+else:  # pragma: no cover
+    from importlib_metadata import distribution, entry_points
 
 from . import mechanism
 from .config import default_config, SASLConfig
@@ -12,7 +16,7 @@ from .mechanism import Mechanism, ServerMechanism, ClientMechanism
 __all__ = ['__version__', 'SASLAuth']
 
 #: The pysasl package version.
-__version__: str = pkg_resources.require(__package__)[0].version
+__version__: str = distribution(__package__).version
 
 
 class SASLAuth(SASLConfig):
@@ -38,7 +42,7 @@ class SASLAuth(SASLConfig):
             for mech in mechanisms if isinstance(mech, ClientMechanism))
 
     @classmethod
-    def defaults(cls, *, config: SASLConfig = default_config) -> 'SASLAuth':
+    def defaults(cls, *, config: SASLConfig = default_config) -> Self:
         """Uses the default built-in authentication mechanisms, ``PLAIN`` and
         ``LOGIN``.
 
@@ -53,7 +57,7 @@ class SASLAuth(SASLConfig):
 
     @classmethod
     def named(cls, names: Iterable[bytes], *,
-              config: SASLConfig = default_config) -> 'SASLAuth':
+              config: SASLConfig = default_config) -> Self:
         """Uses the built-in authentication mechanisms that match a provided
         name.
 
@@ -69,13 +73,13 @@ class SASLAuth(SASLConfig):
 
         """
         builtin = {m.name: m for m in cls._get_builtin_mechanisms(config)}
-        return SASLAuth([builtin[name] for name in names])
+        return cls([builtin[name] for name in names])
 
     @classmethod
     def _get_builtin_mechanisms(cls, config: SASLConfig) \
             -> Iterable[Mechanism]:
         group = mechanism.__package__
-        for entry_point in pkg_resources.iter_entry_points(group):
+        for entry_point in entry_points(group=group):
             mech_cls = entry_point.load()
             yield mech_cls(entry_point.name, config)
 

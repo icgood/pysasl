@@ -1,14 +1,17 @@
 
 import warnings
 from abc import abstractmethod
+from typing import Optional
 from typing_extensions import Final, Protocol
 
 try:
     from passlib.utils import saslprep as _saslprep
 except ImportError as exc:  # pragma: no cover
-    _saslprep = None
-    _saslprep_exc = exc
+    _saslprep_exc: Optional[ImportError] = exc
     warnings.warn('passlib.utils.saslprep is not available', ImportWarning)
+else:
+    _saslprep_exc = None
+
 
 __all__ = ['Preparation', 'default_prep', 'noprep', 'saslprep']
 
@@ -51,14 +54,11 @@ def saslprep(source: str) -> str:
         ImportError: The implementation is not available.
 
     """
-    if _saslprep is not None:
-        ret: str = _saslprep(source)
-        return ret
-    else:  # pragma: no cover
-        raise _saslprep_exc
+    ret: str = _saslprep(source)
+    return ret
 
 
-if _saslprep is not None:
+if _saslprep_exc is None:
     _default_prep = saslprep
 else:  # pragma: no cover
     _default_prep = noprep

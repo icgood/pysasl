@@ -2,7 +2,7 @@
 import secrets
 from abc import abstractmethod
 from typing import Optional, Sequence
-from typing_extensions import Protocol
+from typing_extensions import Protocol, Self
 
 from .hashing import HashInterface, Cleartext
 from .prep import default_prep, Preparation
@@ -104,7 +104,7 @@ class HashedIdentity(Identity):
     @classmethod
     def create(cls, authcid: str, secret: str, *,
                hash: HashInterface,
-               prepare: Preparation = default_prep) -> 'HashedIdentity':
+               prepare: Preparation = default_prep) -> Self:
         """Prepare and hash the given *secret*, returning a
         :class:`HashedIdentity`.
 
