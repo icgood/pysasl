@@ -25,7 +25,7 @@ build-backend = 'hatchling.build'
 
 [project]
 name = 'pysasl'
-version = '1.0.1'
+dynamic = ['version']
 authors = [
     { name = 'Ian Good', email = 'ian@icgood.net' },
 ]
@@ -54,7 +54,8 @@ dependencies = [
 hashing = ['passlib']
 
 [project.urls]
-homepage = 'https://github.com/icgood/pysasl/'
+'Homepage' = 'https://github.com/icgood/pysasl/'
+'API Documentation' = 'https://icgood.github.io/pysasl/'
 
 [project.entry-points.'pysasl.mechanism']
 CRAM-MD5 = 'pysasl.mechanism.crammd5:CramMD5Mechanism'
@@ -63,8 +64,14 @@ LOGIN = 'pysasl.mechanism.login:LoginMechanism'
 PLAIN = 'pysasl.mechanism.plain:PlainMechanism'
 XOAUTH2 = 'pysasl.mechanism.oauth:OAuth2Mechanism'
 
+[tool.hatch.version]
+path = 'pysasl/__about__.py'
+
 [tool.hatch.build]
-exclude = ['/tasks', '/doc', '/.github']
+exclude = ['/doc', '/.github']
+
+[tool.hatch.build.targets.wheel]
+packages = ['pysasl']
 
 [tool.mypy]
 strict = true
@@ -78,6 +85,7 @@ ignore_missing_imports = true
 skips = ['B101']
 
 [tool.pytest.ini_options]
+testpaths = 'test'
 norecursedirs = 'doc'
 
 [tool.coverage.report]
@@ -88,3 +96,39 @@ exclude_lines = [
     '^\s*...\s*$',
     'def __repr__',
 ]
+
+[tool.hatch.envs.default]
+dependencies = [
+    'mypy',
+    'pyright',
+    'pytest',
+    'pytest-cov',
+    'flake8',
+    'flake8-annotations',
+    'flake8-bugbear',
+    'bandit[toml]',
+    'types-passlib',
+]
+features = ['hashing']
+
+[tool.hatch.envs.default.scripts]
+run-pytest = 'py.test --cov-report=term-missing --cov=pysasl'
+run-mypy = 'mypy pysasl test'
+run-pyright = 'pyright pysasl test'
+run-flake8 = 'flake8 pysasl test'
+run-bandit = 'bandit -c pyproject.toml -qr pysasl'
+check = ['run-pytest', 'run-mypy', 'run-pyright', 'run-flake8', 'run-bandit']
+
+[[tool.hatch.envs.all.matrix]]
+python = ['3.7', '3.8', '3.9', '3.10', '3.11']
+
+[tool.hatch.envs.doc]
+dependencies = [
+    'sphinx',
+    'sphinx-autodoc-typehints',
+    'cloud_sptheme',
+]
+
+[tool.hatch.envs.doc.scripts]
+build = 'make -C doc html'
+browse = ['build', 'open doc/build/html/index.html']
