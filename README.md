@@ -12,7 +12,7 @@ There are currently no plans to implement
 [security layer](https://datatracker.ietf.org/doc/html/rfc4422#section-3.7)
 negotiation support.
 
-[![build](https://github.com/icgood/pysasl/actions/workflows/python-package.yml/badge.svg)](https://github.com/icgood/pysasl/actions/workflows/python-package.yml)
+[![build](https://github.com/icgood/pysasl/actions/workflows/python-check.yml/badge.svg)](https://github.com/icgood/pysasl/actions/workflows/python-check.yml)
 [![Coverage Status](https://coveralls.io/repos/icgood/pysasl/badge.svg?branch=main)](https://coveralls.io/r/icgood/pysasl?branch=main)
 [![PyPI](https://img.shields.io/pypi/v/pysasl.svg)](https://pypi.python.org/pypi/pysasl)
 [![PyPI](https://img.shields.io/pypi/pyversions/pysasl.svg)](https://pypi.python.org/pypi/pysasl)
