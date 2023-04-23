@@ -25,25 +25,18 @@ Installation
 
 Available in [PyPi](https://pypi.python.org/):
 
-```
-pip install pysasl
+```console
+$ pip install pysasl
 ```
 
 ### Running Tests
 
-Install into a virtual environment:
+First, install [Hatch][0]. To run the build checks:
 
-```
-python3 -m venv .venv
-source .venv/bin/activate
+```console
+$ hatch run check
 
-pip install -r requirements-dev.txt
-```
-
-Run the tests and report coverage metrics:
-
-```
-invoke
+$ hatch run all:check  # to run against all supported Python versions
 ```
 
 Usage
@@ -198,6 +191,7 @@ to get the initial response before starting the transmission. All
 mechanisms should either return an initial response or an empty string
 when given an empty list for the second argument.
 
+[0]: https://hatch.pypa.io/latest/install/
 [1]: https://icgood.github.io/pysasl/pysasl.html#pysasl.SASLAuth
 [2]: https://icgood.github.io/pysasl/pysasl.creds.html#pysasl.creds.server.ServerCredentials
 [3]: https://tools.ietf.org/html/rfc4954

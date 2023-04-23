@@ -5,18 +5,16 @@ from typing import Iterable, Optional, Sequence
 from typing_extensions import Final, Self
 
 if sys.version_info >= (3, 10):  # pragma: no cover
-    from importlib.metadata import distribution, entry_points
+    from importlib.metadata import entry_points
 else:  # pragma: no cover
-    from importlib_metadata import distribution, entry_points
+    from importlib_metadata import entry_points
 
 from . import mechanism
+from .__about__ import __version__
 from .config import default_config, SASLConfig
 from .mechanism import Mechanism, ServerMechanism, ClientMechanism
 
 __all__ = ['__version__', 'SASLAuth']
-
-#: The pysasl package version.
-__version__: str = distribution(__package__).version
 
 
 class SASLAuth(SASLConfig):
