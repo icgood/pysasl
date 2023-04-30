@@ -8,7 +8,8 @@ try:
     from passlib.utils import saslprep as _saslprep
 except ImportError as exc:  # pragma: no cover
     _saslprep_exc: Optional[ImportError] = exc
-    warnings.warn('passlib.utils.saslprep is not available', ImportWarning)
+    warnings.warn('passlib.utils.saslprep is not available', ImportWarning,
+                  stacklevel=2)
 else:
     _saslprep_exc = None
 
