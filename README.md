@@ -13,9 +13,9 @@ There are currently no plans to implement
 negotiation support.
 
 [![build](https://github.com/icgood/pysasl/actions/workflows/python-check.yml/badge.svg)](https://github.com/icgood/pysasl/actions/workflows/python-check.yml)
-[![Coverage Status](https://coveralls.io/repos/icgood/pysasl/badge.svg?branch=main)](https://coveralls.io/r/icgood/pysasl?branch=main)
 [![PyPI](https://img.shields.io/pypi/v/pysasl.svg)](https://pypi.python.org/pypi/pysasl)
 [![PyPI](https://img.shields.io/pypi/pyversions/pysasl.svg)](https://pypi.python.org/pypi/pysasl)
+![platforms](https://img.shields.io/badge/platform-linux%20%7C%20macOS%20%7C%20windows-blueviolet)
 [![PyPI](https://img.shields.io/pypi/l/pysasl.svg)](https://pypi.python.org/pypi/pysasl)
 
 #### [API Documentation](https://icgood.github.io/pysasl/)
