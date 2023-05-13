@@ -89,6 +89,9 @@ line-length = 79
 [tool.ruff.per-file-ignores]
 "test/*" = ['ANN', 'S104']
 
+[tool.autopep8]
+aggressive = 1
+
 [tool.pytest.ini_options]
 testpaths = 'test'
 norecursedirs = 'doc'
@@ -109,6 +112,8 @@ dependencies = [
     'pytest',
     'pytest-cov',
     'ruff',
+    'pycodestyle',
+    'autopep8',
     'types-passlib',
 ]
 features = ['hashing']
@@ -118,7 +123,8 @@ run-pytest = 'py.test --cov-report=term-missing --cov=pysasl'
 run-mypy = 'mypy pysasl test'
 run-pyright = 'pyright pysasl test'
 run-ruff = 'ruff pysasl test'
-check = ['run-pytest', 'run-mypy', 'run-pyright', 'run-ruff']
+run-autopep8 = 'autopep8 --exit-code -dr pysasl test'
+check = ['run-pytest', 'run-autopep8', 'run-mypy', 'run-pyright', 'run-ruff']
 
 [[tool.hatch.envs.all.matrix]]
 python = ['3.7', '3.8', '3.9', '3.10', '3.11']

@@ -66,7 +66,7 @@ class TestOAuth2Mechanism(unittest.TestCase):
                          resp2.response)
         self.assertRaises(UnexpectedChallenge,
                           self.mech.client_attempt,
-                          creds, [ServerChallenge(b'')]*2)
+                          creds, [ServerChallenge(b'')] * 2)
 
     def test_client_attempt_error(self) -> None:
         creds = ClientCredentials('testuser', 'testtoken')

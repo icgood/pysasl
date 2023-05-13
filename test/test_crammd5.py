@@ -83,4 +83,4 @@ class TestCramMD5Mechanism(unittest.TestCase):
                          resp2.response)
         self.assertRaises(UnexpectedChallenge,
                           self.mech.client_attempt,
-                          creds, [ServerChallenge(b'')]*2)
+                          creds, [ServerChallenge(b'')] * 2)
