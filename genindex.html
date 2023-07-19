@@ -1,13 +1,12 @@
 
 
-
 <!DOCTYPE html>
 
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Index &#8212; pysasl 1.0.2 documentation</title>
+    <title>Index &#8212; pysasl 1.1.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/cloud.css" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noticia+Text:400,i,b,bi|Open+Sans:400,i,b,bi|Roboto+Mono:400,i,b,bi&amp;display=swap" type="text/css" />
@@ -47,7 +46,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> &nbsp; &nbsp;</li>
-    <li><a href="index.html">pysasl 1.0.2 documentation</a> &#187;</li>
+    <li><a href="index.html">pysasl 1.1.0 documentation</a> &#187;</li>
 
         <li class="nav-item nav-item-this"><a href="">Index</a></li> 
       </ul>
@@ -94,12 +93,6 @@
         <li><a href="pysasl.creds.html#pysasl.creds.external.ExternalCredentials.authcid">(pysasl.creds.external.ExternalCredentials property)</a>
 </li>
         <li><a href="pysasl.creds.html#pysasl.creds.plain.PlainCredentials.authcid">(pysasl.creds.plain.PlainCredentials property)</a>
-</li>
-        <li><a href="pysasl.identity.html#pysasl.identity.ClearIdentity.authcid">(pysasl.identity.ClearIdentity property)</a>
-</li>
-        <li><a href="pysasl.identity.html#pysasl.identity.HashedIdentity.authcid">(pysasl.identity.HashedIdentity property)</a>
-</li>
-        <li><a href="pysasl.identity.html#pysasl.identity.Identity.authcid">(pysasl.identity.Identity property)</a>
 </li>
         <li><a href="pysasl.mechanism.html#pysasl.mechanism.crammd5.CramMD5Result.authcid">(pysasl.mechanism.crammd5.CramMD5Result property)</a>
 </li>
@@ -158,12 +151,20 @@
       </ul></li>
       <li><a href="pysasl.html#pysasl.SASLAuth.client_mechanisms">client_mechanisms (pysasl.SASLAuth property)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="pysasl.creds.html#pysasl.creds.client.ClientCredentials">ClientCredentials (class in pysasl.creds.client)</a>
 </li>
       <li><a href="pysasl.mechanism.html#pysasl.mechanism.ClientMechanism">ClientMechanism (class in pysasl.mechanism)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="pysasl.identity.html#pysasl.identity.ClearIdentity.compare_authcid">compare_authcid() (pysasl.identity.ClearIdentity method)</a>
+
+      <ul>
+        <li><a href="pysasl.identity.html#pysasl.identity.HashedIdentity.compare_authcid">(pysasl.identity.HashedIdentity method)</a>
+</li>
+        <li><a href="pysasl.identity.html#pysasl.identity.Identity.compare_authcid">(pysasl.identity.Identity method)</a>
+</li>
+      </ul></li>
       <li><a href="pysasl.identity.html#pysasl.identity.ClearIdentity.compare_secret">compare_secret() (pysasl.identity.ClearIdentity method)</a>
 
       <ul>
@@ -196,12 +197,8 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="pysasl.mechanism.html#pysasl.mechanism.ServerChallenge.data">data (pysasl.mechanism.ServerChallenge property)</a>
 </li>
-      <li><a href="pysasl.config.html#pysasl.config.default_config">default_config (in module pysasl.config)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="pysasl.prep.html#pysasl.prep.default_prep">default_prep() (in module pysasl.prep)</a>
-</li>
       <li><a href="pysasl.html#pysasl.SASLAuth.defaults">defaults() (pysasl.SASLAuth class method)</a>
 </li>
       <li><a href="pysasl.identity.html#pysasl.identity.HashedIdentity.digest">digest (pysasl.identity.HashedIdentity property)</a>
@@ -237,8 +234,6 @@
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="pysasl.html#pysasl.SASLAuth.get_client">get_client() (pysasl.SASLAuth method)</a>
-</li>
-      <li><a href="pysasl.hashing.html#pysasl.hashing.get_hash">get_hash() (in module pysasl.hashing)</a>
 </li>
       <li><a href="pysasl.html#pysasl.SASLAuth.get_server">get_server() (pysasl.SASLAuth method)</a>
 </li>
@@ -302,8 +297,6 @@
       <ul>
         <li><a href="pysasl.html#module-pysasl">pysasl</a>
 </li>
-        <li><a href="pysasl.config.html#module-pysasl.config">pysasl.config</a>
-</li>
         <li><a href="pysasl.creds.html#module-pysasl.creds">pysasl.creds</a>
 </li>
         <li><a href="pysasl.creds.html#module-pysasl.creds.client">pysasl.creds.client</a>
@@ -365,22 +358,13 @@
 </li>
       <li><a href="pysasl.mechanism.html#pysasl.mechanism.plain.PlainMechanism">PlainMechanism (class in pysasl.mechanism.plain)</a>
 </li>
-      <li><a href="pysasl.prep.html#pysasl.prep.Preparation">Preparation (class in pysasl.prep)</a>
-</li>
-      <li><a href="pysasl.config.html#pysasl.config.SASLConfig.prepare">prepare() (pysasl.config.SASLConfig method)</a>
+      <li><a href="pysasl.prep.html#pysasl.prep.Preparation">Preparation (in module pysasl.prep)</a>
 </li>
       <li>
     pysasl
 
       <ul>
         <li><a href="pysasl.html#module-pysasl">module</a>
-</li>
-      </ul></li>
-      <li>
-    pysasl.config
-
-      <ul>
-        <li><a href="pysasl.config.html#module-pysasl.config">module</a>
 </li>
       </ul></li>
       <li>
@@ -506,8 +490,6 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="pysasl.html#pysasl.SASLAuth">SASLAuth (class in pysasl)</a>
 </li>
-      <li><a href="pysasl.config.html#pysasl.config.SASLConfig">SASLConfig (class in pysasl.config)</a>
-</li>
       <li><a href="pysasl.prep.html#pysasl.prep.saslprep">saslprep() (in module pysasl.prep)</a>
 </li>
       <li><a href="pysasl.creds.html#pysasl.creds.client.ClientCredentials.secret">secret (pysasl.creds.client.ClientCredentials property)</a>
@@ -619,7 +601,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> &nbsp; &nbsp;</li>
-    <li><a href="index.html">pysasl 1.0.2 documentation</a> &#187;</li>
+    <li><a href="index.html">pysasl 1.1.0 documentation</a> &#187;</li>
 
         <li class="nav-item nav-item-this"><a href="">Index</a></li> 
       </ul>
@@ -628,7 +610,7 @@
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2022, Ian Good.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.1.3.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.0.1.
     </div>
     <!-- cloud_sptheme 1.4 -->
   </body>

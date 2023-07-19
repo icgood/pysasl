@@ -1,13 +1,12 @@
 
 
-
 <!DOCTYPE html>
 
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>pysasl &#8212; pysasl 1.0.2 documentation</title>
+    <title>pysasl &#8212; pysasl 1.1.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/cloud.css" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noticia+Text:400,i,b,bi|Open+Sans:400,i,b,bi|Roboto+Mono:400,i,b,bi&amp;display=swap" type="text/css" />
@@ -47,7 +46,7 @@
         <li class="right" >
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> &nbsp; &nbsp;</li>
-    <li><a href="../index.html">pysasl 1.0.2 documentation</a> &#187;</li>
+    <li><a href="../index.html">pysasl 1.1.0 documentation</a> &#187;</li>
 
           <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">pysasl</a></li> 
@@ -66,7 +65,7 @@
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Sequence</span>
-<span class="kn">from</span> <span class="nn">typing_extensions</span> <span class="kn">import</span> <span class="n">Final</span><span class="p">,</span> <span class="n">Self</span>
+<span class="kn">from</span> <span class="nn">typing_extensions</span> <span class="kn">import</span> <span class="n">Self</span>
 
 <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span> <span class="o">&gt;=</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">10</span><span class="p">):</span>  <span class="c1"># pragma: no cover</span>
     <span class="kn">from</span> <span class="nn">importlib.metadata</span> <span class="kn">import</span> <span class="n">entry_points</span>
@@ -75,27 +74,23 @@
 
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">mechanism</span>
 <span class="kn">from</span> <span class="nn">.__about__</span> <span class="kn">import</span> <span class="n">__version__</span>
-<span class="kn">from</span> <span class="nn">.config</span> <span class="kn">import</span> <span class="n">default_config</span><span class="p">,</span> <span class="n">SASLConfig</span>
 <span class="kn">from</span> <span class="nn">.mechanism</span> <span class="kn">import</span> <span class="n">Mechanism</span><span class="p">,</span> <span class="n">ServerMechanism</span><span class="p">,</span> <span class="n">ClientMechanism</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;__version__&#39;</span><span class="p">,</span> <span class="s1">&#39;SASLAuth&#39;</span><span class="p">]</span>
 
 
-<div class="viewcode-block" id="SASLAuth"><a class="viewcode-back" href="../pysasl.html#pysasl.SASLAuth">[docs]</a><span class="k">class</span> <span class="nc">SASLAuth</span><span class="p">(</span><span class="n">SASLConfig</span><span class="p">):</span>
+<div class="viewcode-block" id="SASLAuth"><a class="viewcode-back" href="../pysasl.html#pysasl.SASLAuth">[docs]</a><span class="k">class</span> <span class="nc">SASLAuth</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Manages the mechanisms available for authentication attempts.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        mechanisms: List of available SASL mechanism objects.</span>
-<span class="sd">        config: The configuration object.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;config&#39;</span><span class="p">,</span> <span class="s1">&#39;_server_mechanisms&#39;</span><span class="p">,</span> <span class="s1">&#39;_client_mechanisms&#39;</span><span class="p">]</span>
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;_server_mechanisms&#39;</span><span class="p">,</span> <span class="s1">&#39;_client_mechanisms&#39;</span><span class="p">]</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mechanisms</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Mechanism</span><span class="p">],</span> <span class="o">*</span><span class="p">,</span>
-                 <span class="n">config</span><span class="p">:</span> <span class="n">SASLConfig</span> <span class="o">=</span> <span class="n">default_config</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mechanisms</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Mechanism</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">:</span> <span class="n">Final</span> <span class="o">=</span> <span class="n">config</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_server_mechanisms</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">(</span>
             <span class="p">(</span><span class="n">mech</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">mech</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">mech</span> <span class="ow">in</span> <span class="n">mechanisms</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">mech</span><span class="p">,</span> <span class="n">ServerMechanism</span><span class="p">))</span>
@@ -104,12 +99,9 @@
             <span class="k">for</span> <span class="n">mech</span> <span class="ow">in</span> <span class="n">mechanisms</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">mech</span><span class="p">,</span> <span class="n">ClientMechanism</span><span class="p">))</span>
 
 <div class="viewcode-block" id="SASLAuth.defaults"><a class="viewcode-back" href="../pysasl.html#pysasl.SASLAuth.defaults">[docs]</a>    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">defaults</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">SASLConfig</span> <span class="o">=</span> <span class="n">default_config</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">defaults</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Uses the default built-in authentication mechanisms, ``PLAIN`` and</span>
 <span class="sd">        ``LOGIN``.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            config: The configuration object.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            A new :class:`SASLAuth` object.</span>
@@ -118,14 +110,12 @@
         <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">named</span><span class="p">([</span><span class="sa">b</span><span class="s1">&#39;PLAIN&#39;</span><span class="p">,</span> <span class="sa">b</span><span class="s1">&#39;LOGIN&#39;</span><span class="p">])</span></div>
 
 <div class="viewcode-block" id="SASLAuth.named"><a class="viewcode-back" href="../pysasl.html#pysasl.SASLAuth.named">[docs]</a>    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">named</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">names</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">bytes</span><span class="p">],</span> <span class="o">*</span><span class="p">,</span>
-              <span class="n">config</span><span class="p">:</span> <span class="n">SASLConfig</span> <span class="o">=</span> <span class="n">default_config</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">named</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">names</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">bytes</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Uses the built-in authentication mechanisms that match a provided</span>
 <span class="sd">        name.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            names: The authentication mechanism names.</span>
-<span class="sd">            config: The configuration object.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            A new :class:`SASLAuth` object.</span>
@@ -134,16 +124,15 @@
 <span class="sd">            KeyError: A mechanism name was not recognized.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">builtin</span> <span class="o">=</span> <span class="p">{</span><span class="n">m</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">m</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_get_builtin_mechanisms</span><span class="p">(</span><span class="n">config</span><span class="p">)}</span>
+        <span class="n">builtin</span> <span class="o">=</span> <span class="p">{</span><span class="n">m</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">m</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_get_builtin_mechanisms</span><span class="p">()}</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="p">([</span><span class="n">builtin</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">names</span><span class="p">])</span></div>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">_get_builtin_mechanisms</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">SASLConfig</span><span class="p">)</span> \
-            <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Mechanism</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">_get_builtin_mechanisms</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Mechanism</span><span class="p">]:</span>
         <span class="n">group</span> <span class="o">=</span> <span class="n">mechanism</span><span class="o">.</span><span class="n">__package__</span>
         <span class="k">for</span> <span class="n">entry_point</span> <span class="ow">in</span> <span class="n">entry_points</span><span class="p">(</span><span class="n">group</span><span class="o">=</span><span class="n">group</span><span class="p">):</span>
             <span class="n">mech_cls</span> <span class="o">=</span> <span class="n">entry_point</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
-            <span class="k">yield</span> <span class="n">mech_cls</span><span class="p">(</span><span class="n">entry_point</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
+            <span class="k">yield</span> <span class="n">mech_cls</span><span class="p">(</span><span class="n">entry_point</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">server_mechanisms</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">ServerMechanism</span><span class="p">]:</span>
@@ -234,7 +223,7 @@
         <li class="right" >
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> &nbsp; &nbsp;</li>
-    <li><a href="../index.html">pysasl 1.0.2 documentation</a> &#187;</li>
+    <li><a href="../index.html">pysasl 1.1.0 documentation</a> &#187;</li>
 
           <li class="nav-item nav-item-1"><a href="index.html" >Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">pysasl</a></li> 
@@ -244,7 +233,7 @@
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2022, Ian Good.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.1.3.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.0.1.
     </div>
     <!-- cloud_sptheme 1.4 -->
   </body>

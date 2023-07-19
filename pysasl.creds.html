@@ -1,14 +1,13 @@
 
 
-
 <!DOCTYPE html>
 
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>pysasl.creds Package &#8212; pysasl 1.0.2 documentation</title>
+    <title>pysasl.creds Package &#8212; pysasl 1.1.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/cloud.css" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noticia+Text:400,i,b,bi|Open+Sans:400,i,b,bi|Roboto+Mono:400,i,b,bi&amp;display=swap" type="text/css" />
@@ -36,7 +35,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="pysasl.exception Package" href="pysasl.exception.html" />
-    <link rel="prev" title="pysasl.config Package" href="pysasl.config.html" /> 
+    <link rel="prev" title="pysasl Package" href="pysasl.html" /> 
         <meta name="viewport" content="width=device-width, initial-scale=1">
   </head><body>
     <div class="relbar-top">
@@ -54,9 +53,9 @@
           <a href="pysasl.exception.html" title="pysasl.exception Package"
              accesskey="N">next</a> &nbsp; &nbsp;</li>
         <li class="right" >
-          <a href="pysasl.config.html" title="pysasl.config Package"
+          <a href="pysasl.html" title="pysasl Package"
              accesskey="P">previous</a> &nbsp; &nbsp;</li>
-    <li><a href="index.html">pysasl 1.0.2 documentation</a> &#187;</li>
+    <li><a href="index.html">pysasl 1.1.0 documentation</a> &#187;</li>
 
         <li class="nav-item nav-item-this"><a href=""><code class="docutils literal notranslate"><span class="pre">pysasl.creds</span></code> Package</a></li> 
       </ul>
@@ -112,7 +111,7 @@ attempt to succeed.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="pysasl.creds.server.ServerCredentials">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pysasl.creds.server.</span></span><span class="sig-name descname"><span class="pre">ServerCredentials</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysasl/creds/server.html#ServerCredentials"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pysasl.creds.server.ServerCredentials" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#pysasl.creds.Credentials" title="pysasl.creds.Credentials"><code class="xref py py-class docutils literal notranslate"><span class="pre">Credentials</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Protocol" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Protocol</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#pysasl.creds.Credentials" title="pysasl.creds.Credentials"><code class="xref py py-class docutils literal notranslate"><span class="pre">Credentials</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Protocol</span></code></p>
 <p>Credentials that are received from a client and should be authenticated
 against a known secret value.</p>
 <dl class="py method">
@@ -180,7 +179,7 @@ attempt to succeed.</p>
 <span id="pysasl-creds-plain-module"></span><h2><code class="docutils literal notranslate"><span class="pre">pysasl.creds.plain</span></code> Module<a class="headerlink" href="#module-pysasl.creds.plain" title="Permalink to this heading">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="pysasl.creds.plain.PlainCredentials">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pysasl.creds.plain.</span></span><span class="sig-name descname"><span class="pre">PlainCredentials</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">authcid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">secret</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">authzid=''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prepare=&lt;function</span> <span class="pre">saslprep&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysasl/creds/plain.html#PlainCredentials"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pysasl.creds.plain.PlainCredentials" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pysasl.creds.plain.</span></span><span class="sig-name descname"><span class="pre">PlainCredentials</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">authcid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">secret</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">authzid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysasl/creds/plain.html#PlainCredentials"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pysasl.creds.plain.PlainCredentials" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#pysasl.creds.server.ServerCredentials" title="pysasl.creds.server.ServerCredentials"><code class="xref py py-class docutils literal notranslate"><span class="pre">ServerCredentials</span></code></a></p>
 <p>Implementation of <a class="reference internal" href="#pysasl.creds.server.ServerCredentials" title="pysasl.creds.server.ServerCredentials"><code class="xref py py-class docutils literal notranslate"><span class="pre">ServerCredentials</span></code></a> for
 typical SASL mechanisms like
@@ -192,7 +191,6 @@ operates on the <em>secret</em> string in cleartext.</p>
 <li><p><strong>authcid</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Authentication ID string (the username).</p></li>
 <li><p><strong>secret</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Secret string (the password).</p></li>
 <li><p><strong>authzid</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Authorization ID string, if provided.</p></li>
-<li><p><strong>prepare</strong> (<a class="reference internal" href="pysasl.prep.html#pysasl.prep.Preparation" title="pysasl.prep.Preparation"><em>Preparation</em></a>) – The preparation algorithm function.</p></li>
 </ul>
 </dd>
 </dl>
@@ -367,8 +365,8 @@ this exception and use it to authenticate and authorize the request.</p>
   </div>
   <div class="sphinxprev">
     <h4>Previous page</h4>
-    <p class="topless"><a href="pysasl.config.html"
-                          title="Previous page">&larr; <code class="docutils literal notranslate"><span class="pre">pysasl.config</span></code> Package</a></p>
+    <p class="topless"><a href="pysasl.html"
+                          title="Previous page">&larr; <code class="docutils literal notranslate"><span class="pre">pysasl</span></code> Package</a></p>
   </div>
   <div class="sphinxnext">
     <h4>Next page</h4>
@@ -428,9 +426,9 @@ this exception and use it to authenticate and authorize the request.</p>
           <a href="pysasl.exception.html" title="pysasl.exception Package"
              >next</a> &nbsp; &nbsp;</li>
         <li class="right" >
-          <a href="pysasl.config.html" title="pysasl.config Package"
+          <a href="pysasl.html" title="pysasl Package"
              >previous</a> &nbsp; &nbsp;</li>
-    <li><a href="index.html">pysasl 1.0.2 documentation</a> &#187;</li>
+    <li><a href="index.html">pysasl 1.1.0 documentation</a> &#187;</li>
 
         <li class="nav-item nav-item-this"><a href=""><code class="docutils literal notranslate"><span class="pre">pysasl.creds</span></code> Package</a></li> 
       </ul>
@@ -439,7 +437,7 @@ this exception and use it to authenticate and authorize the request.</p>
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2022, Ian Good.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.1.3.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.0.1.
     </div>
     <!-- cloud_sptheme 1.4 -->
   </body>
