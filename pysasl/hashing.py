@@ -11,14 +11,7 @@ from base64 import b64encode, b64decode
 from typing import TypeVar, Any, Optional, Sequence, Dict
 from typing_extensions import Literal, Protocol, Final, TypeAlias
 
-try:
-    from passlib.context import CryptContext
-except ImportError as _exc:  # pragma: no cover
-    _passlib_import_exc: Optional[ImportError] = _exc
-else:
-    _passlib_import_exc = None
-
-__all__ = ['HashT', 'HashInterface', 'BuiltinHash', 'Cleartext', 'get_hash']
+__all__ = ['HashT', 'HashInterface', 'BuiltinHash', 'Cleartext']
 
 _Pbkdf2Hashes: TypeAlias = Literal['sha1', 'sha256', 'sha512']
 
@@ -198,42 +191,3 @@ class Cleartext(HashInterface):
 
     def __repr__(self) -> str:
         return 'Cleartext()'
-
-
-def get_hash(*, passlib_config: Optional[str] = None) \
-        -> HashInterface:  # pragma: no cover
-    """Provide a secure, default :class:`HashInterface` implementation.
-
-    If *passlib_config* is given, a :class:`~passlib.context.CryptContext` is
-    loaded from it. Otherwise, the returned implementation depends on whether
-    :mod:`passlib` is available.
-
-    If :mod:`passlib` is available, a :class:`~passlib.context.CryptContext` is
-    created with a set of `active hashes
-    <https://passlib.readthedocs.io/en/stable/lib/passlib.hash.html#active-hashes>`_,
-    defaulting to ``pbkdf2_sha256`` for new digests.
-
-    If :mod:`passlib` is not available, a :class:`BuiltinHash` with default
-    settings is created. This is intended to be compatible with the
-    :mod:`passlib` default if it is installed later.
-
-    Args:
-        passlib_config: A passlib config file.
-
-    See Also:
-        :meth:`passlib.context.CryptContext.from_path`
-
-    """
-    context: HashInterface
-    if passlib_config is not None:
-        if _passlib_import_exc is not None:
-            raise _passlib_import_exc
-        context = CryptContext.from_path(passlib_config)
-    elif CryptContext is not None:
-        context = CryptContext(
-            schemes=['argon2', 'bcrypt_sha256', 'phpass', 'pbkdf2_sha1',
-                     'pbkdf2_sha256', 'pbkdf2_sha512', 'scram', 'scrypt'],
-            default='pbkdf2_sha256')
-    else:
-        context = BuiltinHash()
-    return context

@@ -4,7 +4,6 @@ from abc import abstractmethod, ABCMeta
 from typing import Union, Optional, Tuple, Sequence
 from typing_extensions import TypeAlias
 
-from ..config import SASLConfig
 from ..creds.client import ClientCredentials
 from ..creds.server import ServerCredentials
 
@@ -71,28 +70,22 @@ class ChallengeResponse:
 
 class _BaseMechanism:
 
-    __slots__: Sequence[str] = ['_name', '_config']
+    __slots__: Sequence[str] = ['_name']
 
-    def __init__(self, name: Union[str, bytes], config: SASLConfig) -> None:
+    def __init__(self, name: Union[str, bytes]) -> None:
         super().__init__()
         if isinstance(name, str):
             name = name.encode('ascii')
         self._name = name
-        self._config = config
 
     @property
     def name(self) -> bytes:
         """The SASL name for this mechanism."""
         return self._name
 
-    @property
-    def config(self) -> SASLConfig:
-        """The configuration object."""
-        return self._config
-
     def __eq__(self, other: object) -> bool:
         if isinstance(other, _BaseMechanism):
-            return self.name == other.name and self.config == other.config
+            return self.name == other.name
         return NotImplemented
 
 

@@ -12,7 +12,6 @@
    :caption: Contents:
 
    pysasl
-   pysasl.config
    pysasl.creds
    pysasl.exception
    pysasl.hashing

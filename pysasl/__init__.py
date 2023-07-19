@@ -2,7 +2,7 @@
 import sys
 from collections import OrderedDict
 from typing import Iterable, Optional, Sequence
-from typing_extensions import Final, Self
+from typing_extensions import Self
 
 if sys.version_info >= (3, 10):  # pragma: no cover
     from importlib.metadata import entry_points
@@ -11,27 +11,23 @@ else:  # pragma: no cover
 
 from . import mechanism
 from .__about__ import __version__
-from .config import default_config, SASLConfig
 from .mechanism import Mechanism, ServerMechanism, ClientMechanism
 
 __all__ = ['__version__', 'SASLAuth']
 
 
-class SASLAuth(SASLConfig):
+class SASLAuth:
     """Manages the mechanisms available for authentication attempts.
 
     Args:
         mechanisms: List of available SASL mechanism objects.
-        config: The configuration object.
 
     """
 
-    __slots__ = ['config', '_server_mechanisms', '_client_mechanisms']
+    __slots__ = ['_server_mechanisms', '_client_mechanisms']
 
-    def __init__(self, mechanisms: Sequence[Mechanism], *,
-                 config: SASLConfig = default_config) -> None:
+    def __init__(self, mechanisms: Sequence[Mechanism]) -> None:
         super().__init__()
-        self.config: Final = config
         self._server_mechanisms = OrderedDict(
             (mech.name, mech)
             for mech in mechanisms if isinstance(mech, ServerMechanism))
@@ -40,12 +36,9 @@ class SASLAuth(SASLConfig):
             for mech in mechanisms if isinstance(mech, ClientMechanism))
 
     @classmethod
-    def defaults(cls, *, config: SASLConfig = default_config) -> Self:
+    def defaults(cls) -> Self:
         """Uses the default built-in authentication mechanisms, ``PLAIN`` and
         ``LOGIN``.
-
-        Args:
-            config: The configuration object.
 
         Returns:
             A new :class:`SASLAuth` object.
@@ -54,14 +47,12 @@ class SASLAuth(SASLConfig):
         return cls.named([b'PLAIN', b'LOGIN'])
 
     @classmethod
-    def named(cls, names: Iterable[bytes], *,
-              config: SASLConfig = default_config) -> Self:
+    def named(cls, names: Iterable[bytes]) -> Self:
         """Uses the built-in authentication mechanisms that match a provided
         name.
 
         Args:
             names: The authentication mechanism names.
-            config: The configuration object.
 
         Returns:
             A new :class:`SASLAuth` object.
@@ -70,16 +61,15 @@ class SASLAuth(SASLConfig):
             KeyError: A mechanism name was not recognized.
 
         """
-        builtin = {m.name: m for m in cls._get_builtin_mechanisms(config)}
+        builtin = {m.name: m for m in cls._get_builtin_mechanisms()}
         return cls([builtin[name] for name in names])
 
     @classmethod
-    def _get_builtin_mechanisms(cls, config: SASLConfig) \
-            -> Iterable[Mechanism]:
+    def _get_builtin_mechanisms(cls) -> Iterable[Mechanism]:
         group = mechanism.__package__
         for entry_point in entry_points(group=group):
             mech_cls = entry_point.load()
-            yield mech_cls(entry_point.name, config)
+            yield mech_cls(entry_point.name)
 
     @property
     def server_mechanisms(self) -> Sequence[ServerMechanism]:

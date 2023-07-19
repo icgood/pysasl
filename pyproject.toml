@@ -50,9 +50,6 @@ dependencies = [
     'importlib-metadata; python_version < "3.10"',
 ]
 
-[project.optional-dependencies]
-hashing = ['passlib']
-
 [project.urls]
 'Homepage' = 'https://github.com/icgood/pysasl/'
 'API Documentation' = 'https://icgood.github.io/pysasl/'
@@ -114,9 +111,7 @@ dependencies = [
     'ruff',
     'pycodestyle',
     'autopep8',
-    'types-passlib',
 ]
-features = ['hashing']
 
 [tool.hatch.envs.default.scripts]
 run-pytest = 'py.test --cov-report=term-missing --cov=pysasl'
