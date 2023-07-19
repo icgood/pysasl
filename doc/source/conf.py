@@ -91,5 +91,5 @@ napoleon_numpy_docstring = False
 
 # -- Options for intersphinx extension ---------------------------------------
 
-intersphinx_mapping = {'https://docs.python.org/3/': None,
-                       'https://passlib.readthedocs.io/en/stable/': None}
+intersphinx_mapping = {'python': ('https://docs.python.org/3/', None),
+                       'passlib': ('https://passlib.readthedocs.io/en/stable/', None)}

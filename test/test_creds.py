@@ -7,6 +7,7 @@ import unittest
 from pysasl.creds.plain import PlainCredentials
 from pysasl.hashing import BuiltinHash, Cleartext
 from pysasl.identity import ClearIdentity, HashedIdentity
+from pysasl.prep import noprep
 
 builtin_hash = BuiltinHash(rounds=1000)
 
@@ -27,9 +28,24 @@ class TestCreds(unittest.TestCase):
         self.assertTrue(creds.verify(stored))
         self.assertIsNone(stored.get_clear_secret())
 
+    def test_hashed_builtin_good_prepare(self) -> None:
+        creds = PlainCredentials('user\u00ADname', 'pass\u00ADword')
+        stored = HashedIdentity.create('us\u200Bername',
+                                       'pa\u200Bssword',
+                                       hash=builtin_hash)
+        self.assertTrue(creds.verify(stored))
+
     def test_hashed_builtin_invalid(self) -> None:
         creds = PlainCredentials('username', 'invalid')
         stored = HashedIdentity('username', password_sha256, hash=builtin_hash)
+        self.assertFalse(creds.verify(stored))
+
+    def test_hashed_builtin_invalid_noprep(self) -> None:
+        creds = PlainCredentials('user\u00ADname', 'pass\u00ADword')
+        stored = HashedIdentity.create('us\u200Bername',
+                                       'pa\u200Bssword',
+                                       hash=builtin_hash,
+                                       prepare=noprep)
         self.assertFalse(creds.verify(stored))
 
     def test_hashed_builtin_copy(self) -> None:
@@ -74,10 +90,21 @@ class TestCreds(unittest.TestCase):
         stored = ClearIdentity('username', 'password')
         self.assertTrue(creds.verify(stored))
 
+    def test_cleartext_good_prepare(self) -> None:
+        creds = PlainCredentials('user\u00ADname', 'pass\u00ADword')
+        stored = ClearIdentity('us\u200Bername', 'pa\u200Bssword')
+        self.assertTrue(creds.verify(stored))
+
     def test_cleartext_invalid(self) -> None:
         creds = PlainCredentials('username', 'password')
         self.assertFalse(creds.verify(ClearIdentity('username', 'invalid')))
         self.assertFalse(creds.verify(ClearIdentity('invalid', 'password')))
+
+    def test_cleartext_invalid_noprep(self) -> None:
+        creds = PlainCredentials('user\u00ADname', 'pass\u00ADword')
+        stored = ClearIdentity('us\u200Bername', 'pa\u200Bssword',
+                               prepare=noprep)
+        self.assertFalse(creds.verify(stored))
 
     def test_cleartext_copy(self) -> None:
         creds = PlainCredentials('username', 'password')
