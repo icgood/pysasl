@@ -24,6 +24,7 @@ class TestCreds(unittest.TestCase):
     def test_hashed_builtin_good(self) -> None:
         creds = PlainCredentials('username', 'password')
         stored = HashedIdentity('username', password_sha256, hash=builtin_hash)
+        self.assertEqual('username', stored.authcid)
         self.assertEqual(password_sha256, stored.digest)
         self.assertTrue(creds.verify(stored))
         self.assertIsNone(stored.get_clear_secret())
@@ -88,6 +89,7 @@ class TestCreds(unittest.TestCase):
     def test_cleartext_good(self) -> None:
         creds = PlainCredentials('username', 'password')
         stored = ClearIdentity('username', 'password')
+        self.assertEqual('username', stored.authcid)
         self.assertTrue(creds.verify(stored))
 
     def test_cleartext_good_prepare(self) -> None:

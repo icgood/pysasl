@@ -18,6 +18,12 @@ class Identity(Protocol):
 
     __slots__: Sequence[str] = []
 
+    @property
+    @abstractmethod
+    def authcid(self) -> str:
+        """The authentication identity, e.g. a login username."""
+        ...
+
     @abstractmethod
     def compare_authcid(self, authcid: str) -> bool:
         """Compare the identity's authcid with the given *authcid*.
@@ -64,6 +70,10 @@ class ClearIdentity(Identity):
         self._secret = secret
         self._prepare = prepare
 
+    @property
+    def authcid(self) -> str:
+        return self._authcid
+
     def _compare(self, this: str, that: str) -> bool:
         prepare = self._prepare
         prepared_this = prepare(this).encode('utf-8')
@@ -71,7 +81,7 @@ class ClearIdentity(Identity):
         return secrets.compare_digest(prepared_this, prepared_that)
 
     def compare_authcid(self, authcid: str) -> bool:
-        return self._compare(self._authcid, authcid)
+        return self._compare(self.authcid, authcid)
 
     def compare_secret(self, secret: str) -> bool:
         return self._compare(self._secret, secret)
@@ -81,7 +91,7 @@ class ClearIdentity(Identity):
         return self._secret
 
     def __repr__(self) -> str:
-        return f'ClearIdentity({self._authcid!r}, ...)'
+        return f'ClearIdentity({self.authcid!r}, ...)'
 
 
 class HashedIdentity(Identity):
@@ -105,6 +115,10 @@ class HashedIdentity(Identity):
         self._digest = digest
         self._hash = hash
         self._prepare = prepare
+
+    @property
+    def authcid(self) -> str:
+        return self._authcid
 
     @classmethod
     def create(cls, authcid: str, secret: str, *,
@@ -140,7 +154,7 @@ class HashedIdentity(Identity):
         return secrets.compare_digest(prepared_this, prepared_that)
 
     def compare_authcid(self, authcid: str) -> bool:
-        return self._compare(self._authcid, authcid)
+        return self._compare(self.authcid, authcid)
 
     def compare_secret(self, secret: str) -> bool:
         return self._hash.verify(self._prepare(secret), self._digest)
@@ -156,4 +170,4 @@ class HashedIdentity(Identity):
             return None
 
     def __repr__(self) -> str:
-        return f'HashedIdentity({self._authcid}, ..., hash={self._hash!r})'
+        return f'HashedIdentity({self.authcid}, ..., hash={self._hash!r})'
