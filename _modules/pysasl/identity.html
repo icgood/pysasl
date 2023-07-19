@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>pysasl.identity &#8212; pysasl 1.1.0 documentation</title>
+    <title>pysasl.identity &#8212; pysasl 1.2.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/cloud.css" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noticia+Text:400,i,b,bi|Open+Sans:400,i,b,bi|Roboto+Mono:400,i,b,bi&amp;display=swap" type="text/css" />
@@ -46,7 +46,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> &nbsp; &nbsp;</li>
-    <li><a href="../../index.html">pysasl 1.1.0 documentation</a> &#187;</li>
+    <li><a href="../../index.html">pysasl 1.2.0 documentation</a> &#187;</li>
 
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../pysasl.html" accesskey="U">pysasl</a> &#187;</li>
@@ -81,6 +81,12 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="vm">__slots__</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="nd">@property</span>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">authcid</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The authentication identity, e.g. a login username.&quot;&quot;&quot;</span>
+        <span class="o">...</span>
 
 <div class="viewcode-block" id="Identity.compare_authcid"><a class="viewcode-back" href="../../pysasl.identity.html#pysasl.identity.Identity.compare_authcid">[docs]</a>    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">compare_authcid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">authcid</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
@@ -128,6 +134,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_secret</span> <span class="o">=</span> <span class="n">secret</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_prepare</span> <span class="o">=</span> <span class="n">prepare</span>
 
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">authcid</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_authcid</span>
+
     <span class="k">def</span> <span class="nf">_compare</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">this</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">that</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="n">prepare</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prepare</span>
         <span class="n">prepared_this</span> <span class="o">=</span> <span class="n">prepare</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
@@ -135,7 +145,7 @@
         <span class="k">return</span> <span class="n">secrets</span><span class="o">.</span><span class="n">compare_digest</span><span class="p">(</span><span class="n">prepared_this</span><span class="p">,</span> <span class="n">prepared_that</span><span class="p">)</span>
 
 <div class="viewcode-block" id="ClearIdentity.compare_authcid"><a class="viewcode-back" href="../../pysasl.identity.html#pysasl.identity.ClearIdentity.compare_authcid">[docs]</a>    <span class="k">def</span> <span class="nf">compare_authcid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">authcid</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compare</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_authcid</span><span class="p">,</span> <span class="n">authcid</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compare</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">authcid</span><span class="p">,</span> <span class="n">authcid</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ClearIdentity.compare_secret"><a class="viewcode-back" href="../../pysasl.identity.html#pysasl.identity.ClearIdentity.compare_secret">[docs]</a>    <span class="k">def</span> <span class="nf">compare_secret</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">secret</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compare</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_secret</span><span class="p">,</span> <span class="n">secret</span><span class="p">)</span></div>
@@ -145,7 +155,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_secret</span></div>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;ClearIdentity(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_authcid</span><span class="si">!r}</span><span class="s1">, ...)&#39;</span></div>
+        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;ClearIdentity(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">authcid</span><span class="si">!r}</span><span class="s1">, ...)&#39;</span></div>
 
 
 <div class="viewcode-block" id="HashedIdentity"><a class="viewcode-back" href="../../pysasl.identity.html#pysasl.identity.HashedIdentity">[docs]</a><span class="k">class</span> <span class="nc">HashedIdentity</span><span class="p">(</span><span class="n">Identity</span><span class="p">):</span>
@@ -169,6 +179,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_digest</span> <span class="o">=</span> <span class="n">digest</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_hash</span> <span class="o">=</span> <span class="nb">hash</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_prepare</span> <span class="o">=</span> <span class="n">prepare</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">authcid</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_authcid</span>
 
 <div class="viewcode-block" id="HashedIdentity.create"><a class="viewcode-back" href="../../pysasl.identity.html#pysasl.identity.HashedIdentity.create">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">authcid</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">secret</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span>
@@ -204,7 +218,7 @@
         <span class="k">return</span> <span class="n">secrets</span><span class="o">.</span><span class="n">compare_digest</span><span class="p">(</span><span class="n">prepared_this</span><span class="p">,</span> <span class="n">prepared_that</span><span class="p">)</span>
 
 <div class="viewcode-block" id="HashedIdentity.compare_authcid"><a class="viewcode-back" href="../../pysasl.identity.html#pysasl.identity.HashedIdentity.compare_authcid">[docs]</a>    <span class="k">def</span> <span class="nf">compare_authcid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">authcid</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compare</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_authcid</span><span class="p">,</span> <span class="n">authcid</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compare</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">authcid</span><span class="p">,</span> <span class="n">authcid</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="HashedIdentity.compare_secret"><a class="viewcode-back" href="../../pysasl.identity.html#pysasl.identity.HashedIdentity.compare_secret">[docs]</a>    <span class="k">def</span> <span class="nf">compare_secret</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">secret</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hash</span><span class="o">.</span><span class="n">verify</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_prepare</span><span class="p">(</span><span class="n">secret</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_digest</span><span class="p">)</span></div>
@@ -220,7 +234,7 @@
             <span class="k">return</span> <span class="kc">None</span></div>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;HashedIdentity(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_authcid</span><span class="si">}</span><span class="s1">, ..., hash=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_hash</span><span class="si">!r}</span><span class="s1">)&#39;</span></div>
+        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;HashedIdentity(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">authcid</span><span class="si">}</span><span class="s1">, ..., hash=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_hash</span><span class="si">!r}</span><span class="s1">)&#39;</span></div>
 </pre></div>
 
             <div class="clearer"></div>
@@ -271,7 +285,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> &nbsp; &nbsp;</li>
-    <li><a href="../../index.html">pysasl 1.1.0 documentation</a> &#187;</li>
+    <li><a href="../../index.html">pysasl 1.2.0 documentation</a> &#187;</li>
 
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../pysasl.html" >pysasl</a> &#187;</li>
