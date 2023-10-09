@@ -32,18 +32,18 @@ authors = [
 description = 'Pure Python SASL client and server library.'
 license = { file = 'LICENSE.md' }
 readme = { file = 'README.md', content-type = 'text/markdown' }
-requires-python = '~=3.7'
+requires-python = '~=3.8'
 classifiers = [
     'Development Status :: 3 - Alpha',
     'Intended Audience :: Developers',
     'Intended Audience :: Information Technology',
     'License :: OSI Approved :: MIT License',
     'Programming Language :: Python',
-    'Programming Language :: Python :: 3.7',
     'Programming Language :: Python :: 3.8',
     'Programming Language :: Python :: 3.9',
     'Programming Language :: Python :: 3.10',
     'Programming Language :: Python :: 3.11',
+    'Programming Language :: Python :: 3.12',
 ]
 dependencies = [
     'typing-extensions',
@@ -122,7 +122,7 @@ run-autopep8 = 'autopep8 --exit-code -dr pysasl test'
 check = ['run-pytest', 'run-autopep8', 'run-mypy', 'run-pyright', 'run-ruff']
 
 [[tool.hatch.envs.all.matrix]]
-python = ['3.7', '3.8', '3.9', '3.10', '3.11']
+python = ['3.8', '3.9', '3.10', '3.11', '3.12']
 
 [tool.hatch.envs.doc]
 dependencies = [
