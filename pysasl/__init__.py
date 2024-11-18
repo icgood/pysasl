@@ -66,7 +66,7 @@ class SASLAuth:
 
     @classmethod
     def _get_builtin_mechanisms(cls) -> Iterable[Mechanism]:
-        group = mechanism.__package__
+        group = mechanism.__package__ or ''
         for entry_point in entry_points(group=group):
             mech_cls = entry_point.load()
             yield mech_cls(entry_point.name)
